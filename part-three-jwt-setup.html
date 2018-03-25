@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+  <!-- description -->
+  
+  <!-- keywords -->
+  
+  <!-- title -->
+  
+    <title>Microservices with Docker, Flask, and React - JWT Setup</title>
+    <meta property="og:title" content="Microservices with Docker, Flask, and React - JWT Setup" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-sm-3 d-none d-md-block">
+    <div id="toc-block" class="collection">
+      <ul class="collapsible collapsible-accordion">
+        <br>
+        <!--  init break_flag -->
+        
+
+        <!-- outer loop -->
+        
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse1">
+                Part 1
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="1" class="collapse" id="collapse1" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-microservices">
+                            Microservices
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-app-overview">
+                            App Overview
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-getting-started">
+                            Getting Started
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-docker-config">
+                            Docker Config
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-postgres-setup">
+                            Postgres Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-test-setup">
+                            Test Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-flask-blueprints">
+                            Flask Blueprints
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-restful-routes">
+                            RESTful Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-deployment">
+                            Deployment
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-jinja-templates">
+                            Jinja Templates
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-workflow">
+                            Workflow
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse2">
+                Part 2
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="2" class="collapse" id="collapse2" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-code-coverage-and-quality">
+                            Code Coverage and Quality
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-continuous-integration">
+                            Continuous Integration
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-flask-debug-toolbar">
+                            Flask Debug Toolbar
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-setup">
+                            React Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-testing-react">
+                            Testing React
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-forms">
+                            React Forms
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-and-docker">
+                            React and Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-next-steps">
+                            Next Steps
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse3">
+                Part 3
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="3" class="collapse" id="collapse3" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-into">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-migrate">
+                            Flask Migrate
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-bcrypt">
+                            Flask Bcrypt
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-jwt-setup">
+                            JWT Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-auth-routes">
+                            Auth Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-router">
+                            React Router
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-bootstrap">
+                            React Bootstrap
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-one">
+                            React Auth - part one
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-mocking-user-interaction">
+                            Mocking User Interaction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-two">
+                            React Auth - part two
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-authorization">
+                            Authorization
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-component">
+                            Update Component
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-docker">
+                            Update Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+        <div class="col-md-9">
+
+          <h1>JWT Setup</h1>
+
+          
+
+            <h5>Part 3, Lesson 4</h5>
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-flask-bcrypt">&laquo; Flask Bcrypt</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-auth-routes">Auth Routes &raquo;</a>
+              
+            </div>
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - JWT Setup&amp;url=https%3A%2F%2Ftestdriven.io/part-three-jwt-setup&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <br><br>
+
+          
+
+          <p>In this lesson, we’ll add JWT to the <code class="highlighter-rouge">users</code> service…</p>
+
+<hr />
+
+<p>If you’re new to JWTs and/or token-based authentication, review the <a href="https://realpython.com/blog/python/token-based-authentication-with-flask/#introduction">Introduction</a> of the <a href="https://realpython.com/blog/python/token-based-authentication-with-flask">Token-Based Authentication With Flask</a> post. <a href="https://medium.com/technology-learning/how-we-solved-authentication-and-authorization-in-our-microservice-architecture-994539d1b6e6">How We Solved Authentication and Authorization in Our Microservice Architecture</a> is an excellent read as well.</p>
+
+<p>The auth workflow works as follows:</p>
+
+<ol>
+  <li>The end user submits login credentials from the <code class="highlighter-rouge">client</code> to the <code class="highlighter-rouge">users</code> service via AJAX</li>
+  <li>The <code class="highlighter-rouge">users</code> service then verifies that the credentials are valid and responds with an auth token</li>
+  <li>The token is stored on the client and is sent with all subsequent requests, where the <code class="highlighter-rouge">users</code> service decodes the token and validates it</li>
+</ol>
+
+<p>Tokens have three main parts:</p>
+
+<ol>
+  <li>Header</li>
+  <li>Payload</li>
+  <li>Signature</li>
+</ol>
+
+<blockquote>
+  <p>If you’re curious, you can read more about each part from <a href="https://jwt.io/introduction/">Introduction to JSON Web Tokens</a>.</p>
+</blockquote>
+
+<h2 id="pyjwt">PyJWT</h2>
+
+<p>To work with JSON Web Tokens in our app, add the <a href="http://pyjwt.readthedocs.io/en/latest/">PyJWT</a> package to the <em>requirements.txt</em> file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyjwt==1.5.3
+</code></pre></div></div>
+
+<h3 id="encode-token">Encode Token</h3>
+
+<p>Add the following test to <code class="highlighter-rouge">TestUserModel()</code> in <em>services/users/project/tests/test_user_model.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_encode_auth_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">add_user</span><span class="p">(</span><span class="s">'justatest'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="n">auth_token</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">encode_auth_token</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">auth_token</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>As always, make sure the tests fail. Next, add the <code class="highlighter-rouge">encode_auth_token</code> method to the <code class="highlighter-rouge">User()</code> class in <em>models.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">encode_auth_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="s">"""Generates the auth token"""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'exp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span>
+                <span class="n">days</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+            <span class="s">'iat'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="s">'sub'</span><span class="p">:</span> <span class="n">user_id</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="n">payload</span><span class="p">,</span>
+            <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">),</span>
+            <span class="n">algorithm</span><span class="o">=</span><span class="s">'HS256'</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">e</span>
+</code></pre></div></div>
+
+<p>Given a user id, <code class="highlighter-rouge">encode_auth_token</code> encodes and returns a token. Take note of the payload. This is where we add metadata about the token and information about the user. This info is often referred to as <a href="https://scotch.io/tutorials/the-anatomy-of-a-json-web-token#payload">JWT Claims</a>. We utilized the following “claims”:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">exp</code>: token expiration date</li>
+  <li><code class="highlighter-rouge">iat</code> (issued at): token generation date</li>
+  <li><code class="highlighter-rouge">sub</code>: the subject of the token e.g., - the user whom it identifies</li>
+</ol>
+
+<p>Add the following imports:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">import datetime</code></li>
+  <li><code class="highlighter-rouge">import jwt</code></li>
+</ol>
+
+<p>Update the containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>Run the tests. They should pass, right?</p>
+
+<p>Turn to the app config. The secret key needs to be updated for production. Let’s configure it with an environment variable.</p>
+
+<p>First, within <em>test_config.py</em>, change all instances of:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SECRET_KEY'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'my_precious'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>To:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SECRET_KEY'</span><span class="p">]</span> <span class="o">==</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Then update <code class="highlighter-rouge">BaseConfig</code> in <em>services/users/project/config.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BaseConfig</span><span class="p">:</span>
+    <span class="s">"""Base configuration"""</span>
+    <span class="n">TESTING</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">SQLALCHEMY_TRACK_MODIFICATIONS</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">)</span>
+    <span class="n">DEBUG_TB_ENABLED</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">DEBUG_TB_INTERCEPT_REDIRECTS</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">BCRYPT_LOG_ROUNDS</span> <span class="o">=</span> <span class="mi">13</span>
+</code></pre></div></div>
+
+<p>Add the <code class="highlighter-rouge">SECRET_KEY</code> environment variable to <code class="highlighter-rouge">environment</code> within <em>docker-compose-dev.yml</em>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">environment</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">FLASK_DEBUG=1</span>
+  <span class="pi">-</span> <span class="s">APP_SETTINGS=project.config.DevelopmentConfig</span>
+  <span class="pi">-</span> <span class="s">DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev</span>
+  <span class="pi">-</span> <span class="s">DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test</span>
+  <span class="pi">-</span> <span class="s">SECRET_KEY=my_precious</span>
+</code></pre></div></div>
+
+<p>Let’s also add the token expiration to the config:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BaseConfig</span><span class="p">:</span>
+    <span class="s">"""Base configuration"""</span>
+    <span class="n">TESTING</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">SQLALCHEMY_TRACK_MODIFICATIONS</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">)</span>
+    <span class="n">DEBUG_TB_ENABLED</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">DEBUG_TB_INTERCEPT_REDIRECTS</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">BCRYPT_LOG_ROUNDS</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">TOKEN_EXPIRATION_DAYS</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">TOKEN_EXPIRATION_SECONDS</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">class</span> <span class="nc">DevelopmentConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="s">"""Development configuration"""</span>
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'DATABASE_URL'</span><span class="p">)</span>
+    <span class="n">DEBUG_TB_ENABLED</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">BCRYPT_LOG_ROUNDS</span> <span class="o">=</span> <span class="mi">4</span>
+
+
+<span class="k">class</span> <span class="nc">TestingConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="s">"""Testing configuration"""</span>
+    <span class="n">TESTING</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'DATABASE_TEST_URL'</span><span class="p">)</span>
+    <span class="n">BCRYPT_LOG_ROUNDS</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">TOKEN_EXPIRATION_DAYS</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">TOKEN_EXPIRATION_SECONDS</span> <span class="o">=</span> <span class="mi">3</span>
+
+
+<span class="k">class</span> <span class="nc">ProductionConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="s">"""Production configuration"""</span>
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'DATABASE_URL'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Update the tests:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">TestDevelopmentConfig</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'project.config.DevelopmentConfig'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">app</span>
+
+    <span class="k">def</span> <span class="nf">test_app_is_development</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SECRET_KEY'</span><span class="p">]</span> <span class="o">==</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">current_app</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SQLALCHEMY_DATABASE_URI'</span><span class="p">]</span> <span class="o">==</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'DATABASE_URL'</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'DEBUG_TB_ENABLED'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'BCRYPT_LOG_ROUNDS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TOKEN_EXPIRATION_DAYS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TOKEN_EXPIRATION_SECONDS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TestTestingConfig</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'project.config.TestingConfig'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">app</span>
+
+    <span class="k">def</span> <span class="nf">test_app_is_testing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SECRET_KEY'</span><span class="p">]</span> <span class="o">==</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TESTING'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'PRESERVE_CONTEXT_ON_EXCEPTION'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SQLALCHEMY_DATABASE_URI'</span><span class="p">]</span> <span class="o">==</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'DATABASE_TEST_URL'</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'DEBUG_TB_ENABLED'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'BCRYPT_LOG_ROUNDS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TOKEN_EXPIRATION_DAYS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TOKEN_EXPIRATION_SECONDS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TestProductionConfig</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="s">'project.config.ProductionConfig'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">app</span>
+
+    <span class="k">def</span> <span class="nf">test_app_is_production</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SECRET_KEY'</span><span class="p">]</span> <span class="o">==</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TESTING'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'DEBUG_TB_ENABLED'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'BCRYPT_LOG_ROUNDS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">13</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TOKEN_EXPIRATION_DAYS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TOKEN_EXPIRATION_SECONDS'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Then update the <code class="highlighter-rouge">encode_auth_token</code> in the model:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">encode_auth_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="s">"""Generates the auth token"""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'exp'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span>
+                <span class="n">days</span><span class="o">=</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'TOKEN_EXPIRATION_DAYS'</span><span class="p">),</span>
+                <span class="n">seconds</span><span class="o">=</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'TOKEN_EXPIRATION_SECONDS'</span><span class="p">)</span>
+            <span class="p">),</span>
+            <span class="s">'iat'</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="s">'sub'</span><span class="p">:</span> <span class="n">user_id</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+            <span class="n">payload</span><span class="p">,</span>
+            <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">),</span>
+            <span class="n">algorithm</span><span class="o">=</span><span class="s">'HS256'</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">e</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Now is a great time to check your understanding: See if you can write the test as well as the code for decoding a token on your own.</p>
+</blockquote>
+
+<h3 id="decode-token">Decode Token</h3>
+
+<p>Moving on, add the following test to <em>test_user_model.py</em> for decoding a token:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_decode_auth_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">add_user</span><span class="p">(</span><span class="s">'justatest'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="n">auth_token</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">encode_auth_token</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">auth_token</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">decode_auth_token</span><span class="p">(</span><span class="n">auth_token</span><span class="p">),</span> <span class="n">user</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Add the following method to the <code class="highlighter-rouge">User()</code> class:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">decode_auth_token</span><span class="p">(</span><span class="n">auth_token</span><span class="p">):</span>
+    <span class="s">"""
+    Decodes the auth token - :param auth_token: - :return: integer|string
+    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+            <span class="n">auth_token</span><span class="p">,</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">payload</span><span class="p">[</span><span class="s">'sub'</span><span class="p">]</span>
+    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">ExpiredSignatureError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'Signature expired. Please log in again.'</span>
+    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">InvalidTokenError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'Invalid token. Please log in again.'</span>
+</code></pre></div></div>
+
+<p>Again, every authenticated request <em>must</em> include the auth token to verity the user’s authenticity. Make sure the tests pass before moving on.</p>
+
+
+          
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - JWT Setup&amp;url=https%3A%2F%2Ftestdriven.io/part-three-jwt-setup&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-flask-bcrypt">&laquo; Flask Bcrypt</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-auth-routes">Auth Routes &raquo;</a>
+              
+            </div>
+
+          
+
+        </div>
+
+      </div>
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+  <!-- description -->
+  
+  <!-- keywords -->
+  
+  <!-- title -->
+  
+    <title>Microservices with Docker, Flask, and React - React Setup</title>
+    <meta property="og:title" content="Microservices with Docker, Flask, and React - React Setup" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-sm-3 d-none d-md-block">
+    <div id="toc-block" class="collection">
+      <ul class="collapsible collapsible-accordion">
+        <br>
+        <!--  init break_flag -->
+        
+
+        <!-- outer loop -->
+        
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse1">
+                Part 1
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="1" class="collapse" id="collapse1" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-microservices">
+                            Microservices
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-app-overview">
+                            App Overview
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-getting-started">
+                            Getting Started
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-docker-config">
+                            Docker Config
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-postgres-setup">
+                            Postgres Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-test-setup">
+                            Test Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-flask-blueprints">
+                            Flask Blueprints
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-restful-routes">
+                            RESTful Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-deployment">
+                            Deployment
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-jinja-templates">
+                            Jinja Templates
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-workflow">
+                            Workflow
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse2">
+                Part 2
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="2" class="collapse" id="collapse2" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-code-coverage-and-quality">
+                            Code Coverage and Quality
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-continuous-integration">
+                            Continuous Integration
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-flask-debug-toolbar">
+                            Flask Debug Toolbar
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-setup">
+                            React Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-testing-react">
+                            Testing React
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-forms">
+                            React Forms
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-and-docker">
+                            React and Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-next-steps">
+                            Next Steps
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse3">
+                Part 3
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="3" class="collapse" id="collapse3" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-into">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-migrate">
+                            Flask Migrate
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-bcrypt">
+                            Flask Bcrypt
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-jwt-setup">
+                            JWT Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-auth-routes">
+                            Auth Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-router">
+                            React Router
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-bootstrap">
+                            React Bootstrap
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-one">
+                            React Auth - part one
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-mocking-user-interaction">
+                            Mocking User Interaction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-two">
+                            React Auth - part two
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-authorization">
+                            Authorization
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-component">
+                            Update Component
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-docker">
+                            Update Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+        <div class="col-md-9">
+
+          <h1>React Setup</h1>
+
+          
+
+            <h5>Part 2, Lesson 5</h5>
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-flask-debug-toolbar">&laquo; Flask Debug Toolbar</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-testing-react">Testing React &raquo;</a>
+              
+            </div>
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - React Setup&amp;url=https%3A%2F%2Ftestdriven.io/part-two-react-setup&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <br><br>
+
+          
+
+          <p>Let’s turn our attention to the client-side and add <a href="https://reactjs.org/">React</a>…</p>
+
+<hr />
+
+<p>React is a declarative, component-based, JavaScript library for building user interfaces.</p>
+
+<p>If you’re new to React, review the <a href="https://reactjs.org/docs/hello-world.html">Quick Start</a> and the excellent <a href="https://reactjs.org/blog/2013/06/05/why-react.html">Why did we build React?</a> blog post. You may also want to step through the <a href="https://github.com/mjhea0/react-intro">Intro to React</a> tutorial to learn more about <a href="https://babeljs.io/">Babel</a> and <a href="https://webpack.github.io/">Webpack</a> - and how they work beneath the scenes.</p>
+
+<p>Make sure you have <a href="https://nodejs.org/en/">Node</a> and <a href="https://www.npmjs.com/">NPM</a> installed before continuing:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>node <span class="nt">-v</span>
+v9.4.0
+<span class="nv">$ </span>npm <span class="nt">-v</span>
+5.6.0
+</code></pre></div></div>
+
+<h2 id="project-setup">Project Setup</h2>
+
+<p>We’ll use the amazing <a href="https://github.com/facebookincubator/create-react-app">Create React App</a> CLI to generate a boilerplate that’s all set up and ready to go.</p>
+
+<blockquote>
+  <p>Again, it’s important to understand what’s happening under the hood with Webpack and Babel. For more, check out the <a href="https://github.com/mjhea0/react-intro">Intro to React</a> tutorial.</p>
+</blockquote>
+
+<p>Start by installing Create React App globally:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm <span class="nb">install </span>create-react-app@1.5.1 <span class="nt">--global</span>
+</code></pre></div></div>
+
+<p>Add a new directory to “services” called “client”, and then <code class="highlighter-rouge">cd</code> into the newly created directory and create the boilerplate:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>create-react-app <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>Along with creating the basic project structure, this will also install all dependencies. Once done, start the server:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm start
+</code></pre></div></div>
+
+<p>After staring the server, Create React App automatically launches the app in your default browser on <a href="http://localhost:3000">http://localhost:3000</a>.</p>
+
+<p>Ensure all is well, and then kill the server.</p>
+
+<p>Next, to simplify the development process, remove the <a href="https://docs.npmjs.com/files/package-lock.json">package-lock.json</a> file. Let’s also tell npm not to create one, during future module installations, for this project:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'package-lock=false'</span> <span class="o">&gt;&gt;</span> .npmrc
+</code></pre></div></div>
+
+<blockquote>
+  <p>Review the <a href="https://docs.npmjs.com/files/npmrc">npm docs</a> for more info on the <em>.npmrc</em> config file.</p>
+</blockquote>
+
+<p>Now we’re ready build our first component!</p>
+
+<h2 id="first-component">First Component</h2>
+
+<p>First, to simplify the structure, remove the <em>App.css</em>, <em>App.js</em>, <em>App.test.js</em>, and <em>index.css</em> from the “src” folder, and then update <em>index.js</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">ReactDOM</span> <span class="k">from</span> <span class="s1">'react-dom'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"col-md-4"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+          <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>All Users<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">hr</span><span class="p">/&gt;&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">)</span>
+<span class="p">};</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">App</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'root'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>What’s happening?</p>
+
+<ol>
+  <li>After importing the <code class="highlighter-rouge">React</code> and <code class="highlighter-rouge">ReactDom</code> classes, we created a functional component called <code class="highlighter-rouge">App</code>, which returns <a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a>.</li>
+  <li>
+    <p>We then used the <code class="highlighter-rouge">render</code> method from <code class="highlighter-rouge">ReactDOM</code> to mount the App to the DOM into the HTML element with an ID of <code class="highlighter-rouge">root</code>.</p>
+
+    <blockquote>
+      <p>Take note of <code class="highlighter-rouge">&lt;div id="root"&gt;&lt;/div&gt;</code> within the <em>index.html</em> file in the “public” folder.</p>
+    </blockquote>
+  </li>
+</ol>
+
+<p>Add Bootstrap to <em>index.html</em> (found in the “public” folder) in the <code class="highlighter-rouge">head</code>:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;link</span>
+  <span class="na">href=</span><span class="s">"//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"</span>
+  <span class="na">rel=</span><span class="s">"stylesheet"</span>
+<span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p>Start the server again to see the changes in the browser:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm start
+</code></pre></div></div>
+
+<h2 id="class-based-component">Class-based Component</h2>
+
+<p>Update <em>index.js</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">ReactDOM</span> <span class="k">from</span> <span class="s1">'react-dom'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"container"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"row"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"col-md-4"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+            <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>All Users<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">hr</span><span class="p">/&gt;&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">App</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'root'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>What’s happening?</p>
+
+<ol>
+  <li>We created a class-based component, which runs automatically when an instance is created (behind the scenes).</li>
+  <li>When ran, <code class="highlighter-rouge">super()</code> calls the constructor of <code class="highlighter-rouge">Component</code>, which <code class="highlighter-rouge">App</code> extends from.</li>
+</ol>
+
+<p>You may have already noticed, but the output, in the browser, is the exact same as before, despite using a class-based component. We’ll look at the differences between the two shortly!</p>
+
+<h2 id="ajax">AJAX</h2>
+
+<p>To connect the client to the server, add a <code class="highlighter-rouge">getUsers()</code> method to the <code class="highlighter-rouge">App</code> class, which uses <a href="https://github.com/mzabriskie/axios">Axios</a> to manage the AJAX call:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">getUsers</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REACT_APP_USERS_SERVICE_URL</span><span class="p">}</span><span class="s2">/users`</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span> <span class="p">})</span>
+  <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Install Axios:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm <span class="nb">install </span>axios@0.17.1 <span class="nt">--save</span>
+</code></pre></div></div>
+
+<p>Add the import:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="s1">'axios'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>You should now have:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">ReactDOM</span> <span class="k">from</span> <span class="s1">'react-dom'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">axios</span> <span class="k">from</span> <span class="s1">'axios'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">getUsers</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REACT_APP_USERS_SERVICE_URL</span><span class="p">}</span><span class="s2">/users`</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span> <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">});</span>
+  <span class="p">}</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"container"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"row"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"col-md-4"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+            <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>All Users<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">hr</span><span class="p">/&gt;&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nc">App</span> <span class="p">/&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'root'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>To connect this up to the users service, open a new terminal window, navigate to the project root, set <code class="highlighter-rouge">testdriven-dev</code> as the active Docker Machine:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine <span class="nb">env </span>testdriven-dev
+<span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>testdriven-dev<span class="k">)</span>
+</code></pre></div></div>
+
+<p>Update the containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>Ensure the app is working in the browser, and then run the tests:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml <span class="se">\</span>
+  run <span class="nb">users </span>python manage.py <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>Now, turning back to React, we need to add the <a href="https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables">environment variable</a>,  <code class="highlighter-rouge">process.env.REACT_APP_USERS_SERVICE_URL</code>. Kill the Create React App server, and then run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">REACT_APP_USERS_SERVICE_URL</span><span class="o">=</span>http://DOCKER_MACHINE_DEV_IP
+</code></pre></div></div>
+
+<blockquote>
+  <p>All custom environment variables must begin with <code class="highlighter-rouge">REACT_APP_</code>. For more, check out the <a href="https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables">official docs</a>.</p>
+</blockquote>
+
+<p>We still need to call the <code class="highlighter-rouge">getUsers()</code> method, which we can do, for now, in the <code class="highlighter-rouge">constructor()</code>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">super</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getUsers</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Run the server - via <code class="highlighter-rouge">npm start</code> - and then within <a href="https://developer.chrome.com/devtools">Chrome DevTools</a>, open the JavaScript Console. You should see the following error:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failed to load http://192.168.99.100/users:
+No 'Access-Control-Allow-Origin' header is present on the requested resource.
+Origin 'http://localhost:3000' is therefore not allowed access.
+</code></pre></div></div>
+
+<p>In short, we’re making a <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">cross-origin</a> AJAX request (from <code class="highlighter-rouge">http://localhost:3000</code> to <code class="highlighter-rouge">http://192.168.99.100</code>), which is a violation of the browser’s “same origin policy”. Fortunately, we can use the <a href="https://flask-cors.readthedocs.io/en/latest/">Flask-CORS</a> extension to handle this.</p>
+
+<p>Within the “users” directory, add Flask-CORS to the <em>requirements.txt</em> file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flask-cors==3.0.3
+</code></pre></div></div>
+
+<p>To keep things simple, let’s allow cross origin requests on all routes, from any domain. Simply update <code class="highlighter-rouge">create_app()</code> in <em>services/users/project/__init__.py</em> like so:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">script_info</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+    <span class="c"># instantiate the app</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+    <span class="c"># enable CORS</span>
+    <span class="n">CORS</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="c"># set config</span>
+    <span class="n">app_settings</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'APP_SETTINGS'</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">app_settings</span><span class="p">)</span>
+
+    <span class="c"># set up extensions</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">toolbar</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="c"># register blueprints</span>
+    <span class="kn">from</span> <span class="nn">project.api.users</span> <span class="kn">import</span> <span class="n">users_blueprint</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">users_blueprint</span><span class="p">)</span>
+
+    <span class="c"># shell context for flask cli</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">shell_context_processor</span><span class="p">({</span><span class="s">'app'</span><span class="p">:</span> <span class="n">app</span><span class="p">,</span> <span class="s">'db'</span><span class="p">:</span> <span class="n">db</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">app</span>
+</code></pre></div></div>
+
+<p>Add the import at the top:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
+</code></pre></div></div>
+
+<p>To test, start by updating the containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>Then, update and seed the database:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml <span class="se">\</span>
+  run <span class="nb">users </span>python manage.py recreate_db
+
+<span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml <span class="se">\</span>
+  run <span class="nb">users </span>python manage.py seed_db
+</code></pre></div></div>
+
+<p>Fire back up both servers, open the JavaScript Console again, and this time you should see the results of <code class="highlighter-rouge">console.log(res);</code>:</p>
+
+<div style="text-align:left;">
+  <img src="/assets/img/course/01_react_ajax_request.png" style="max-width: 100%; border:0; box-shadow: none;" alt="react ajax request" />
+</div>
+
+<p>Let’s parse the JSON object:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">getUsers</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REACT_APP_USERS_SERVICE_URL</span><span class="p">}</span><span class="s2">/users`</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span> <span class="p">})</span>
+  <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now you should have an array with two objects in the JavaScript Console:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hermanmu@gmail.com"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"michael"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"michael@mherman.org"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"michaelherman"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Before we move on, we need to do a quick refactor. Remember how we called the <code class="highlighter-rouge">getUsers()</code> method in the constructor?</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">super</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getUsers</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Well, the <code class="highlighter-rouge">constructor()</code> fires <em>before</em> the component is mounted to the DOM. What would happen if the AJAX request took longer than expected and the component mounted before the request completed? This introduces a <a href="https://en.wikipedia.org/wiki/Race_condition">race condition</a>. Fortunately, React makes it fairly simple to correct this via Lifecycle Methods.</p>
+
+<h2 id="component-lifecycle-methods">Component Lifecycle Methods</h2>
+
+<p>Class-based components have several functions available to them that execute at certain times during the life of the component. These are called Lifecycle Methods. Take a quick look at the <a href="https://reactjs.org/docs/react-component.html#the-component-lifecycle">official documentation</a> to learn about each method and when each is called.</p>
+
+<p>The AJAX call <a href="https://daveceddia.com/where-fetch-data-componentwillmount-vs-componentdidmount/">should be made</a> in the <code class="highlighter-rouge">componentDidMount()</code> method:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getUsers</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Update the component:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">();</span>
+  <span class="p">};</span>
+  <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">getUsers</span><span class="p">();</span>
+  <span class="p">};</span>
+  <span class="nx">getUsers</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REACT_APP_USERS_SERVICE_URL</span><span class="p">}</span><span class="s2">/users`</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">users</span><span class="p">);</span> <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">})</span>
+  <span class="p">};</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"container"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"row"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"col-md-4"</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+            <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>All Users<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">hr</span><span class="p">/&gt;&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+          <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Make sure everything still works as it did before.</p>
+
+<h2 id="state">State</h2>
+
+<p>To add the [state](https://en.wikipedia.org/wiki/State_(computer_science%29) - i.e., the users - to the component we need to use <code class="highlighter-rouge">setState()</code>, which is an asynchronous function used to update state.</p>
+
+<p>Update <code class="highlighter-rouge">getUsers()</code>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">getUsers</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">axios</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">REACT_APP_USERS_SERVICE_URL</span><span class="p">}</span><span class="s2">/users`</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="na">users</span><span class="p">:</span> <span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">users</span> <span class="p">});</span> <span class="p">})</span>
+  <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">});</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Add state to the constructor:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">super</span><span class="p">();</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">users</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>So, <code class="highlighter-rouge">this.state</code> adds the state <code class="highlighter-rouge">property</code> to the class and sets <code class="highlighter-rouge">users</code> to an empty array.</p>
+
+<blockquote>
+  <p>Review <a href="https://reactjs.org/docs/state-and-lifecycle.html#using-state-correctly">Using State Correctly</a> from the official docs.</p>
+</blockquote>
+
+<p>Finally, update the <code class="highlighter-rouge">render()</code> method to display the data returned from the AJAX call to the end user:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"col-md-6"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+          <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>All Users<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">hr</span><span class="p">/&gt;&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+          <span class="si">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="p">(</span>
+                <span class="p">&lt;</span><span class="nt">h4</span>
+                  <span class="na">key=</span><span class="si">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span>
+                  <span class="na">className=</span><span class="s2">"card card-body bg-light"</span>
+                <span class="p">&gt;</span><span class="si">{</span> <span class="nx">user</span><span class="p">.</span><span class="nx">username</span> <span class="si">}</span>
+                <span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
+              <span class="p">)</span>
+            <span class="p">})</span>
+          <span class="si">}</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">)</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>What’s happening?</p>
+
+<ol>
+  <li>We iterated over the users (from the AJAX request) and created a new H4 element. This is why we needed to set an initial state of an empty array - it prevents <code class="highlighter-rouge">map</code> from exploding.</li>
+  <li><code class="highlighter-rouge">key</code>? - used by React to keep track of each element. Review the <a href="https://facebook.github.io/react/docs/lists-and-keys.html#keys">official docs</a> for more.</li>
+</ol>
+
+<h2 id="functional-component">Functional Component</h2>
+
+<p>Let’s create a new component for the users list. Add a new folder called “components” to “src”. Add a new file to that folder called <em>UsersList.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">UsersList</span> <span class="o">=</span> <span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="si">{</span>
+        <span class="nx">props</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="p">(</span>
+            <span class="p">&lt;</span><span class="nt">h4</span>
+              <span class="na">key=</span><span class="si">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span>
+              <span class="na">className=</span><span class="s2">"card card-body bg-light"</span>
+            <span class="p">&gt;</span><span class="si">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="si">}</span>
+            <span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
+          <span class="p">)</span>
+        <span class="p">})</span>
+      <span class="si">}</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">)</span>
+<span class="p">};</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">UsersList</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Why did we use a functional component here rather than a class-based component?</p>
+
+<p>Notice how we used <code class="highlighter-rouge">props</code> instead of <code class="highlighter-rouge">state</code> in this component. Essentially, you can pass state to a component with either <code class="highlighter-rouge">props</code> or <code class="highlighter-rouge">state</code>:</p>
+
+<ol>
+  <li>Props - data flows down via <code class="highlighter-rouge">props</code> (from <code class="highlighter-rouge">state</code> to <code class="highlighter-rouge">props</code>), read only</li>
+  <li>State - data is tied to a component, read and write</li>
+</ol>
+
+<blockquote>
+  <p>For more, check out <a href="http://lucybain.com/blog/2016/react-state-vs-pros/">ReactJS: Props vs. State</a>.</p>
+</blockquote>
+
+<p>It’s a good practice to limit the number of class-based (stateful) components since they can manipulate state and are, thus, less predictable. If you just need to render data (like in the above case), then use a functional (state-less) component.</p>
+
+<p>Now we need to pass state from the parent to the child component via <code class="highlighter-rouge">props</code>. First, add the import to <em>index.js</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">UsersList</span> <span class="k">from</span> <span class="s1">'./components/UsersList'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Then, update the <code class="highlighter-rouge">render()</code> method:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"row"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"col-md-6"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+          <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>All Users<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">hr</span><span class="p">/&gt;&lt;</span><span class="nt">br</span><span class="p">/&gt;</span>
+            <span class="p">&lt;</span><span class="nc">UsersList</span> <span class="na">users=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">users</span><span class="si">}</span><span class="p">/&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Review the code in each component and add comments as necessary. Commit your code.</p>
+
+
+          
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - React Setup&amp;url=https%3A%2F%2Ftestdriven.io/part-two-react-setup&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-flask-debug-toolbar">&laquo; Flask Debug Toolbar</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-testing-react">Testing React &raquo;</a>
+              
+            </div>
+
+          
+
+        </div>
+
+      </div>
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

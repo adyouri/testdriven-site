@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+  <!-- description -->
+  
+  <!-- keywords -->
+  
+  <!-- title -->
+  
+    <title>Microservices with Docker, Flask, and React - Auth Routes</title>
+    <meta property="og:title" content="Microservices with Docker, Flask, and React - Auth Routes" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-sm-3 d-none d-md-block">
+    <div id="toc-block" class="collection">
+      <ul class="collapsible collapsible-accordion">
+        <br>
+        <!--  init break_flag -->
+        
+
+        <!-- outer loop -->
+        
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse1">
+                Part 1
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="1" class="collapse" id="collapse1" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-microservices">
+                            Microservices
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-app-overview">
+                            App Overview
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-getting-started">
+                            Getting Started
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-docker-config">
+                            Docker Config
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-postgres-setup">
+                            Postgres Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-test-setup">
+                            Test Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-flask-blueprints">
+                            Flask Blueprints
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-restful-routes">
+                            RESTful Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-deployment">
+                            Deployment
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-jinja-templates">
+                            Jinja Templates
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-workflow">
+                            Workflow
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse2">
+                Part 2
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="2" class="collapse" id="collapse2" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-code-coverage-and-quality">
+                            Code Coverage and Quality
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-continuous-integration">
+                            Continuous Integration
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-flask-debug-toolbar">
+                            Flask Debug Toolbar
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-setup">
+                            React Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-testing-react">
+                            Testing React
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-forms">
+                            React Forms
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-and-docker">
+                            React and Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-next-steps">
+                            Next Steps
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse3">
+                Part 3
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="3" class="collapse" id="collapse3" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-into">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-migrate">
+                            Flask Migrate
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-bcrypt">
+                            Flask Bcrypt
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-jwt-setup">
+                            JWT Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-auth-routes">
+                            Auth Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-router">
+                            React Router
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-bootstrap">
+                            React Bootstrap
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-one">
+                            React Auth - part one
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-mocking-user-interaction">
+                            Mocking User Interaction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-two">
+                            React Auth - part two
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-authorization">
+                            Authorization
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-component">
+                            Update Component
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-docker">
+                            Update Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+        <div class="col-md-9">
+
+          <h1>Auth Routes</h1>
+
+          
+
+            <h5>Part 3, Lesson 5</h5>
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-jwt-setup">&laquo; JWT Setup</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-react-router">React Router &raquo;</a>
+              
+            </div>
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - Auth Routes&amp;url=https%3A%2F%2Ftestdriven.io/part-three-auth-routes&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <br><br>
+
+          
+
+          <p>Now we can configure the authentication routes…</p>
+
+<hr />
+
+<p>Before writing any code, let’s ensure that the test coverage does not decrease as we add the new routes. Where are we at right now?</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Coverage Summary:
+Name                    Stmts   Miss Branch BrPart  Cover
+<span class="nt">---------------------------------------------------------</span>
+project/__init__.py        24     12      0      0    50%
+project/api/models.py      31     21      2      0    30%
+project/api/users.py       50     10     10      0    83%
+<span class="nt">---------------------------------------------------------</span>
+TOTAL                     105     43     12      0    62%
+</code></pre></div></div>
+
+<h2 id="routes-setup">Routes Setup</h2>
+
+<p>We’ll set up the following routes…</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Endpoint</th>
+      <th>HTTP Method</th>
+      <th>Authenticated?</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/auth/register</td>
+      <td>POST</td>
+      <td>No</td>
+      <td>register a user</td>
+    </tr>
+    <tr>
+      <td>/auth/login</td>
+      <td>POST</td>
+      <td>No</td>
+      <td>log in a user</td>
+    </tr>
+    <tr>
+      <td>/auth/logout</td>
+      <td>GET</td>
+      <td>Yes</td>
+      <td>log out a user</td>
+    </tr>
+    <tr>
+      <td>/auth/status</td>
+      <td>GET</td>
+      <td>Yes</td>
+      <td>get user status</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Add a new file to the “services/users/project/api” directory called <em>auth.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># services/users/project/api/auth.py</span>
+
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">exc</span><span class="p">,</span> <span class="n">or_</span>
+
+<span class="kn">from</span> <span class="nn">project.api.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">project</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">bcrypt</span>
+
+
+<span class="n">auth_blueprint</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s">'auth'</span><span class="p">,</span> <span class="n">__name__</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Then, register the new Blueprint with the app in <em>services/users/project/__init__.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span>
+<span class="c"># register blueprints</span>
+<span class="kn">from</span> <span class="nn">project.api.users</span> <span class="kn">import</span> <span class="n">users_blueprint</span>
+<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">users_blueprint</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">project.api.auth</span> <span class="kn">import</span> <span class="n">auth_blueprint</span>
+<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">auth_blueprint</span><span class="p">)</span>
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>Add a new file called <em>test_auth.py</em> to the “tests” folder to hold all tests associated with the Blueprint:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># services/users/project/tests/test_auth.py</span>
+
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">project</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">project.api.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">project.tests.base</span> <span class="kn">import</span> <span class="n">BaseTestCase</span>
+<span class="kn">from</span> <span class="nn">project.tests.utils</span> <span class="kn">import</span> <span class="n">add_user</span>
+
+
+<span class="k">class</span> <span class="nc">TestAuthBlueprint</span><span class="p">(</span><span class="n">BaseTestCase</span><span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="register-route">Register Route</h2>
+
+<p>Start with a test:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_user_registration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/register'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'username'</span><span class="p">:</span> <span class="s">'justatest'</span><span class="p">,</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'123456'</span><span class="p">,</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'success'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Successfully registered.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'auth_token'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content_type</span> <span class="o">==</span> <span class="s">'application/json'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This only tests the happy path. What about failures?</p>
+
+<ol>
+  <li>email already exists</li>
+  <li>username already exists</li>
+  <li>invalid payload (empty, no username, no email, no password)</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_user_registration_duplicate_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">add_user</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/register'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'username'</span><span class="p">:</span> <span class="s">'michael'</span><span class="p">,</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s">'Sorry. That user already exists.'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'fail'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">test_user_registration_duplicate_username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">add_user</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/register'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'username'</span><span class="p">:</span> <span class="s">'test'</span><span class="p">,</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com2'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s">'Sorry. That user already exists.'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'fail'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">test_user_registration_invalid_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/register'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'Invalid payload.'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'fail'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">test_user_registration_invalid_json_keys_no_username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/register'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'Invalid payload.'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'fail'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">test_user_registration_invalid_json_keys_no_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/register'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'username'</span><span class="p">:</span> <span class="s">'justatest'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'Invalid payload.'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'fail'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">test_user_registration_invalid_json_keys_no_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/register'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'username'</span><span class="p">:</span> <span class="s">'justatest'</span><span class="p">,</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'Invalid payload.'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'fail'</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Ensure the tests fail, and then add the view:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@auth_blueprint.route</span><span class="p">(</span><span class="s">'/auth/register'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">register_user</span><span class="p">():</span>
+    <span class="c"># get post data</span>
+    <span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+    <span class="n">response_object</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'status'</span><span class="p">:</span> <span class="s">'fail'</span><span class="p">,</span>
+        <span class="s">'message'</span><span class="p">:</span> <span class="s">'Invalid payload.'</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">post_data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">400</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">post_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'username'</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">post_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'email'</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">post_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'password'</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c"># check for existing user</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span>
+            <span class="n">or_</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">username</span> <span class="o">==</span> <span class="n">username</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
+            <span class="c"># add new user to db</span>
+            <span class="n">new_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+                <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
+                <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span>
+                <span class="n">password</span><span class="o">=</span><span class="n">password</span>
+            <span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_user</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="c"># generate auth token</span>
+            <span class="n">auth_token</span> <span class="o">=</span> <span class="n">new_user</span><span class="o">.</span><span class="n">encode_auth_token</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'success'</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Successfully registered.'</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'auth_token'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_token</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">201</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Sorry. That user already exists.'</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">400</span>
+    <span class="c"># handler errors</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">IntegrityError</span><span class="p">,</span> <span class="nb">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">400</span>
+</code></pre></div></div>
+
+<p>Be sure the tests pass!</p>
+
+<h2 id="login-route">Login Route</h2>
+
+<p>Again, start with a few tests:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_registered_user_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">add_user</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/login'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'success'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Successfully logged in.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'auth_token'</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content_type</span> <span class="o">==</span> <span class="s">'application/json'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_not_registered_user_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/login'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'fail'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'User does not exist.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content_type</span> <span class="o">==</span> <span class="s">'application/json'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Run the tests. They should fail. Now, add the view:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@auth_blueprint.route</span><span class="p">(</span><span class="s">'/auth/login'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">login_user</span><span class="p">():</span>
+    <span class="c"># get post data</span>
+    <span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+    <span class="n">response_object</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'status'</span><span class="p">:</span> <span class="s">'fail'</span><span class="p">,</span>
+        <span class="s">'message'</span><span class="p">:</span> <span class="s">'Invalid payload.'</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">post_data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">400</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">post_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'email'</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">post_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'password'</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c"># fetch the user data</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">check_password_hash</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+            <span class="n">auth_token</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">encode_auth_token</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">auth_token</span><span class="p">:</span>
+                <span class="n">response_object</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'success'</span>
+                <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Successfully logged in.'</span>
+                <span class="n">response_object</span><span class="p">[</span><span class="s">'auth_token'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_token</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">200</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'User does not exist.'</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">404</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Try again.'</span>     
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">500</span>
+</code></pre></div></div>
+
+<p>Do the tests pass?</p>
+
+<h2 id="logout-route">Logout Route</h2>
+
+<p>Test valid logout:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_valid_logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">add_user</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="c"># user login</span>
+        <span class="n">resp_login</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/login'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="c"># valid token logout</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp_login</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s">'auth_token'</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s">'/auth/logout'</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="n">f</span><span class="s">'Bearer {token}'</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'success'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Successfully logged out.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Test invalid logout:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_invalid_logout_expired_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">add_user</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">resp_login</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/login'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="c"># invalid token logout</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp_login</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s">'auth_token'</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s">'/auth/logout'</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="n">f</span><span class="s">'Bearer {token}'</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'fail'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Signature expired. Please log in again.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_invalid_logout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s">'/auth/logout'</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Bearer invalid'</span><span class="p">})</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'fail'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Invalid token. Please log in again.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Add the import:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+</code></pre></div></div>
+
+<p>Update the views:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@auth_blueprint.route</span><span class="p">(</span><span class="s">'/auth/logout'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">logout_user</span><span class="p">():</span>
+    <span class="c"># get auth token</span>
+    <span class="n">auth_header</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'Authorization'</span><span class="p">)</span>
+    <span class="n">response_object</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'status'</span><span class="p">:</span> <span class="s">'fail'</span><span class="p">,</span>
+        <span class="s">'message'</span><span class="p">:</span> <span class="s">'Provide a valid auth token.'</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">auth_header</span><span class="p">:</span>
+        <span class="n">auth_token</span> <span class="o">=</span> <span class="n">auth_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">' '</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">decode_auth_token</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'success'</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Successfully logged out.'</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">200</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="n">resp</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">401</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">403</span>
+</code></pre></div></div>
+
+<p>Run the tests:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">----------------------------------------------------------------------</span>
+Ran 35 tests <span class="k">in </span>5.040s
+
+OK
+</code></pre></div></div>
+
+<p>Did you notice the <code class="highlighter-rouge">time.sleep(4)</code> in the <code class="highlighter-rouge">test_invalid_logout_expired_token</code> test? This adds an additional 4 seconds to our test suite. To speed things up, let’s update the <code class="highlighter-rouge">TOKEN_EXPIRATION_SECONDS</code> for this specific test:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_invalid_logout_expired_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">add_user</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'TOKEN_EXPIRATION_SECONDS'</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">resp_login</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/login'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="c"># invalid token logout</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp_login</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s">'auth_token'</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s">'/auth/logout'</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="n">f</span><span class="s">'Bearer {token}'</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'fail'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Signature expired. Please log in again.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Add the import:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">current_app</span>
+</code></pre></div></div>
+
+<p>You can also remove the <code class="highlighter-rouge">time</code> import:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+</code></pre></div></div>
+
+<p>Make sure the tests still pass:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">----------------------------------------------------------------------</span>
+Ran 35 tests <span class="k">in </span>1.015s
+
+OK
+</code></pre></div></div>
+
+<h2 id="status-route">Status Route</h2>
+
+<p>Remember: In order to get the user details of the currently logged in user, the auth token <em>must</em> be sent with the request.</p>
+
+<p>Start with some tests:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_user_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">add_user</span><span class="p">(</span><span class="s">'test'</span><span class="p">,</span> <span class="s">'test@test.com'</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">resp_login</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="s">'/auth/login'</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                <span class="s">'email'</span><span class="p">:</span> <span class="s">'test@test.com'</span><span class="p">,</span>
+                <span class="s">'password'</span><span class="p">:</span> <span class="s">'test'</span>
+            <span class="p">}),</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="s">'application/json'</span>
+        <span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp_login</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())[</span><span class="s">'auth_token'</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s">'/auth/status'</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="n">f</span><span class="s">'Bearer {token}'</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'success'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'data'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'data'</span><span class="p">][</span><span class="s">'username'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'test'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'data'</span><span class="p">][</span><span class="s">'email'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'test@test.com'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'data'</span><span class="p">][</span><span class="s">'active'</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_invalid_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s">'/auth/status'</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">'Authorization'</span><span class="p">:</span> <span class="s">'Bearer invalid'</span><span class="p">})</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'fail'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Invalid token. Please log in again.'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The tests should fail. Now, in the route handler, we should:</p>
+
+<ol>
+  <li>extract the auth token and check its validity</li>
+  <li>grab the user id from the payload and get the user details (if the token is valid, of course)</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@auth_blueprint.route</span><span class="p">(</span><span class="s">'/auth/status'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_user_status</span><span class="p">():</span>
+    <span class="c"># get auth token</span>
+    <span class="n">auth_header</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'Authorization'</span><span class="p">)</span>
+    <span class="n">response_object</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'status'</span><span class="p">:</span> <span class="s">'fail'</span><span class="p">,</span>
+        <span class="s">'message'</span><span class="p">:</span> <span class="s">'Provide a valid auth token.'</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">auth_header</span><span class="p">:</span>
+        <span class="n">auth_token</span> <span class="o">=</span> <span class="n">auth_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">' '</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">decode_auth_token</span><span class="p">(</span><span class="n">auth_token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">resp</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'success'</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Success.'</span>
+            <span class="n">response_object</span><span class="p">[</span><span class="s">'data'</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">200</span>
+        <span class="n">response_object</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="n">resp</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">401</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">401</span>
+</code></pre></div></div>
+
+<p>Test one final time.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">----------------------------------------------------------------------</span>
+Ran 37 tests <span class="k">in </span>1.144s
+
+OK
+</code></pre></div></div>
+
+<p>Then, check coverage:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Coverage Summary:
+Name                    Stmts   Miss Branch BrPart  Cover
+<span class="nt">---------------------------------------------------------</span>
+project/__init__.py        26     12      0      0    54%
+project/api/auth.py        78     15     18      4    80%
+project/api/models.py      31     17      2      0    48%
+project/api/users.py       50     10     10      0    83%
+<span class="nt">---------------------------------------------------------</span>
+TOTAL                     185     54     30      4    73%
+</code></pre></div></div>
+
+<p>Finally, update <code class="highlighter-rouge">seed_db()</code> in <em>manage.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@cli.command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">seed_db</span><span class="p">():</span>
+    <span class="s">"""Seeds the database."""</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">User</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s">'michael'</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="s">'michael@reallynotreal.com'</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s">'greaterthaneight'</span>
+    <span class="p">))</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">User</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s">'michaelherman'</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="s">'michael@mherman.org'</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s">'greaterthaneight'</span>
+    <span class="p">))</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Commit and push your code. Do the tests pass on Travis CI?</p>
+
+
+          
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - Auth Routes&amp;url=https%3A%2F%2Ftestdriven.io/part-three-auth-routes&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-jwt-setup">&laquo; JWT Setup</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-three-react-router">React Router &raquo;</a>
+              
+            </div>
+
+          
+
+        </div>
+
+      </div>
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

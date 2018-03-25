@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/selenium-grid-docker-test/distributed_testing_docker_selenium.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This post shows how to distribute automated tests with Selenium Grid and Docker Swarm.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="testing, selenium tests, automated tests, selenium, selenium grid, python, docker, docker swarm, webdriver">
+  
+  <!-- title -->
+  
+    <title>Distributed Testing with Selenium Grid and Docker - TestDriven.io</title>
+    <meta property="og:title" content="Distributed Testing with Selenium Grid and Docker" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/selenium-grid-docker-test/distributed_testing_docker_selenium.png" style="max-width:100%" alt="selenium and docker">
+            </div>
+          
+
+          <h1>Distributed Testing with Selenium Grid and Docker</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/herman">Michael Herman</a></span> on <span class="badge badge-secondary">Mar 19, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Distributed Testing with Selenium Grid and Docker&amp;url=https%3A%2F%2Ftestdriven.io/distributed-testing-with-selenium-grid&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>Reducing test execution time is key for software development teams that wish to implement frequent delivery approaches (like continuous integration and delivery) or accelerate development cycle times in general. Developers simply cannot afford to wait hours on end for tests to complete in environments where frequent builds and tests are the norm. Distributing tests across a number of machines is one solution to this problem.</p>
+
+<p>This article looks at how to distribute automated tests across a number of machines with Selenium Grid and Docker Swarm.</p>
+
+<p>We’ll also look at how to run tests against a number of browsers and automate the provisioning and deprovisioning of machines to keep costs down.</p>
+
+<h2 id="objectives">Objectives</h2>
+
+<p>After completing this tutorial, you will be able to:</p>
+
+<ol>
+  <li>Containerize a Selenium Grid with Docker</li>
+  <li>Run automated tests on Selenium Grid</li>
+  <li>Describe the differences between distributed and parallel computing</li>
+  <li>Deploy a Selenium Grid to Digital Ocean via Docker Compose and Machine</li>
+  <li>Automate the provisioning and deprovisioning of resources on Digital Ocean</li>
+</ol>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#objectives" id="markdown-toc-objectives">Objectives</a></li>
+  <li><a href="#project-setup" id="markdown-toc-project-setup">Project Setup</a></li>
+  <li><a href="#selenium-grid" id="markdown-toc-selenium-grid">Selenium Grid</a></li>
+  <li><a href="#distributed-vs-parallel" id="markdown-toc-distributed-vs-parallel">Distributed vs Parallel</a></li>
+  <li><a href="#running-in-parallel" id="markdown-toc-running-in-parallel">Running in Parallel</a></li>
+  <li><a href="#digital-ocean" id="markdown-toc-digital-ocean">Digital Ocean</a></li>
+  <li><a href="#docker-swarm-mode" id="markdown-toc-docker-swarm-mode">Docker Swarm Mode</a></li>
+  <li><a href="#automation-scripts" id="markdown-toc-automation-scripts">Automation Scripts</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="project-setup">Project Setup</h2>
+
+<p>Let’s start with a basic Selenium test in Python:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.keys</span> <span class="kn">import</span> <span class="n">Keys</span>
+
+
+<span class="k">class</span> <span class="nc">GithubSearchTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_github_repo_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span>
+        <span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://github.com'</span><span class="p">)</span>
+        <span class="n">search_box</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s">'q'</span><span class="p">)</span>
+        <span class="n">search_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">RETURN</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c"># simulate long running test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'Search more than'</span><span class="p">,</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_github_repo_search_for_selenium</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span>
+        <span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://github.com'</span><span class="p">)</span>
+        <span class="n">search_box</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s">'q'</span><span class="p">)</span>
+        <span class="n">search_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="s">'selenium'</span><span class="p">)</span>
+        <span class="n">search_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">RETURN</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c"># simulate long running test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'repository results'</span><span class="p">,</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_github_repo_search_for_testdriven</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span>
+        <span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://github.com'</span><span class="p">)</span>
+        <span class="n">search_box</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s">'q'</span><span class="p">)</span>
+        <span class="n">search_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="s">'testdriven'</span><span class="p">)</span>
+        <span class="n">search_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">RETURN</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c"># simulate long running test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s">'testdriven'</span><span class="p">,</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_github_repo_search_with_no_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span>
+        <span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://github.com'</span><span class="p">)</span>
+        <span class="n">search_box</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s">'q'</span><span class="p">)</span>
+        <span class="n">search_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="s">'?*#^^</span><span class="si">%</span><span class="s">'</span><span class="p">)</span>
+        <span class="n">search_box</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">Keys</span><span class="o">.</span><span class="n">RETURN</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c"># simulate long running test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+            <span class="s">'We couldn’t find any repositories matching'</span><span class="p">,</span>
+            <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>  <span class="c"># quit vs close?</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Following along?</p>
+
+<ol>
+  <li>Create a new project directory.</li>
+  <li>Save the above code in a new file called <em>test.py</em>.</li>
+  <li>Create and activate a virtual environment.</li>
+  <li>Install Selenium - <code class="highlighter-rouge">pip install selenium==3.10.0</code>.</li>
+  <li>Install <a href="https://sites.google.com/a/chromium.org/ChromeDriver/">ChromeDriver</a> globally. (We’re using version <a href="https://chromedriver.storage.googleapis.com/index.html?path=2.36/">2.3.6</a>.)</li>
+  <li>Ensure it works - <code class="highlighter-rouge">python test.py</code>.</li>
+</ol>
+
+<p>In this test, we navigate to <code class="highlighter-rouge">https://github.com</code>, perform four searches, and then assert that the search results page is rendered appropriately. Nothing too spectacular, but it’s enough to work with. Feel free to use your own Selenium tests in place of this test.</p>
+
+<p><em>Execution time</em>: about 50 seconds</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python test.py
+
+....
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 4 tests <span class="k">in </span>52.010s
+
+OK
+</code></pre></div></div>
+
+<h2 id="selenium-grid">Selenium Grid</h2>
+
+<p>When it comes to distributed testing, <a href="https://www.seleniumhq.org/docs/07_selenium_grid.jsp">Selenium Grid</a> is one of the most powerful and popular open-source tools. With it, we can spread the test load  across multiple machines and run them cross-browser.</p>
+
+<p>Let’s say you have a suite of 90 tests that you run locally on your laptop against a single version of Chrome. Perhaps it takes six minutes to run those tests. Using Selenium Grid you could spin up three different machines to run them, which would decrease the test execution time by (roughly) one-third. You could also run the same tests against different browsers and platforms. So, not only are you saving time, but you are also helping to ensure that your web application behaves and looks the same when run on different browsers and environments.</p>
+
+<p>Selenium Grid uses a client-server model that includes a central hub and multiple nodes (the browsers which run the tests).</p>
+
+<p><img src="/assets/img/blog/selenium-grid-docker-test/selenium-grid.png" style="max-width:70%;padding-top:20px;" alt="selenium grid" /></p>
+
+<p>(<a href="https://docs.seleniumhq.org/selenium-grid.jsp">image source</a>)</p>
+
+<p>For example, you could have three nodes connected to the hub, each running a different browser. Then, when you run your tests with a specific remote WebDriver, the WebDriver request is sent to the central hub and it searches for an available node that matches the specified criteria (like a browser version, for instance). Once a node is found, the script is sent and the tests are run.</p>
+
+<p>Instead of dealing with the hassle of manually configuring and installing Selenium Grid, we can use official images from <a href="https://github.com/SeleniumHQ/docker-selenium">Selenium Docker</a> to spin up a hub and several nodes.</p>
+
+<p>To get up and running, add the following code to a new file called <em>docker-compose.yml</em> to the root directory of your project:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.5'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">hub</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">selenium/hub:3.10.0</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">4444:4444</span>
+
+  <span class="na">chrome</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">selenium/node-chrome:3.10.0</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">hub</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">HUB_HOST=hub</span>
+
+  <span class="na">firefox</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">selenium/node-firefox:3.10.0</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">hub</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">HUB_HOST=hub</span>
+</code></pre></div></div>
+
+<p>We used the <code class="highlighter-rouge">3.10.0</code> tag, which is associated with the following versions of Selenium, WebDriver, Chrome, and Firefox:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Selenium: 3.10.0
+Google Chrome: 64.0.3282.186
+ChromeDriver: 2.35
+Mozilla Firefox: 58.0.2
+Geckodriver: 0.19.1
+</code></pre></div></div>
+
+<blockquote>
+  <p>Refer to the <a href="https://github.com/SeleniumHQ/docker-selenium/releases">releases</a> page, if you’d like to use different versions of Chrome or Firefox</p>
+</blockquote>
+
+<p>Pull and then run the images:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>This guide uses Docker version 17.12.0-ce.</p>
+</blockquote>
+
+<p>Once done, open a browser and navigate to the Selenium Grid console at <a href="http://localhost:4444/grid/console">http://localhost:4444/grid/console</a> to ensure all is well:</p>
+
+<p><img src="/assets/img/blog/selenium-grid-docker-test/console1.png" style="max-width:90%;padding-top:20px;" alt="selenium grid console" /></p>
+
+<p>Configure the remote driver in the test file by updating the <code class="highlighter-rouge">setUp</code> method:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">caps</span> <span class="o">=</span> <span class="p">{</span><span class="s">'browserName'</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'BROWSER'</span><span class="p">,</span> <span class="s">'chrome'</span><span class="p">)}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Remote</span><span class="p">(</span>
+        <span class="n">command_executor</span><span class="o">=</span><span class="s">'http://localhost:4444/wd/hub'</span><span class="p">,</span>
+        <span class="n">desired_capabilities</span><span class="o">=</span><span class="n">caps</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p>Make sure to add the import as well:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+</code></pre></div></div>
+
+<p>Run the test via Selenium Grid on the Chrome node:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">BROWSER</span><span class="o">=</span>chrome <span class="o">&amp;&amp;</span> python test.py
+
+....
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 4 tests <span class="k">in </span>52.364s
+
+OK
+</code></pre></div></div>
+
+<p>Try Firefox as well:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">BROWSER</span><span class="o">=</span>firefox <span class="o">&amp;&amp;</span> python test.py
+
+....
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 4 tests <span class="k">in </span>53.367s
+
+OK
+</code></pre></div></div>
+
+<p>To simulate a longer test run, let’s run the same test sequentially twenty times - ten on Chrome, ten on Firefox.</p>
+
+<p>Add a new file called <em>sequential_test_run.py</em> to the project root:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_call</span>
+
+
+<span class="k">for</span> <span class="n">counter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">chrome_cmd</span> <span class="o">=</span> <span class="s">'export BROWSER=chrome &amp;&amp; python test.py'</span>
+    <span class="n">firefox_cmd</span> <span class="o">=</span> <span class="s">'export BROWSER=firefox &amp;&amp; python test.py'</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">chrome_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">firefox_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Run the tests:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python sequential_test_run.py
+</code></pre></div></div>
+
+<p><em>Execution time</em>: about 18 minutes</p>
+
+<h2 id="distributed-vs-parallel">Distributed vs Parallel</h2>
+
+<p>That’s all well and good, but the tests are still not running in parallel.</p>
+
+<blockquote>
+  <p>This can confusing as “parallel” and “distributed” are often used interchangeably by testers and developers. Review <a href="https://cs.stackexchange.com/questions/1580/distributed-vs-parallel-computing">Distributed vs parallel computing</a> for more info.</p>
+</blockquote>
+
+<p>Thus far we’ve only dealt with distributing the tests across multiple machines, which is handled by Selenium Grid. The test runner or framework, like <a href="https://docs.pytest.org">pytest</a> or <a href="http://nose.readthedocs.io/">nose</a>, is responsible for running the tests in parallel. To keep things simple, we’ll use the subprocess module rather than a full framework. It’s worth noting that if you are using either pytest or nose, check out the <a href="https://pypi.python.org/pypi/pytest-xdist">pytest-xdist</a> plugin or the <a href="http://nose.readthedocs.io/en/latest/doc_tests/test_multiprocess/multiprocess.html">Parallel Testing with nose</a> guide for help with parallel execution, respectively.</p>
+
+<h2 id="running-in-parallel">Running in Parallel</h2>
+
+<p>Add a new file called <em>parallel_test_run.py</em> to the project root:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span>
+
+
+<span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">counter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">chrome_cmd</span> <span class="o">=</span> <span class="s">'export BROWSER=chrome &amp;&amp; python test.py'</span>
+    <span class="n">firefox_cmd</span> <span class="o">=</span> <span class="s">'export BROWSER=firefox &amp;&amp; python test.py'</span>
+    <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Popen</span><span class="p">(</span><span class="n">chrome_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+    <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Popen</span><span class="p">(</span><span class="n">firefox_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">counter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">processes</span><span class="p">[</span><span class="n">counter</span><span class="p">]</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>This will run the test file concurrently twenty times using a separate process for each.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python parallel_test_run.py
+</code></pre></div></div>
+
+<p><em>Execution time</em>: about 9 minutes</p>
+
+<p>This should take a little over nine minutes to run, which, compared to running all twenty tests sequentially, cuts the execution time in half. We can speed things up even further by registering more nodes.</p>
+
+<h2 id="digital-ocean">Digital Ocean</h2>
+
+<p>Let’s spin up a Digital Ocean droplet so that we have a few more cores to work with.</p>
+
+<p>Start by <a href="https://m.do.co/c/d8f211a4b4c2">signing up</a> if you don’t already have an account, and then <a href="https://www.digitalocean.com/community/tutorials/how-to-use-the-digitalocean-api-v2">generate</a> an access token so we can use the <a href="https://developers.digitalocean.com/documentation/v2/">Digital Ocean API</a>.</p>
+
+<p>Add the token to your environment:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">DIGITAL_OCEAN_ACCESS_TOKEN</span><span class="o">=[</span>your_digital_ocean_token]
+</code></pre></div></div>
+
+<p>Provision a new droplet with Docker Machine:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine create <span class="se">\</span>
+  <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+  <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
+  <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
+  selenium-grid<span class="p">;</span>
+</code></pre></div></div>
+
+<p>Once done, point the Docker daemon at the machine and set it as the active machine:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine <span class="nb">env </span>selenium-grid
+<span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>selenium-grid<span class="k">)</span>
+</code></pre></div></div>
+
+<p>Spin up the three containers - the hub and two nodes - on the droplet:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>Grab the IP of the droplet:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine ip selenium-grid
+</code></pre></div></div>
+
+<p>Ensure Selenium Grid is up and running at  <a href="http://localhost:4444/grid/console">http://YOUR_IP:4444/grid/console</a>, and then update the IP address in the test file:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">command_executor</span><span class="o">=</span><span class="s">'http://YOUR_IP:4444/wd/hub'</span><span class="p">,</span>
+</code></pre></div></div>
+
+<p>Run the tests in parallel again:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python parallel_test_run.py
+</code></pre></div></div>
+
+<p>Refresh the Grid console. Two tests should be running while the remaining 18 are queued:</p>
+
+<p><img src="/assets/img/blog/selenium-grid-docker-test/console2.png" style="max-width:90%;padding-top:20px;" alt="selenium grid console" /></p>
+
+<p>Again, this should take about nine minutes to run.</p>
+
+<h2 id="docker-swarm-mode">Docker Swarm Mode</h2>
+
+<p>Moving right along, we should spin up a few more nodes for the tests to run on. However, since there are limited resources on the droplet, let’s add a number of droplets for the nodes to reside on. This is where Docker Swarm comes into play.</p>
+
+<p>To create the Swarm, let’s start fresh by first spinning down the old droplet:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine <span class="nb">rm </span>selenium-grid
+</code></pre></div></div>
+
+<p>Then, spin up five new droplets:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="k">for </span>i <span class="k">in </span>1 2 3 4 5<span class="p">;</span> <span class="k">do
+    </span>docker-machine create <span class="se">\</span>
+      <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+      <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
+      <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
+      node-<span class="nv">$i</span><span class="p">;</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>Initialize <a href="https://docs.docker.com/engine/swarm/">Swarm mode</a> on <code class="highlighter-rouge">node-1</code>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine ssh node-1 <span class="nt">--</span> docker swarm init <span class="nt">--advertise-addr</span> <span class="k">$(</span>docker-machine ip node-1<span class="k">)</span>
+</code></pre></div></div>
+
+<p>You should see something similar to:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Swarm initialized: current node <span class="o">(</span>v5ws8viwik72643a4gty5j9m1<span class="o">)</span> is now a manager.
+
+To add a worker to this swarm, run the following <span class="nb">command</span>:
+
+    docker swarm <span class="nb">join</span> <span class="nt">--token</span> SWMTKN-1-5pbf36cwvksze8bpb8dnguduhgzvdzoxxnnycimxrjcjrnu4sv-4kgwl6eedg3aowmqukm639j3f 167.99.49.144:2377
+
+To add a manager to this swarm, run <span class="s1">'docker swarm join-token manager'</span> and follow the instructions.
+</code></pre></div></div>
+
+<p>Take note of the join command as it contains a token that we need in order to add node workers to the Swarm.</p>
+
+<blockquote>
+  <p>If you forget, you can always run <code class="highlighter-rouge">docker-machine ssh node-1 -- docker swarm join-token worker</code>.</p>
+</blockquote>
+
+<p>Add the remaining four nodes to the Swarm as <a href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/">workers</a>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="k">for </span>i <span class="k">in </span>2 3 4 5<span class="p">;</span> <span class="k">do
+    </span>docker-machine ssh node-<span class="nv">$i</span> <span class="se">\</span>
+      <span class="nt">--</span> docker swarm <span class="nb">join</span> <span class="nt">--token</span> YOUR_JOIN_TOKEN<span class="p">;</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>Update the <em>docker-compose.yml</em> file to deploy Selenium Grid in Swarm mode:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.5'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">hub</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">selenium/hub:3.10.0</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">4444:4444</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">mode</span><span class="pi">:</span> <span class="s">replicated</span>
+      <span class="na">replicas</span><span class="pi">:</span> <span class="s">1</span>
+      <span class="na">placement</span><span class="pi">:</span>
+        <span class="na">constraints</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="s">node.role == worker</span>
+
+  <span class="na">chrome</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">selenium/node-chrome:3.10.0</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">/dev/urandom:/dev/random</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">hub</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">HUB_PORT_4444_TCP_ADDR=hub</span>
+      <span class="pi">-</span> <span class="s">HUB_PORT_4444_TCP_PORT=4444</span>
+      <span class="pi">-</span> <span class="s">NODE_MAX_SESSION=1</span>
+    <span class="na">entrypoint</span><span class="pi">:</span> <span class="s">bash -c 'SE_OPTS="-host $$HOSTNAME -port 5555" /opt/bin/entry_point.sh'</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">5555:5555</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">replicas</span><span class="pi">:</span> <span class="s">1</span>
+      <span class="na">placement</span><span class="pi">:</span>
+        <span class="na">constraints</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="s">node.role == worker</span>
+
+  <span class="na">firefox</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">selenium/node-firefox:3.10.0</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">/dev/urandom:/dev/random</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">hub</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">HUB_PORT_4444_TCP_ADDR=hub</span>
+      <span class="pi">-</span> <span class="s">HUB_PORT_4444_TCP_PORT=4444</span>
+      <span class="pi">-</span> <span class="s">NODE_MAX_SESSION=1</span>
+    <span class="na">entrypoint</span><span class="pi">:</span> <span class="s">bash -c 'SE_OPTS="-host $$HOSTNAME -port 5556" /opt/bin/entry_point.sh'</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">5556:5556</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">replicas</span><span class="pi">:</span> <span class="s">1</span>
+      <span class="na">placement</span><span class="pi">:</span>
+        <span class="na">constraints</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="s">node.role == worker</span>
+</code></pre></div></div>
+
+<p>Major changes:</p>
+
+<ol>
+  <li><em>Placement constraints</em>: We set up a <a href="https://docs.docker.com/engine/swarm/services/#placement-constraints">placement constraint</a> of <code class="highlighter-rouge">node.role == worker</code> so that all tasks will be run on the worker nodes. It’s generally best to keep manager nodes free from CPU and/or memory-intensive tasks.</li>
+  <li><em>Entrypoint</em>: Here, we updated the host set in <code class="highlighter-rouge">SE_OPTS</code> within the <em>entry_point.sh</em> <a href="https://github.com/SeleniumHQ/docker-selenium/blob/master/NodeBase/entry_point.sh">script</a> so nodes running on different hosts will be able to successfully link back to the hub.</li>
+</ol>
+
+<p>With that, point the Docker daemon  at <code class="highlighter-rouge">node-1</code> and deploy the stack:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>node-1<span class="k">)</span>
+<span class="nv">$ </span>docker stack deploy <span class="nt">--compose-file</span><span class="o">=</span>docker-compose.yml selenium
+</code></pre></div></div>
+
+<p>Add a few more nodes:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker service scale <span class="nv">selenium_chrome</span><span class="o">=</span>4 <span class="nv">selenium_firefox</span><span class="o">=</span>4
+</code></pre></div></div>
+
+<p>Review the stack:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker stack ps selenium
+</code></pre></div></div>
+
+<p>You should see something like:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ID                  NAME                 IMAGE                          NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
+vv6di392ztue        selenium_hub.1       selenium/hub:3.10.0            node-4              Running             Running 3 minutes ago
+49zc138dfnpg        selenium_firefox.1   selenium/node-firefox:3.10.0   node-3              Running             Running 2 minutes ago
+ogh30bo97zst        selenium_chrome.1    selenium/node-chrome:3.10.0    node-2              Running             Running 2 minutes ago
+p5k7shum35t5        selenium_firefox.2   selenium/node-firefox:3.10.0   node-2              Running             Running 34 seconds ago
+t8u745apsqy9        selenium_chrome.2    selenium/node-chrome:3.10.0    node-5              Running             Running 16 seconds ago
+vqojb3zt24ns        selenium_firefox.3   selenium/node-firefox:3.10.0   node-5              Running             Running 18 seconds ago
+h7vwmg5nmi9m        selenium_chrome.3    selenium/node-chrome:3.10.0    node-4              Running             Running 31 seconds ago
+k3kuas6550rp        selenium_firefox.4   selenium/node-firefox:3.10.0   node-4              Running             Running 33 seconds ago
+q0uhbsdesixu        selenium_chrome.4    selenium/node-chrome:3.10.0    node-3              Running             Running 33 seconds ago
+</code></pre></div></div>
+
+<p>Then, grab the name of the node running the hub along with the IP address and set it as an environment variable:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ NODE</span><span class="o">=</span><span class="k">$(</span>docker service ps <span class="nt">--format</span> <span class="s2">"{{.Node}}"</span> selenium_hub<span class="k">)</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">NODE_HUB_ADDRESS</span><span class="o">=</span><span class="k">$(</span>docker-machine ip <span class="nv">$NODE</span><span class="k">)</span>
+</code></pre></div></div>
+
+<p>Update the <code class="highlighter-rouge">setUp</code> method again:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">caps</span> <span class="o">=</span> <span class="p">{</span><span class="s">'browserName'</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'BROWSER'</span><span class="p">,</span> <span class="s">'chrome'</span><span class="p">)}</span>
+    <span class="n">address</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'NODE_HUB_ADDRESS'</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Remote</span><span class="p">(</span>
+        <span class="n">command_executor</span><span class="o">=</span><span class="n">f</span><span class="s">'http://{address}:4444/wd/hub'</span><span class="p">,</span>
+        <span class="n">desired_capabilities</span><span class="o">=</span><span class="n">caps</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p>Test!</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python parallel_test_run.py
+</code></pre></div></div>
+
+<p><img src="/assets/img/blog/selenium-grid-docker-test/console3.png" style="max-width:90%;padding-top:20px;" alt="selenium grid console" /></p>
+
+<p><em>Execution time</em>: about 2.5 minutes</p>
+
+<p>Remove the droplets:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine <span class="nb">rm </span>node-1 node-2 node-3 node-4 node-5 <span class="nt">-y</span>
+</code></pre></div></div>
+
+<p>To recap, to create a Swarm, we:</p>
+
+<ol>
+  <li>Spun up new droplets</li>
+  <li>Initialized Swarm mode on one of the droplets (<code class="highlighter-rouge">node-1</code>, in this case)</li>
+  <li>Added the nodes to the Swarm as workers</li>
+</ol>
+
+<h2 id="automation-scripts">Automation Scripts</h2>
+
+<p>Since it’s not cost-effective to leave the droplets idle, waiting for the client to run tests, we should automatically provision the droplets before test runs and then deprovision them after.</p>
+
+<p>Let’s write a script that:</p>
+
+<ul>
+  <li>Provisions the droplets with Docker Machine</li>
+  <li>Configures Docker Swarm mode</li>
+  <li>Adds nodes to the Swarm</li>
+  <li>Deploys Selenium Grid</li>
+  <li>Runs the tests</li>
+  <li>Spins down the droplets</li>
+</ul>
+
+<p><em>create.sh</em>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+
+<span class="nb">echo</span> <span class="s2">"Spinning up five droplets..."</span>
+
+<span class="k">for </span>i <span class="k">in </span>1 2 3 4 5<span class="p">;</span> <span class="k">do
+  </span>docker-machine create <span class="se">\</span>
+    <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+    <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
+    <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
+    node-<span class="nv">$i</span><span class="p">;</span>
+<span class="k">done
+
+
+</span><span class="nb">echo</span> <span class="s2">"Initializing Swarm mode..."</span>
+
+docker-machine ssh node-1 <span class="nt">--</span> docker swarm init <span class="nt">--advertise-addr</span> <span class="k">$(</span>docker-machine ip node-1<span class="k">)</span>
+
+docker-machine ssh node-1 <span class="nt">--</span> docker node update <span class="nt">--availability</span> drain node-1
+
+<span class="nb">echo</span> <span class="s2">"Adding the nodes to the Swarm..."</span>
+
+<span class="nv">TOKEN</span><span class="o">=</span><span class="sb">`</span>docker-machine ssh node-1 docker swarm join-token worker | <span class="nb">grep </span>token | <span class="nb">awk</span> <span class="s1">'{ print $5 }'</span><span class="sb">`</span>
+
+docker-machine ssh node-2 <span class="s2">"docker swarm join --token </span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2"> </span><span class="k">$(</span>docker-machine ip node-1<span class="k">)</span><span class="s2">:2377"</span>
+docker-machine ssh node-3 <span class="s2">"docker swarm join --token </span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2"> </span><span class="k">$(</span>docker-machine ip node-1<span class="k">)</span><span class="s2">:2377"</span>
+docker-machine ssh node-4 <span class="s2">"docker swarm join --token </span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2"> </span><span class="k">$(</span>docker-machine ip node-1<span class="k">)</span><span class="s2">:2377"</span>
+docker-machine ssh node-5 <span class="s2">"docker swarm join --token </span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2"> </span><span class="k">$(</span>docker-machine ip node-1<span class="k">)</span><span class="s2">:2377"</span>
+
+
+<span class="nb">echo</span> <span class="s2">"Deploying Selenium Grid to http://</span><span class="k">$(</span>docker-machine ip node-1<span class="k">)</span><span class="s2">:4444..."</span>
+
+<span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>node-1<span class="k">)</span>
+docker stack deploy <span class="nt">--compose-file</span><span class="o">=</span>docker-compose.yml selenium
+docker service scale <span class="nv">selenium_chrome</span><span class="o">=</span>2 <span class="nv">selenium_firefox</span><span class="o">=</span>2
+
+
+<span class="nb">echo</span> <span class="s2">"Set environment variable..."</span>
+
+<span class="nv">NODE</span><span class="o">=</span><span class="k">$(</span>docker service ps <span class="nt">--format</span> <span class="s2">"{{.Node}}"</span> selenium_hub<span class="k">)</span>
+<span class="nb">export </span><span class="nv">NODE_HUB_ADDRESS</span><span class="o">=</span><span class="k">$(</span>docker-machine ip <span class="nv">$NODE</span><span class="k">)</span>
+</code></pre></div></div>
+
+<p><em>destroy.sh</em>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+docker-machine <span class="nb">rm </span>node-1 node-2 node-3 node-4 node-5 <span class="nt">-y</span>
+</code></pre></div></div>
+
+<p>Test!</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>sh create.sh
+<span class="nv">$ </span>python parallel_test_run.py
+<span class="nv">$ </span>sh destroy.sh
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This article looked at configuring Selenium Grid with Docker and Docker Swarm to distribute tests across a number of machines.</p>
+
+<p>The full code can be found in the <a href="https://github.com/testdrivenio/selenium-grid-docker-swarm-test">selenium-grid-docker-swarm-test</a> repository.</p>
+
+<p>Looking for some challenges?</p>
+
+<ol>
+  <li>Try further reducing test execution time by running all test methods in parallel on different Selenium Grid nodes.</li>
+  <li>Configure the running of tests on Travis or Jenkins (or some other CI tool) so they are part of the continuous integration process.</li>
+</ol>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Distributed Testing with Selenium Grid and Docker&amp;url=https%3A%2F%2Ftestdriven.io/distributed-testing-with-selenium-grid&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

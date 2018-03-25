@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/flask-rq/aysnc_python_redis.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This post looks at how to configure Redis Queue to handle long-running tasks in a Flask app.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="python, web development, flask, redis, redis queue, asynchronous tasks, rq, task queue, docker">
+  
+  <!-- title -->
+  
+    <title>Asynchronous Tasks with Flask and Redis Queue - TestDriven.io</title>
+    <meta property="og:title" content="Asynchronous Tasks with Flask and Redis Queue" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/flask-rq/aysnc_python_redis.png" style="max-width:100%" alt="python and redis">
+            </div>
+          
+
+          <h1>Asynchronous Tasks with Flask and Redis Queue</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/herman">Michael Herman</a></span> on <span class="badge badge-secondary">Feb 27, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Asynchronous Tasks with Flask and Redis Queue&amp;url=https%3A%2F%2Ftestdriven.io/asynchronous-tasks-with-flask-and-redis-queue&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>If a long-running task is part of your application’s workflow you should handle it in the background, outside the normal flow.</p>
+
+<p>Perhaps your web application requires users to submit a thumbnail (which will probably need to be re-sized) and confirm their email when they register. If your application processed the image and sent a confirmation email directly in the request handler, then the end user would have to wait for them both to finish. Instead, you’ll want to pass these tasks off to a task queue and let a separate worker process deal with it, so you can immediately send a response back to the client. The end user can do other things on the client-side and your application is free to respond to requests from other users.</p>
+
+<p>This post looks at how to configure <a href="http://python-rq.org/">Redis Queue</a> (RQ) to handle long-running tasks in a Flask app.</p>
+
+<blockquote>
+  <p>Celery is a viable solution as well. It’s quite a bit more complex and brings in more dependencies than Redis Queue, though.</p>
+</blockquote>
+
+<h2 id="objectives">Objectives</h2>
+
+<p>By the end of this post you should be able to:</p>
+
+<ol>
+  <li>Integrate Redis Queue into a Flask app and create tasks.</li>
+  <li>Containerize Flask and Redis with Docker.</li>
+  <li>Run long-running tasks in the background with a separate worker process.</li>
+  <li>Set up <a href="https://github.com/eoranged/rq-dashboard">RQ Dashboard</a> to monitor  queues, jobs, and workers.</li>
+  <li>Scale the worker count with Docker.</li>
+</ol>
+
+<h2 id="workflow">Workflow</h2>
+
+<p>Our goal is to develop a Flask application that works in conjunction with Redis Queue to handle long-running processes outside the normal request/response cycle.</p>
+
+<ol>
+  <li>The end user kicks off a new task via a POST request to the server-side</li>
+  <li>Within the view, a task is added to the queue and the task id is sent back to the client-side</li>
+  <li>Using AJAX, the client continues to poll the server to check the status of the task while the task itself is being ran in the background</li>
+</ol>
+
+<p><img src="/assets/img/blog/flask-rq/flask-rq-flow.png" style="max-width:70%;padding-top:20px;" alt="flask and redis queue user flow" /></p>
+
+<p>In the end, the app will look like this:</p>
+
+<p><img src="/assets/img/blog/flask-rq/app.gif" style="max-width:70%;padding-top:20px;" alt="final app" /></p>
+
+<h2 id="project-setup">Project Setup</h2>
+
+<p>Want to follow along? Clone down the base project, and then review the code and project structure:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/mjhea0/flask-redis-queue <span class="nt">--branch</span> base <span class="nt">--single-branch</span>
+<span class="nv">$ </span><span class="nb">cd </span>flask-redis-queue
+</code></pre></div></div>
+
+<p>Since we’ll need to manage three processes in total (Flask, Redis, worker), we’ll use Docker to simply our workflow by wiring them altogether to run in one terminal window.</p>
+
+<p>To test, run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>Open your browser to <a href="http://localhost:5001">http://localhost:5001</a>. You should see:</p>
+
+<p><img src="/assets/img/blog/flask-rq/flask_redis_queue.png" style="max-width:70%" alt="flask, redis queue, docker" /></p>
+
+<h2 id="trigger-a-task">Trigger a Task</h2>
+
+<p>An event handler in <em>project/client/static/main.js</em> is set up that listens for a button click and sends an AJAX POST request to the server with the appropriate task type - <code class="highlighter-rouge">1</code>, <code class="highlighter-rouge">2</code>, or <code class="highlighter-rouge">3</code>.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">$</span><span class="p">(</span><span class="s1">'.btn'</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">url</span><span class="p">:</span> <span class="s1">'/tasks'</span><span class="p">,</span>
+    <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">'type'</span><span class="p">)</span> <span class="p">},</span>
+    <span class="na">method</span><span class="p">:</span> <span class="s1">'POST'</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">done</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">getStatus</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">task_id</span><span class="p">)</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">fail</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>On the server-side, a view is already configured to handle the request in <em>project/server/main/views.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@main_blueprint.route</span><span class="p">(</span><span class="s">'/tasks'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">run_task</span><span class="p">():</span>
+    <span class="n">task_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">'type'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">task_type</span><span class="p">),</span> <span class="mi">202</span>
+</code></pre></div></div>
+
+<p>We just need to wire up Redis Queue.</p>
+
+<h2 id="redis-queue">Redis Queue</h2>
+
+<p>So, we need to spin up two new processes - Redis and a worker. Add them to the <em>docker-compose.yml</em> file:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.5'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">web</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">.</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">web</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">web</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">5001:5000'</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">python manage.py run -h 0.0.0.0</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.:/usr/src/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">FLASK_DEBUG=1</span>
+      <span class="pi">-</span> <span class="s">APP_SETTINGS=project.server.config.DevelopmentConfig</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+
+  <span class="na">worker</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">web</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">python manage.py run_worker</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.:/usr/src/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">APP_SETTINGS=project.server.config.DevelopmentConfig</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:3.2.11</span>
+</code></pre></div></div>
+
+<p>Add the task to a new file called <em>tasks.py</em> in “project/server/main”:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># project/server/main/tasks.py</span>
+
+
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="k">def</span> <span class="nf">create_task</span><span class="p">(</span><span class="n">task_type</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">task_type</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</code></pre></div></div>
+
+<p>Update the view to connect to Redis, enqueue the task, and respond with the id:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@main_blueprint.route</span><span class="p">(</span><span class="s">'/tasks'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">run_task</span><span class="p">():</span>
+    <span class="n">task_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">'type'</span><span class="p">]</span>
+    <span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'REDIS_URL'</span><span class="p">])):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">create_task</span><span class="p">,</span> <span class="n">task_type</span><span class="p">)</span>
+    <span class="n">response_object</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">,</span>
+        <span class="s">'data'</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">'task_id'</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">),</span> <span class="mi">202</span>
+</code></pre></div></div>
+
+<p>Don’t forget the imports:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> \
+    <span class="n">request</span><span class="p">,</span> <span class="n">current_app</span>
+
+<span class="kn">from</span> <span class="nn">project.server.main.tasks</span> <span class="kn">import</span> <span class="n">create_task</span>
+</code></pre></div></div>
+
+<p>Update <code class="highlighter-rouge">BaseConfig</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BaseConfig</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="s">"""Base configuration."""</span>
+    <span class="n">WTF_CSRF_ENABLED</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">REDIS_URL</span> <span class="o">=</span> <span class="s">'redis://redis:6379/0'</span>
+    <span class="n">QUEUES</span> <span class="o">=</span> <span class="p">[</span><span class="s">'default'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Did you notice that we referenced the <code class="highlighter-rouge">redis</code> service (from <em>docker-compose.yml</em>) in the <code class="highlighter-rouge">REDIS_URL</code> rather than <code class="highlighter-rouge">localhost</code> or some other IP? Review the Docker Compose <a href="https://docs.docker.com/compose/networking/">docs</a> for more info on connecting to other services via the hostname.</p>
+
+<p>Finally, we can use a Redis Queue <a href="http://python-rq.org/docs/workers/">worker</a>, to process tasks at the top of the queue.</p>
+
+<p><em>manage.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@cli.command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">run_worker</span><span class="p">():</span>
+    <span class="n">redis_url</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'REDIS_URL'</span><span class="p">]</span>
+    <span class="n">redis_connection</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">redis_url</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">redis_connection</span><span class="p">):</span>
+        <span class="n">worker</span> <span class="o">=</span> <span class="n">Worker</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'QUEUES'</span><span class="p">])</span>
+        <span class="n">worker</span><span class="o">.</span><span class="n">work</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Here, we set up a custom CLI command to fire the worker.</p>
+
+<p>It’s important to note that the <code class="highlighter-rouge">@cli.command()</code> decorator will provide access to the application context along with the associated config variables from <em>project/server/config.py</em> when the command is executed.</p>
+
+<p>Add the imports as well:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">Worker</span>
+</code></pre></div></div>
+
+<p>Add the dependencies to the requirements file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis==2.10.6
+rq==0.10.0
+</code></pre></div></div>
+
+<p>Build and spin up the new containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>To trigger a new task, run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-F</span> <span class="nb">type</span><span class="o">=</span>0 http://localhost:5001/tasks
+</code></pre></div></div>
+
+<p>You should see something like:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+  <span class="s2">"data"</span>: <span class="o">{</span>
+    <span class="s2">"task_id"</span>: <span class="s2">"bdad64d0-3865-430e-9cc3-ec1410ddb0fd"</span>
+  <span class="o">}</span>,
+  <span class="s2">"status"</span>: <span class="s2">"success"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="task-status">Task Status</h2>
+
+<p>Turn back to the event handler on the client-side:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">$</span><span class="p">(</span><span class="s1">'.btn'</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">url</span><span class="p">:</span> <span class="s1">'/tasks'</span><span class="p">,</span>
+    <span class="na">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">'type'</span><span class="p">)</span> <span class="p">},</span>
+    <span class="na">method</span><span class="p">:</span> <span class="s1">'POST'</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">done</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">getStatus</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">task_id</span><span class="p">)</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">fail</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Once the response comes back from the original AJAX request, we then continue to call <code class="highlighter-rouge">getStatus()</code> with the task id every second. If the response is successful, a new row is added to the table on the DOM.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getStatus</span><span class="p">(</span><span class="nx">taskID</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">url</span><span class="p">:</span> <span class="s2">`/tasks/</span><span class="p">${</span><span class="nx">taskID</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="na">method</span><span class="p">:</span> <span class="s1">'GET'</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">done</span><span class="p">((</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">html</span> <span class="o">=</span> <span class="s2">`
+      &lt;tr&gt;
+        &lt;td&gt;</span><span class="p">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">task_id</span><span class="p">}</span><span class="s2">&lt;/td&gt;
+        &lt;td&gt;</span><span class="p">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">task_status</span><span class="p">}</span><span class="s2">&lt;/td&gt;
+        &lt;td&gt;</span><span class="p">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">task_result</span><span class="p">}</span><span class="s2">&lt;/td&gt;
+      &lt;/tr&gt;`</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">'#tasks'</span><span class="p">).</span><span class="nx">prepend</span><span class="p">(</span><span class="nx">html</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">taskStatus</span> <span class="o">=</span> <span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">task_status</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">taskStatus</span> <span class="o">===</span> <span class="s1">'finished'</span> <span class="o">||</span> <span class="nx">taskStatus</span> <span class="o">===</span> <span class="s1">'failed'</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">getStatus</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">task_id</span><span class="p">);</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">fail</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Update the view:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@main_blueprint.route</span><span class="p">(</span><span class="s">'/tasks/&lt;task_id&gt;'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="n">task_id</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'REDIS_URL'</span><span class="p">])):</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">fetch_job</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">task</span><span class="p">:</span>
+        <span class="n">response_object</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'status'</span><span class="p">:</span> <span class="s">'success'</span><span class="p">,</span>
+            <span class="s">'data'</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">'task_id'</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">get_id</span><span class="p">(),</span>
+                <span class="s">'task_status'</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">get_status</span><span class="p">(),</span>
+                <span class="s">'task_result'</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">result</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">response_object</span> <span class="o">=</span> <span class="p">{</span><span class="s">'status'</span><span class="p">:</span> <span class="s">'error'</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">response_object</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Add a new task to the queue:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-F</span> <span class="nb">type</span><span class="o">=</span>1 http://localhost:5001/tasks
+</code></pre></div></div>
+
+<p>Then, grab the <code class="highlighter-rouge">task_id</code> from the response and call the updated endpoint to view the status:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl http://localhost:5001/tasks/5819789f-ebd7-4e67-afc3-5621c28acf02
+
+<span class="o">{</span>
+  <span class="s2">"data"</span>: <span class="o">{</span>
+    <span class="s2">"task_id"</span>: <span class="s2">"5819789f-ebd7-4e67-afc3-5621c28acf02"</span>,
+    <span class="s2">"task_result"</span>: <span class="nb">true</span>,
+    <span class="s2">"task_status"</span>: <span class="s2">"finished"</span>
+  <span class="o">}</span>,
+  <span class="s2">"status"</span>: <span class="s2">"success"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Test it out in the browser as well:</p>
+
+<p><img src="/assets/img/blog/flask-rq/flask_redis_queue_updated.png" style="max-width:70%" alt="flask, redis queue, docker" /></p>
+
+<h2 id="dashboard">Dashboard</h2>
+
+<p><a href="https://github.com/eoranged/rq-dashboard">RQ Dashboard</a> is a lightweight, web-based monitoring system for Redis Queue.</p>
+
+<p>To set up, first add a new directory to the “project” directory called “dashboard”. Then, add a new <em>Dockerfile</em> to that newly created directory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM python:3.6.4-alpine
+
+RUN pip install rq-dashboard
+
+EXPOSE 9181
+
+CMD ["rq-dashboard"]
+</code></pre></div></div>
+
+<p>Simply add the service to the <em>docker-compose.yml</em> file like so:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.5'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">web</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">.</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">web</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">web</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">5001:5000'</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">python manage.py run -h 0.0.0.0</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.:/usr/src/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">FLASK_DEBUG=1</span>
+      <span class="pi">-</span> <span class="s">APP_SETTINGS=project.server.config.DevelopmentConfig</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+
+  <span class="na">worker</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">web</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">python manage.py run_worker</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.:/usr/src/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">APP_SETTINGS=project.server.config.DevelopmentConfig</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:3.2.11</span>
+
+  <span class="na">dashboard</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">./project/dashboard</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">dashboard</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">dashboard</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">9181:9181'</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">rq-dashboard -H redis</span>
+</code></pre></div></div>
+
+<p>Build the image and spin up the container:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>Navigate to <a href="http://localhost:9181">http://localhost:9181</a> to view the dashboard:</p>
+
+<p><img src="/assets/img/blog/flask-rq/rq_dashboard.png" style="max-width:70%;padding-top:20px;" alt="rq dashboard" /></p>
+
+<p>Kick off a few jobs to fully test the dashboard:</p>
+
+<p><img src="/assets/img/blog/flask-rq/rq_dashboard_in_action.png" style="max-width:70%;padding-top:20px;" alt="rq dashboard" /></p>
+
+<p>Try adding a few more workers to see how that affects things:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span> <span class="nt">--scale</span> <span class="nv">worker</span><span class="o">=</span>3
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This has been a basic guide on how to configure Redis Queue to run long-running tasks in a Flask app. You should let the queue handle any processes that could block or slow down the user-facing code.</p>
+
+<p>Looking for some challenges?</p>
+
+<ol>
+  <li>Spin up <a href="https://m.do.co/c/d8f211a4b4c2">Digital Ocean</a> and deploy this application across a number of droplets using Docker Swarm.</li>
+  <li>Write unit tests for the new endpoints. (Mock out the Redis instance with <a href="https://github.com/jamesls/fakeredis">fakeredis</a>)</li>
+  <li>Instead of polling the server, try using <a href="https://flask-socketio.readthedocs.io">Flask-SocketIO</a> to open up a websocket connection.</li>
+</ol>
+
+<p>Grab the code from the <a href="https://github.com/mjhea0/flask-redis-queue">repo</a>.</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Asynchronous Tasks with Flask and Redis Queue&amp;url=https%3A%2F%2Ftestdriven.io/asynchronous-tasks-with-flask-and-redis-queue&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/web_scraper_python_selenium.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This post looks at how to speed up a Python web scraper with multiprocessing.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="web scraping, python, multiprocessing, scraping, crawling, web crawling, selenium, concurrency, webdriver">
+  
+  <!-- title -->
+  
+    <title>Building A Concurrent Web Scraper With Python and Selenium - TestDriven.io</title>
+    <meta property="og:title" content="Building A Concurrent Web Scraper With Python and Selenium" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/web_scraper_python_selenium.png" style="max-width:100%" alt="python and selenium">
+            </div>
+          
+
+          <h1>Building A Concurrent Web Scraper With Python and Selenium</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/pollman">Caleb Pollman</a></span> on <span class="badge badge-secondary">Feb 19, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Building A Concurrent Web Scraper With Python and Selenium&amp;url=https%3A%2F%2Ftestdriven.io/building-a-concurrent-web-scraper-with-python-and-selenium&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>This is a quick post that looks at how to speed up a simple, Python-based web scraping and crawling script with parallel processing via the multiprocessing library. We’ll also break down the script itself and show how to test the parsing functionality.</p>
+
+<p>After completing this tutorial you should be able to:</p>
+
+<ol>
+  <li>Scrape and crawl websites with Selenium and parse HTML with Beautiful Soup</li>
+  <li>Set up unittest to test the scraping and parsing functionalities</li>
+  <li>Set up multiprocessing to execute the web scraper in parallel</li>
+  <li>Configure headless mode for ChromeDriver with Selenium</li>
+</ol>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#project-setup" id="markdown-toc-project-setup">Project Setup</a></li>
+  <li><a href="#script-overview" id="markdown-toc-script-overview">Script Overview</a></li>
+  <li><a href="#testing" id="markdown-toc-testing">Testing</a></li>
+  <li><a href="#configure-multiprocessing" id="markdown-toc-configure-multiprocessing">Configure Multiprocessing</a></li>
+  <li><a href="#configure-headless-chromedriver" id="markdown-toc-configure-headless-chromedriver">Configure Headless ChromeDriver</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="project-setup">Project Setup</h2>
+
+<p>Clone down the repo if you’d like to follow along. From the command line run the following commands:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone git@github.com:calebpollman/web-scraping-parallel-processing.git
+<span class="nv">$ </span><span class="nb">cd </span>web-scraping-parallel-processing
+<span class="nv">$ </span>python3.6 <span class="nt">-m</span> venv <span class="nb">env</span>
+<span class="nv">$ </span><span class="nb">source env</span>/bin/activate
+<span class="o">(</span><span class="nb">env</span><span class="o">)</span><span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</code></pre></div></div>
+
+<blockquote>
+  <p>The above commands may differ depending on your environment.</p>
+</blockquote>
+
+<p>Install <a href="https://sites.google.com/a/chromium.org/ChromeDriver/">ChromeDriver</a> globally. (We’re using version <a href="https://chromedriver.storage.googleapis.com/index.html?path=2.35/">2.3.5</a>).</p>
+
+<h2 id="script-overview">Script Overview</h2>
+
+<p>The script traverses and scrapes the first 20 pages of <a href="https://news.ycombinator.com/">Hacker News</a> for information about the current articles listed using <a href="http://www.seleniumhq.org/projects/webdriver/">Selenium</a> to automate interaction with the site and <a href="https://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a> to parse the HTML.</p>
+
+<p><em>script.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">time</span>
+
+<span class="kn">from</span> <span class="nn">scrapers.scraper</span> <span class="kn">import</span> <span class="n">get_driver</span><span class="p">,</span> <span class="n">connect_to_base</span><span class="p">,</span> \
+    <span class="n">parse_html</span><span class="p">,</span> <span class="n">write_to_file</span>
+
+
+<span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="n">page_number</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Error connecting to hackernews'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">current_page</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">Y</span><span class="si">%</span><span class="s">m</span><span class="si">%</span><span class="s">d</span><span class="si">%</span><span class="s">H</span><span class="si">%</span><span class="s">M</span><span class="si">%</span><span class="s">S'</span><span class="p">)</span>
+    <span class="n">output_filename</span> <span class="o">=</span> <span class="n">f</span><span class="s">'output_{output_timestamp}.csv'</span>
+    <span class="n">browser</span> <span class="o">=</span> <span class="n">get_driver</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">current_page</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Scraping page #{current_page}...'</span><span class="p">)</span>
+        <span class="n">run_process</span><span class="p">(</span><span class="n">current_page</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">)</span>
+        <span class="n">current_page</span> <span class="o">=</span> <span class="n">current_page</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Elapsed run time: {elapsed_time} seconds'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Let’s start with the main-condition block. After setting a few variables, the browser is initialized via <code class="highlighter-rouge">get_driver()</code> from <em>scrapers/scraper.py</em>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="c"># set variables</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">current_page</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">Y</span><span class="si">%</span><span class="s">m</span><span class="si">%</span><span class="s">d</span><span class="si">%</span><span class="s">H</span><span class="si">%</span><span class="s">M</span><span class="si">%</span><span class="s">S'</span><span class="p">)</span>
+    <span class="n">output_filename</span> <span class="o">=</span> <span class="n">f</span><span class="s">'output_{output_timestamp}.csv'</span>
+
+    <span class="c">########</span>
+    <span class="c"># here #</span>
+    <span class="c">########</span>
+    <span class="n">browser</span> <span class="o">=</span> <span class="n">get_driver</span><span class="p">()</span>
+    <span class="c"># scrape and crawl</span>
+    <span class="k">while</span> <span class="n">current_page</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Scraping page #{current_page}...'</span><span class="p">)</span>
+        <span class="n">run_process</span><span class="p">(</span><span class="n">current_page</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">)</span>
+        <span class="n">current_page</span> <span class="o">=</span> <span class="n">current_page</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="c"># exit</span>
+    <span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Elapsed run time: {elapsed_time} seconds'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>A <code class="highlighter-rouge">while</code> loop is then configured to control the flow of the overall scraper.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="c"># set variables</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">current_page</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">Y</span><span class="si">%</span><span class="s">m</span><span class="si">%</span><span class="s">d</span><span class="si">%</span><span class="s">H</span><span class="si">%</span><span class="s">M</span><span class="si">%</span><span class="s">S'</span><span class="p">)</span>
+    <span class="n">output_filename</span> <span class="o">=</span> <span class="n">f</span><span class="s">'output_{output_timestamp}.csv'</span>
+    <span class="n">browser</span> <span class="o">=</span> <span class="n">get_driver</span><span class="p">()</span>
+    <span class="c"># scrape and crawl</span>
+
+    <span class="c">########</span>
+    <span class="c"># here #</span>
+    <span class="c">########</span>
+    <span class="k">while</span> <span class="n">current_page</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Scraping page #{current_page}...'</span><span class="p">)</span>
+        <span class="n">run_process</span><span class="p">(</span><span class="n">current_page</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">)</span>
+        <span class="n">current_page</span> <span class="o">=</span> <span class="n">current_page</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="c"># exit</span>
+    <span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Elapsed run time: {elapsed_time} seconds'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Within the loop, <code class="highlighter-rouge">run_process()</code> is called, which houses the connection and scraping functions.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="n">page_number</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Error connecting to hackernews'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>In <code class="highlighter-rouge">run_process()</code>, the browser instance and a page number are passed to <code class="highlighter-rouge">connect_to_base()</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="n">page_number</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">):</span>
+
+    <span class="c">########</span>
+    <span class="c"># here #</span>
+    <span class="c">########</span>
+    <span class="k">if</span> <span class="n">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Error connecting to hackernews'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This function attempts to connect to Hacker News and then uses Selenium’s explicit wait functionality to ensure the element with <code class="highlighter-rouge">id='hnmain'</code> has loaded before continuing.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+    <span class="n">base_url</span> <span class="o">=</span> <span class="n">f</span><span class="s">'https://news.ycombinator.com/news?p={page_number}'</span>
+    <span class="n">connection_attempts</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">connection_attempts</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="p">)</span>
+            <span class="c"># wait for table element with id = 'hnmain' to load</span>
+            <span class="c"># before returning True</span>
+            <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+                <span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s">'hnmain'</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">connection_attempts</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Error connecting to {base_url}.'</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Attempt #{connection_attempts}.'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">False</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Review the Selenium <a href="http://selenium-python.readthedocs.io/waits.html#explicit-waits">docs</a> for more information on explicit wait.</p>
+</blockquote>
+
+<p>To emulate a human user, <code class="highlighter-rouge">sleep(2)</code> is called after the browser has connected to Hacker News.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="n">page_number</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+
+        <span class="c">########</span>
+        <span class="c"># here #</span>
+        <span class="c">########</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Error connecting to hackernews'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Once the page has loaded and <code class="highlighter-rouge">sleep(2)</code> has executed, the browser grabs the HTML source, which is then passed to <code class="highlighter-rouge">parse_html()</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="n">page_number</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c">########</span>
+        <span class="c"># here #</span>
+        <span class="c">########</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+
+        <span class="c">########</span>
+        <span class="c"># here #</span>
+        <span class="c">########</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Error connecting to hackernews'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">parse_html()</code> uses Beautiful Soup to parse the HTML, generating a list of dicts with the appropriate data.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">):</span>
+    <span class="c"># create soup object</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s">'html.parser'</span><span class="p">)</span>
+    <span class="n">output_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c"># parse soup object to get article id, rank, score, and title</span>
+    <span class="n">tr_blocks</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'tr'</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s">'athing'</span><span class="p">)</span>
+    <span class="n">article</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">tr_blocks</span><span class="p">:</span>
+        <span class="n">article_id</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'id'</span><span class="p">)</span>
+        <span class="n">article_url</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'a'</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="s">'href'</span><span class="p">]</span>
+        <span class="c"># check if article is a hacker news article</span>
+        <span class="k">if</span> <span class="s">'item?id='</span> <span class="ow">in</span> <span class="n">article_url</span><span class="p">:</span>
+            <span class="n">article_url</span> <span class="o">=</span> <span class="n">f</span><span class="s">'https://news.ycombinator.com/{article_url}'</span>
+        <span class="n">load_time</span> <span class="o">=</span> <span class="n">get_load_time</span><span class="p">(</span><span class="n">article_url</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">f</span><span class="s">'score_{article_id}'</span><span class="p">)</span><span class="o">.</span><span class="n">string</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="s">'0 points'</span>
+        <span class="n">article_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'id'</span><span class="p">:</span> <span class="n">article_id</span><span class="p">,</span>
+            <span class="s">'load_time'</span><span class="p">:</span> <span class="n">load_time</span><span class="p">,</span>
+            <span class="s">'rank'</span><span class="p">:</span> <span class="n">tr</span><span class="o">.</span><span class="n">span</span><span class="o">.</span><span class="n">string</span><span class="p">,</span>
+            <span class="s">'score'</span><span class="p">:</span> <span class="n">score</span><span class="p">,</span>
+            <span class="s">'title'</span><span class="p">:</span> <span class="n">tr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">class_</span><span class="o">=</span><span class="s">'storylink'</span><span class="p">)</span><span class="o">.</span><span class="n">string</span><span class="p">,</span>
+            <span class="s">'url'</span><span class="p">:</span> <span class="n">article_url</span>
+        <span class="p">}</span>
+        <span class="c"># appends article_info to output_list</span>
+        <span class="n">output_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">article_info</span><span class="p">)</span>
+        <span class="n">article</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">output_list</span>
+</code></pre></div></div>
+
+<p>This function also passes the article URL to <code class="highlighter-rouge">get_load_time()</code>, which loads the URL and records the subsequent load time.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_load_time</span><span class="p">(</span><span class="n">article_url</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c"># set headers</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s">'User-Agent'</span><span class="p">:</span> <span class="s">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'</span><span class="p">}</span>
+        <span class="c"># make get request to article_url</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">article_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">3.000</span><span class="p">)</span>
+        <span class="c"># get page load time</span>
+        <span class="n">load_time</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="n">load_time</span> <span class="o">=</span> <span class="s">'Loading Error'</span>
+    <span class="k">return</span> <span class="n">load_time</span>
+</code></pre></div></div>
+
+<p>The output is added to a CSV file.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="n">page_number</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+
+        <span class="c">########</span>
+        <span class="c"># here #</span>
+        <span class="c">########</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Error connecting to hackernews'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">write_to_file()</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">output_list</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">'a'</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">fieldnames</span> <span class="o">=</span> <span class="p">[</span><span class="s">'id'</span><span class="p">,</span> <span class="s">'load_time'</span><span class="p">,</span> <span class="s">'rank'</span><span class="p">,</span> <span class="s">'score'</span><span class="p">,</span> <span class="s">'title'</span><span class="p">,</span> <span class="s">'url'</span><span class="p">]</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldnames</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Finally, back in the <code class="highlighter-rouge">while</code> loop, the <code class="highlighter-rouge">page_number</code> is incremented and the process starts over again.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="c"># set variables</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">current_page</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">output_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">Y</span><span class="si">%</span><span class="s">m</span><span class="si">%</span><span class="s">d</span><span class="si">%</span><span class="s">H</span><span class="si">%</span><span class="s">M</span><span class="si">%</span><span class="s">S'</span><span class="p">)</span>
+    <span class="n">output_filename</span> <span class="o">=</span> <span class="n">f</span><span class="s">'output_{output_timestamp}.csv'</span>
+    <span class="n">browser</span> <span class="o">=</span> <span class="n">get_driver</span><span class="p">()</span>
+    <span class="c"># scrape and crawl</span>
+    <span class="k">while</span> <span class="n">current_page</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Scraping page #{current_page}...'</span><span class="p">)</span>
+        <span class="n">run_process</span><span class="p">(</span><span class="n">current_page</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">browser</span><span class="p">)</span>
+
+        <span class="c">########</span>
+        <span class="c"># here #</span>
+        <span class="c">########</span>
+        <span class="n">current_page</span> <span class="o">=</span> <span class="n">current_page</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="c"># exit</span>
+    <span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Elapsed run time: {elapsed_time} seconds'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Want to test this out? Grab the full script <a href="https://github.com/calebpollman/web-scraping-parallel-processing/blob/master/script.py">here</a>.</p>
+</blockquote>
+
+<p>It took about 355 seconds (nearly 6 minutes) to run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span><span class="nb">env</span><span class="o">)</span><span class="nv">$ </span>python script.py
+Scraping page <span class="c">#1...</span>
+Scraping page <span class="c">#2...</span>
+Scraping page <span class="c">#3...</span>
+Scraping page <span class="c">#4...</span>
+Scraping page <span class="c">#5...</span>
+Scraping page <span class="c">#6...</span>
+Scraping page <span class="c">#7...</span>
+Scraping page <span class="c">#8...</span>
+Scraping page <span class="c">#9...</span>
+Scraping page <span class="c">#10...</span>
+Scraping page <span class="c">#11...</span>
+Scraping page <span class="c">#12...</span>
+Scraping page <span class="c">#13...</span>
+Scraping page <span class="c">#14...</span>
+Scraping page <span class="c">#15...</span>
+Scraping page <span class="c">#16...</span>
+Scraping page <span class="c">#17...</span>
+Scraping page <span class="c">#18...</span>
+Scraping page <span class="c">#19...</span>
+Scraping page <span class="c">#20...</span>
+Elapsed run <span class="nb">time</span>: 355.06936597824097 seconds
+</code></pre></div></div>
+
+<blockquote>
+  <p>Keep in mind that there may not be content on all 20 pages, so the elapsed time may be different on your end. This script was ran when there was content on 16 pages (461 records).</p>
+</blockquote>
+
+<p>Got it? Great! Let’s add some basic testing.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>To test the parsing functionality without initiating the browser and, thus, making repeated GET requests to Hacker News, you can download the page HTML and parse it locally. This can help avoid scenarios where you may get your IP blocked for making too many requests too quickly while writing and testing your parsing function, as well as saving you time by not needing to fire up a browser every time you run the script.</p>
+
+<p><em>test/test_scraper.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">scrapers.scraper</span> <span class="kn">import</span> <span class="n">parse_html</span>
+
+
+<span class="k">class</span> <span class="nc">TestParseFunction</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test/test.html'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">'utf-8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">html</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">test_output_is_not_none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_output_is_a_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_output_is_a_list_of_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Ensure all is well:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span><span class="nb">env</span><span class="o">)</span><span class="nv">$ </span>python <span class="nb">test</span>/test_scraper.py
+...
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 3 tests <span class="k">in </span>64.620s
+
+OK
+</code></pre></div></div>
+
+<p>64 seconds?! Want to mock <code class="highlighter-rouge">get_load_time()</code> to bypass the GET request?</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
+
+<span class="kn">from</span> <span class="nn">scrapers.scraper</span> <span class="kn">import</span> <span class="n">parse_html</span>
+
+
+<span class="k">class</span> <span class="nc">TestParseFunction</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="nd">@patch</span><span class="p">(</span><span class="s">'scrapers.scraper.get_load_time'</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_get_load_time</span><span class="p">):</span>
+        <span class="n">mock_get_load_time</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="s">'mocked!'</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test/test.html'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">'utf-8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">html</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">test_output_is_not_none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_output_is_a_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_output_is_a_list_of_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Test:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span><span class="nb">env</span><span class="o">)</span><span class="nv">$ </span>python <span class="nb">test</span>/test_scraper.py
+...
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 3 tests <span class="k">in </span>0.578s
+
+OK
+</code></pre></div></div>
+
+<h2 id="configure-multiprocessing">Configure Multiprocessing</h2>
+
+<p>Now comes up the fun part! By making just a few changes to the script, we can speed things up:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span><span class="p">,</span> <span class="n">cpu_count</span>
+
+<span class="kn">from</span> <span class="nn">scraper.scraper</span> <span class="kn">import</span> <span class="n">get_driver</span><span class="p">,</span> <span class="n">connect_to_base</span><span class="p">,</span> \
+    <span class="n">parse_html</span><span class="p">,</span> <span class="n">write_to_file</span>
+
+
+<span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="n">page_number</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="n">browser</span> <span class="o">=</span> <span class="n">get_driver</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">connect_to_base</span><span class="p">(</span><span class="n">browser</span><span class="p">,</span> <span class="n">page_number</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">page_source</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">parse_html</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        <span class="n">write_to_file</span><span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Error connecting to hackernews'</span><span class="p">)</span>
+        <span class="n">browser</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">output_timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'</span><span class="si">%</span><span class="s">Y</span><span class="si">%</span><span class="s">m</span><span class="si">%</span><span class="s">d</span><span class="si">%</span><span class="s">H</span><span class="si">%</span><span class="s">M</span><span class="si">%</span><span class="s">S'</span><span class="p">)</span>
+    <span class="n">output_filename</span> <span class="o">=</span> <span class="n">f</span><span class="s">'output_{output_timestamp}.csv'</span>
+    <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="n">cpu_count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">run_process</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">repeat</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)))</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Elapsed run time: {elapsed_time} seconds'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>With the <code class="highlighter-rouge">multiprocessing</code> library, <code class="highlighter-rouge">Pool</code> is used to spawn a number of subprocesses based on the number of CPUs available on the system (minus one since the system processes take up a core).</p>
+
+<blockquote>
+  <p>This script is tested on a i7 Macbook Pro that has <a href="https://superuser.com/a/1101314">8 cores</a>.</p>
+</blockquote>
+
+<p>Run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span><span class="nb">env</span><span class="o">)</span><span class="nv">$ </span>python script_parallel.py
+Elapsed run <span class="nb">time</span>: 62.95027780532837 seconds
+</code></pre></div></div>
+
+<blockquote>
+  <p>Check out the completed script <a href="https://github.com/calebpollman/web-scraping-parallel-processing/blob/master/script_parallel.py">here</a>.</p>
+</blockquote>
+
+<h2 id="configure-headless-chromedriver">Configure Headless ChromeDriver</h2>
+
+<p>To speed things up even further we can run Chrome in headless mode by simply updating <code class="highlighter-rouge">get_driver()</code> in <em>scrapers/scraper.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_driver</span><span class="p">():</span>
+    <span class="c"># initialize options</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">ChromeOptions</span><span class="p">()</span>
+    <span class="c"># pass in headless argument to options</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--headless'</span><span class="p">)</span>
+    <span class="c"># initialize driver</span>
+    <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">chrome_options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">driver</span>
+</code></pre></div></div>
+
+<p>Run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span><span class="nb">env</span><span class="o">)</span><span class="nv">$ </span>python script_parallel.py
+Elapsed run <span class="nb">time</span>: 58.14033889770508 seconds
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>With a small amount of variation from the original code, we were able to configure parallel processing in the script and set up ChromeDriver to run a headless browser to take the script’s run time from around 355 seconds to just over 58 seconds. In this specific scenario that’s 89.3% faster, which is a huge improvement.</p>
+
+<p>I hope this helps your scripts. You can find the code in the <a href="https://github.com/calebpollman/web-scraping-parallel-processing/">repo</a>. Cheers!</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Building A Concurrent Web Scraper With Python and Selenium&amp;url=https%3A%2F%2Ftestdriven.io/building-a-concurrent-web-scraper-with-python-and-selenium&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

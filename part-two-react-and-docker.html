@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+  <!-- description -->
+  
+  <!-- keywords -->
+  
+  <!-- title -->
+  
+    <title>Microservices with Docker, Flask, and React - React and Docker</title>
+    <meta property="og:title" content="Microservices with Docker, Flask, and React - React and Docker" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-sm-3 d-none d-md-block">
+    <div id="toc-block" class="collection">
+      <ul class="collapsible collapsible-accordion">
+        <br>
+        <!--  init break_flag -->
+        
+
+        <!-- outer loop -->
+        
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse1">
+                Part 1
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="1" class="collapse" id="collapse1" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-microservices">
+                            Microservices
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-app-overview">
+                            App Overview
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-getting-started">
+                            Getting Started
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-docker-config">
+                            Docker Config
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-postgres-setup">
+                            Postgres Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-test-setup">
+                            Test Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-flask-blueprints">
+                            Flask Blueprints
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-restful-routes">
+                            RESTful Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-deployment">
+                            Deployment
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-jinja-templates">
+                            Jinja Templates
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-workflow">
+                            Workflow
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-one-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse2">
+                Part 2
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="2" class="collapse" id="collapse2" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-intro">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-code-coverage-and-quality">
+                            Code Coverage and Quality
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-continuous-integration">
+                            Continuous Integration
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-flask-debug-toolbar">
+                            Flask Debug Toolbar
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-setup">
+                            React Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-testing-react">
+                            Testing React
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-forms">
+                            React Forms
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-react-and-docker">
+                            React and Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-next-steps">
+                            Next Steps
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-two-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            
+            <li>
+              <!-- create header for part -->
+              <h5 class="btn btn-outline-dark btn-block" data-toggle="collapse" href="#collapse3">
+                Part 3
+              </h5>
+              <!-- create ul for hidden part content -->
+              <ul data-part="3" class="collapse" id="collapse3" style="padding:0">
+
+                <!-- nested loop -->
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-into">
+                            Introduction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-migrate">
+                            Flask Migrate
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-flask-bcrypt">
+                            Flask Bcrypt
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-jwt-setup">
+                            JWT Setup
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-auth-routes">
+                            Auth Routes
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-router">
+                            React Router
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-bootstrap">
+                            React Bootstrap
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-one">
+                            React Auth - part one
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-mocking-user-interaction">
+                            Mocking User Interaction
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-react-auth-two">
+                            React Auth - part two
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-authorization">
+                            Authorization
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-component">
+                            Update Component
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-update-docker">
+                            Update Docker
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                    <li>
+                        <span class="badge">&bull;</span>
+                        <span>
+                          <a href="https://testdriven.io/part-three-structure">
+                            Structure
+                          </a>
+                        </span>
+                      </li>
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                  
+                
+                <br>
+              </ul>
+            
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+          <!-- resets break_flag if the current post_part has incremented -->
+          
+          <!-- creates header and content for each part -->
+          <!-- break_flag prevents header and content creation being repeated for each post.part -->
+          
+            <!-- stops nested loop after first itration  -->
+            
+          
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+        <div class="col-md-9">
+
+          <h1>React and Docker</h1>
+
+          
+
+            <h5>Part 2, Lesson 8</h5>
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-react-forms">&laquo; React Forms</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-next-steps">Next Steps &raquo;</a>
+              
+            </div>
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - React and Docker&amp;url=https%3A%2F%2Ftestdriven.io/part-two-react-and-docker&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <br><br>
+
+          
+
+          <p>Let’s containerize the React app…</p>
+
+<hr />
+
+<h2 id="local-development">Local Development</h2>
+
+<p>Add <em>Dockerfile-dev</em> to the root of the “client” directory, making sure to review the code comments:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># base image
+FROM node:9.4
+
+# set working directory
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+
+# add `/usr/src/app/node_modules/.bin` to $PATH
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+# install and cache app dependencies
+COPY package.json /usr/src/app/package.json
+RUN npm install --silent
+RUN npm install react-scripts@1.1.0 -g --silent
+
+# start app
+CMD ["npm", "start"]
+</code></pre></div></div>
+
+<blockquote>
+  <p>Silencing the NPM output via <code class="highlighter-rouge">--silent</code> is a personal choice. It’s often frowned upon, though, since it can swallow errors. Keep this in mind so you don’t waste time debugging.</p>
+</blockquote>
+
+<p>Add a <em>.dockerignore</em>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node_modules
+coverage
+build
+env
+htmlcov
+.dockerignore
+Dockerfile-dev
+Dockerfile-prod
+</code></pre></div></div>
+
+<p>Then, add the new service to the <em>docker-compose-dev.yml</em> file like so:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">client</span><span class="pi">:</span>
+  <span class="na">container_name</span><span class="pi">:</span> <span class="s">client</span>
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">context</span><span class="pi">:</span> <span class="s">./services/client</span>
+    <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile-dev</span>
+  <span class="na">volumes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s1">'</span><span class="s">./services/client:/usr/src/app'</span>
+    <span class="pi">-</span> <span class="s1">'</span><span class="s">/usr/src/app/node_modules'</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s1">'</span><span class="s">3007:3000'</span>
+  <span class="na">environment</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">NODE_ENV=development</span>
+    <span class="pi">-</span> <span class="s">REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}</span>
+  <span class="na">depends_on</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">users</span>
+  <span class="na">links</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">users</span>
+</code></pre></div></div>
+
+<p>In the terminal, make sure <code class="highlighter-rouge">testdriven-dev</code> is the active machine and then add the valid environment variable:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">REACT_APP_USERS_SERVICE_URL</span><span class="o">=</span>http://DOCKER_MACHINE_DEV_IP
+</code></pre></div></div>
+
+<p>Build the image and fire up the new container:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml up <span class="nt">--build</span> <span class="nt">-d</span> client
+</code></pre></div></div>
+
+<p>Run the client-side tests:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml <span class="se">\</span>
+  run client npm <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>Navigate to <a href="http://DOCKER_MACHINE_DEV_IP:3007/">http://DOCKER_MACHINE_DEV_IP:3007/</a> in your browser to test the app.</p>
+
+<p>What happens if you navigate to the main route? Since we’re still routing traffic to the Flask app (via Nginx), you will see the old app, served up with server-side templating. We need to update the Nginx configuration to route traffic to that main route to the React app.</p>
+
+<p>Update <em>services/nginx/flask.conf</em>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+
+  listen 80;
+
+  location / {
+    proxy_pass http://client:3000;
+    proxy_redirect    default;
+    proxy_set_header  Host $host;
+    proxy_set_header  X-Real-IP $remote_addr;
+    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header  X-Forwarded-Host $server_name;
+  }
+
+  location /users {
+    proxy_pass        http://users:5000;
+    proxy_redirect    default;
+    proxy_set_header  Host $host;
+    proxy_set_header  X-Real-IP $remote_addr;
+    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header  X-Forwarded-Host $server_name;
+  }
+
+}
+</code></pre></div></div>
+
+<p>What’s happening?</p>
+
+<ol>
+  <li>The <code class="highlighter-rouge">location</code> blocks define the <a href="https://www.nginx.com/resources/glossary/reverse-proxy-server/">reverse proxies</a>.</li>
+  <li>When a requested URI matches the URI in a location block, Nginx passes the request either to the Create React App development server (serving the React app) or to the Flask development server (serving up the Flask app).</li>
+</ol>
+
+<p>Also, <code class="highlighter-rouge">client</code> needs to spin up before <code class="highlighter-rouge">nginx</code>, so update <em>docker-compose-dev.yml</em>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">nginx</span><span class="pi">:</span>
+  <span class="na">container_name</span><span class="pi">:</span> <span class="s">nginx</span>
+  <span class="na">build</span><span class="pi">:</span> <span class="s">./services/nginx</span>
+  <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">80:80</span>
+  <span class="na">depends_on</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">users</span>
+    <span class="pi">-</span> <span class="s">client</span>
+</code></pre></div></div>
+
+<p>Update the containers (via <code class="highlighter-rouge">docker-compose -f docker-compose-dev.yml up -d --build</code>) and then test the app out in the browser:</p>
+
+<ol>
+  <li><a href="http://DOCKER_MACHINE_IP/">http://DOCKER_MACHINE_DEV_IP/</a></li>
+  <li><a href="http://DOCKER_MACHINE_IP/users">http://DOCKER_MACHINE_DEV_IP/users</a></li>
+</ol>
+
+<p>We can also take advantage of auto-reload since we set up a volume. To test, fire up the <a href="https://docs.docker.com/compose/reference/logs/">logs</a>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-dev.yml logs <span class="nt">-f</span>
+</code></pre></div></div>
+
+<p>Clear the terminal screen, and then change the state object in the <code class="highlighter-rouge">App</code> component:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">users</span><span class="p">:</span> <span class="p">[],</span>
+  <span class="na">username</span><span class="p">:</span> <span class="s1">'justatest'</span><span class="p">,</span>
+  <span class="na">email</span><span class="p">:</span> <span class="s1">''</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>As soon as you save, you should see the app re-compile and the browser should refresh on its own:</p>
+
+<div style="text-align:left;">
+  <img src="/assets/img/course/02_react_docker_auto_reload.png" style="max-width: 100%; border:0; box-shadow: none;" alt="react docker auto reload" />
+</div>
+
+<p>Make sure to change the state back before moving on.</p>
+
+<blockquote>
+  <p>Having problems getting auto-reload to work properly with Docker Machine and VirtualBox?</p>
+  <ol>
+    <li>Try <a href="https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#troubleshooting">enabling</a> a polling mechanism via <a href="https://github.com/paulmillr/chokidar">chokidar</a> by adding the following environment variable key/pair to the <em>docker-compose-dev.yml</em> file - <code class="highlighter-rouge">CHOKIDAR_USEPOLLING=true</code>. Review <a href="http://mherman.org/blog/2017/12/07/dockerizing-a-react-app">Dockerizing a React App</a> for more info.</li>
+    <li>Try <a href="https://stackoverflow.com/questions/30550742/how-do-i-undo-the-command-eval-docker-machine-env-blog/33251637#33251637">reseting</a> the Docker environment back to localhost. Rebuild the images, spin up the containers, and test auto-reload again.</li>
+  </ol>
+</blockquote>
+
+<h2 id="create-react-app-build">Create React App Build</h2>
+
+<p>Before updating the production environment, let’s create a <a href="https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#deployment">build</a> with Create React App locally, outside of Docker (e.g., in a new terminal window), which will generate static files.</p>
+
+<p>Make sure the <code class="highlighter-rouge">REACT_APP_USERS_SERVICE_URL</code> environment variable is set:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">REACT_APP_USERS_SERVICE_URL</span><span class="o">=</span>http://DOCKER_MACHINE_DEV_IP
+</code></pre></div></div>
+
+<blockquote>
+  <p>All environment variables are <a href="https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables">embedded</a> into the app at build time. Keep this in mind.</p>
+</blockquote>
+
+<p>Then run the <code class="highlighter-rouge">build</code> command from the “services/client” directory:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm run build
+</code></pre></div></div>
+
+<p>You should see a “build” directory, within “services/client”, with the static files. We need to serve this up with a basic web server. Let’s use the <a href="https://docs.python.org/3/library/http.server.html#module-http.server">HTTP server</a> from the Python standard library. Navigate to the “build” directory, and then run the server:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 <span class="nt">-m</span> http.server
+</code></pre></div></div>
+
+<p>This will serve up the app on <a href="http://localhost:8000/">http://localhost:8000/</a>. Test it out in the browser to make sure it works. Once done, kill the server and navigate back to the project root.</p>
+
+<h2 id="production">Production</h2>
+
+<p>Add <em>Dockerfile-prod</em> to the root of the “client” directory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># build environment
+FROM node:9.4 as builder
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+ARG REACT_APP_USERS_SERVICE_URL
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+ENV REACT_APP_USERS_SERVICE_URL $REACT_APP_USERS_SERVICE_URL
+COPY package.json /usr/src/app/package.json
+RUN npm install --silent
+RUN npm install react-scripts@1.1.0 -g --silent
+COPY . /usr/src/app
+RUN npm run build
+
+# production environment
+FROM nginx:1.13.5-alpine
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+</code></pre></div></div>
+
+<p>Here, we used <a href="https://docs.docker.com/engine/userguide/eng-image/multistage-build/">multistage builds</a> to create a temporary image (build environment) used for building the artifact that is then copied over to the production image (production environment). The temporary build image is discarded along with the original files and folders associated with the image. This produces a lean, production-ready image.</p>
+
+<p>When the image is built, arguments will be passed to the <em>Dockerfile</em>, via the <a href="https://docs.docker.com/engine/reference/builder/#arg">ARG</a> instruction, which can then be used as environment variables. <code class="highlighter-rouge">npm run build</code> will generate static files that are served up on port 80 via Nginx.</p>
+
+<p>Let’s test it without Docker Compose.</p>
+
+<p>First, from “services/client”, build the image, making sure to use the <code class="highlighter-rouge">--build-arg</code> flag to pass in the appropriate arguments:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker build <span class="nt">-f</span> Dockerfile-prod <span class="nt">-t</span> <span class="s2">"test"</span> ./ <span class="se">\</span>
+  <span class="nt">--build-arg</span> <span class="nv">NODE_ENV</span><span class="o">=</span>development <span class="se">\</span>
+  <span class="nt">--build-arg</span> <span class="nv">REACT_APP_USERS_SERVICE_URL</span><span class="o">=</span>http://DOCKER_MACHINE_PROD_IP
+</code></pre></div></div>
+
+<blockquote>
+  <p>Make sure to replace <code class="highlighter-rouge">DOCKER_MACHINE_PROD_IP</code> with your actual IP.</p>
+</blockquote>
+
+<p>This uses the <em>Dockerfile-prod</em> file found in “services/client”, <code class="highlighter-rouge">./</code>, to build a new image called <code class="highlighter-rouge">test</code> with the required build arguments.</p>
+
+<blockquote>
+  <p>You can view all images by running <code class="highlighter-rouge">docker image</code>.</p>
+</blockquote>
+
+<p>Spin up the container from the <code class="highlighter-rouge">test</code> image, mapping port 80 in the container to port 9000 outside the container:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker run <span class="nt">-d</span> <span class="nt">-p</span> 9000:80 <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>Navigate to <a href="http://localhost:9000/">http://localhost:9000/</a> in your browser to test.</p>
+
+<p>Stop and remove the container once done:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker stop CONTAINER_ID
+<span class="nv">$ </span>docker <span class="nb">rm </span>CONTAINER_ID
+</code></pre></div></div>
+
+<p>Finally, remove the image:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker rmi <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>With the <em>Dockerfile-prod</em> file set up and tested, add the service to <em>docker-compose-prod.yml</em>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">client</span><span class="pi">:</span>
+  <span class="na">container_name</span><span class="pi">:</span> <span class="s">client</span>
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">context</span><span class="pi">:</span> <span class="s">./services/client</span>
+    <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile-prod</span>
+    <span class="na">args</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
+      <span class="pi">-</span> <span class="s">REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s1">'</span><span class="s">3007:80'</span>
+  <span class="na">depends_on</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">users</span>
+  <span class="na">links</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">users</span>
+</code></pre></div></div>
+
+<p>So, instead of passing <code class="highlighter-rouge">NODE_ENV</code> and <code class="highlighter-rouge">REACT_APP_USERS_SERVICE_URL</code> as environment variables, which happens at runtime, we defined them as build arguments.</p>
+
+<p>Again, the <code class="highlighter-rouge">client</code> service needs to spin up before <code class="highlighter-rouge">nginx</code>, so update <em>docker-compose-prod.yml</em>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">nginx</span><span class="pi">:</span>
+  <span class="na">container_name</span><span class="pi">:</span> <span class="s">nginx</span>
+  <span class="na">build</span><span class="pi">:</span> <span class="s">./services/nginx</span>
+  <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">80:80</span>
+  <span class="na">depends_on</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">users</span>
+    <span class="pi">-</span> <span class="s">client</span>
+</code></pre></div></div>
+
+<p>Did you notice that we exposed a different internal port for the <code class="highlighter-rouge">client</code> service in production?</p>
+
+<ul>
+  <li><code class="highlighter-rouge">3000</code> for dev</li>
+  <li><code class="highlighter-rouge">80</code>for prod</li>
+</ul>
+
+<p>Because of this, we need to use a different Nginx config file in production:</p>
+
+<ol>
+  <li>Rename <em>services/nginx/Dockerfile</em> to <em>services/nginx/Dockerfile-dev</em></li>
+  <li>Rename <em>services/nginx/flask.conf</em> to <em>services/nginx/dev.conf</em></li>
+  <li>
+    <p>Update <em>services/nginx/Dockerfile-dev</em>:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> FROM nginx:1.13.8
+
+ RUN rm /etc/nginx/conf.d/default.conf
+ COPY /dev.conf /etc/nginx/conf.d
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Update <code class="highlighter-rouge">nginx</code> in <em>docker-compose-dev.yml</em>:</p>
+
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="na">nginx</span><span class="pi">:</span>
+   <span class="na">container_name</span><span class="pi">:</span> <span class="s">nginx</span>
+   <span class="na">build</span><span class="pi">:</span>
+     <span class="na">context</span><span class="pi">:</span> <span class="s">./services/nginx</span>
+     <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile-dev</span>
+   <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+   <span class="na">ports</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">80:80</span>
+   <span class="na">depends_on</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">users</span>
+     <span class="pi">-</span> <span class="s">client</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Create a new file called <em>services/nginx/Dockerfile-prod</em>:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> FROM nginx:1.13.8
+
+ RUN rm /etc/nginx/conf.d/default.conf
+ COPY /prod.conf /etc/nginx/conf.d
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Add <em>services/nginx/prod.conf</em> as well:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> server {
+
+   listen 80;
+
+   location / {
+     proxy_pass http://client:80;
+     proxy_redirect    default;
+     proxy_set_header  Host $host;
+     proxy_set_header  X-Real-IP $remote_addr;
+     proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+     proxy_set_header  X-Forwarded-Host $server_name;
+   }
+
+   location /users {
+     proxy_pass        http://users:5000;
+     proxy_redirect    default;
+     proxy_set_header  Host $host;
+     proxy_set_header  X-Real-IP $remote_addr;
+     proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+     proxy_set_header  X-Forwarded-Host $server_name;
+   }
+
+ }
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Update <code class="highlighter-rouge">nginx</code> in <em>docker-compose-prod.yml</em>:</p>
+
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="na">nginx</span><span class="pi">:</span>
+   <span class="na">container_name</span><span class="pi">:</span> <span class="s">nginx</span>
+   <span class="na">build</span><span class="pi">:</span>
+     <span class="na">context</span><span class="pi">:</span> <span class="s">./services/nginx</span>
+     <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile-prod</span>
+   <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+   <span class="na">ports</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">80:80</span>
+   <span class="na">depends_on</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">users</span>
+     <span class="pi">-</span> <span class="s">client</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>To update production, set the <code class="highlighter-rouge">testdriven-prod</code> machine as the active machine, change the <code class="highlighter-rouge">REACT_APP_USERS_SERVICE_URL</code> environment variable to the IP associated with the <code class="highlighter-rouge">testdriven-prod</code> machine, and update the containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine <span class="nb">env </span>testdriven-prod
+<span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>testdriven-prod<span class="k">)</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">REACT_APP_USERS_SERVICE_URL</span><span class="o">=</span>http://DOCKER_MACHINE_AWS_IP
+<span class="nv">$ </span>docker-compose <span class="nt">-f</span> docker-compose-prod.yml up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Remember: Since the environment variables are added at the build time, if you change the variables, you <em>will</em> have to re-build the Docker image.</p>
+</blockquote>
+
+<p>Make sure all is well in the browser.</p>
+
+<h2 id="travis">Travis</h2>
+
+<p>One more thing: Add the <code class="highlighter-rouge">REACT_APP_USERS_SERVICE_URL</code> environment variable to the <em>.travis.yml</em> file, within the <code class="highlighter-rouge">before_script</code>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1</span>
+  <span class="pi">-</span> <span class="s">docker-compose -f docker-compose-dev.yml up --build -d</span>
+</code></pre></div></div>
+
+<p>Commit and push your code to GitHub. Ensure the Travis build passes before moving on.</p>
+
+
+          
+
+            
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Microservices with Docker, Flask, and React - React and Docker&amp;url=https%3A%2F%2Ftestdriven.io/part-two-react-and-docker&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+            <div class="page-nav">
+              <br>
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-react-forms">&laquo; React Forms</a>
+              
+              
+                <a class="btn btn-outline-success" href="https://testdriven.io/part-two-next-steps">Next Steps &raquo;</a>
+              
+            </div>
+
+          
+
+        </div>
+
+      </div>
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

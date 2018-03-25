@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/bdd_django_aloe.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This article details the Behavior-Driven Development (BDD) cycle with Django and Aloe.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="django, python, bdd, tdd, testing, behavior-driven development, drf, djangorestframework, django rest framework">
+  
+  <!-- title -->
+  
+    <title>Behavior-Driven Development with Django and Aloe - TestDriven.io</title>
+    <meta property="og:title" content="Behavior-Driven Development with Django and Aloe" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/bdd_django_aloe.png" style="max-width:100%" alt="bdd with django and aloe">
+            </div>
+          
+
+          <h1>Behavior-Driven Development with Django and Aloe</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/parent">Jason Parent</a></span> on <span class="badge badge-secondary">Feb 13, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Behavior-Driven Development with Django and Aloe&amp;url=https%3A%2F%2Ftestdriven.io/behavior-driven-development-with-django-and-aloe&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>Imagine you are a Django developer building a social network for a lean startup. The CEO is pressuring your team for an MVP. The engineers have agreed to build the product using <a href="https://en.wikipedia.org/wiki/Behavior-driven_development">behavior-driven development</a> (BDD) to deliver fast and efficient results. The product owner gives you the first feature request, and following the practice of all good programming methodologies, you begin the BDD process by writing a test. Next you code a bit of functionality to make your test pass and you consider your design. The last step requires you to analyze the feature itself. Does it belong in your app?</p>
+
+<p>We can’t answer that question for you, but we can teach you when to ask it. <strong>In the following tutorial, we walk you through the BDD development cycle by programming an example feature using Django and <a href="https://aloe.readthedocs.io/">Aloe</a></strong>. Follow along to learn how you can use the BDD process to help catch and fix poor designs quickly while programming a stable app.</p>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#objectives" id="markdown-toc-objectives">Objectives</a></li>
+  <li><a href="#project-setup" id="markdown-toc-project-setup">Project Setup</a></li>
+  <li><a href="#brief-overview-of-bdd" id="markdown-toc-brief-overview-of-bdd">Brief Overview of BDD</a></li>
+  <li><a href="#your-first-feature-request" id="markdown-toc-your-first-feature-request">Your First Feature Request</a></li>
+  <li><a href="#analyzing-the-feature" id="markdown-toc-analyzing-the-feature">Analyzing the Feature</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="objectives">Objectives</h2>
+
+<p>By the time you complete this tutorial, you should be able to:</p>
+
+<ul>
+  <li>Describe and practice behavior-driven development (BDD)</li>
+  <li>Explain how to implement BDD in a new project</li>
+  <li>Test your Django applications using Aloe</li>
+</ul>
+
+<h2 id="project-setup">Project Setup</h2>
+
+<p>Want to build this project as you read the post?</p>
+
+<ol>
+  <li>Create a new project directory.</li>
+  <li>Create and activate a virtual environment.</li>
+  <li>
+    <p>Install the following dependencies, and then start a new Django project:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="o">(</span>venv<span class="o">)</span> <span class="nv">$ </span>pip <span class="nb">install</span> <span class="se">\</span>
+         <span class="nv">django</span><span class="o">==</span>2.0.2 <span class="se">\</span>
+         <span class="nv">djangorestframework</span><span class="o">==</span>3.7.7 <span class="se">\</span>
+         <span class="nv">aloe_django</span><span class="o">==</span>0.1.3
+ <span class="o">(</span>venv<span class="o">)</span> <span class="nv">$ </span>django-admin startproject example_bdd
+ <span class="o">(</span>venv<span class="o">)</span> <span class="nv">$ </span><span class="nb">cd </span>example_bdd
+ <span class="o">(</span>venv<span class="o">)</span> <span class="nv">$ </span>python manage.py startapp example
+</code></pre></div>    </div>
+
+    <blockquote>
+      <p>You may need to manually install <a href="https://github.com/pypa/setuptools_scm">setuptools-scm</a> (<code class="highlighter-rouge">pip install setuptools-scm</code>) if you get this error when trying to install <code class="highlighter-rouge">aloe_django</code>:</p>
+
+      <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> distutils.errors.DistutilsError:
+ Could not find suitable distribution <span class="k">for </span>Requirement.parse<span class="o">(</span><span class="s1">'setuptools_scm'</span><span class="o">)</span>
+</code></pre></div>      </div>
+
+    </blockquote>
+  </li>
+  <li>
+    <p>Update the <code class="highlighter-rouge">INSTALLED_APPS</code> list in <em>settings.py</em>:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+
+     <span class="o">...</span>
+
+     <span class="s">'aloe_django'</span><span class="p">,</span>
+     <span class="s">'rest_framework'</span><span class="p">,</span>
+     <span class="s">'example'</span><span class="p">,</span>
+ <span class="p">]</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>Just looking for the code? Grab it from the <a href="https://github.com/testdrivenio/django-aloe-bdd">repo</a>.</p>
+
+<h2 id="brief-overview-of-bdd">Brief Overview of BDD</h2>
+
+<p>Behavior-driven development is a way of testing your code that challenges you to constantly revisit your design. When you write a test, you answer the question <em>Does my code do what I expect it to do?</em> through assertions. Failing tests expose the mistakes in your code. With BDD, you analyze a feature: <em>Is the user experience what I expect it to be?</em> There is nothing as concrete as a failing test to expose a bad feature, but the consequences of delivering a bad experience are tangible.</p>
+
+<p>Execute BDD as part of your test development cycle. Draw the functional boundaries of a feature with tests. Create code that colors in the details. Step back and consider your design. And then do it all over again until the picture is complete.</p>
+
+<blockquote>
+  <p>Review the following <a href="https://pythonhosted.org/behave/philosophy.html">post</a> for a more in-depth explanation of BDD.</p>
+</blockquote>
+
+<h2 id="your-first-feature-request">Your First Feature Request</h2>
+
+<p>“Users should be able to log into the app and see a list of their friends.”</p>
+
+<p>That’s how your product manager starts the conversation about the app’s first feature. It’s not much but you can use it to write a test. She’s actually requesting two pieces of functionality–user authentication and the ability to form relationships between users. Here’s a rule of thumb: treat a conjunction like a beacon warning you against trying to test too many things at once. If you ever see an “and” or an “or” in a test statement, you should break that test into smaller ones.</p>
+
+<p>With that truism in mind take the first half of the feature request and write a test scenario: <em>a user can log into the app</em>. In order to support user authentication, your app must store user credentials and give users a way to access their data with those credentials. Here’s how you translate those criteria into an Aloe <em>.feature</em> file.</p>
+
+<p><strong>example/features/friendships.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Feature: Friendships
+
+  Scenario: A user can log into the app
+
+    Given I empty the "User" table
+
+    And I create the following users:
+      | id | email             | username | password  |
+      | 1  | annie@example.com | Annie    | pAssw0rd! |
+
+    When I log in with username "Annie" and password "pAssw0rd!"
+
+    Then I am logged in
+</code></pre></div></div>
+
+<p>An Aloe test case is called a <em>feature</em>. You program features using two files–a <em>Feature</em> file and a <em>Steps</em> file.</p>
+
+<ol>
+  <li>The <em>Feature</em> file consists of statements written in plain English that describe how to configure, execute, and confirm the results of a test. Use the <code class="highlighter-rouge">Feature</code> keyword to label the feature and the <code class="highlighter-rouge">Scenario</code> keyword to define a user story that you are planning to test. In the example above, the scenario defines a series of steps that explain how to populate the <em>User</em> database table, log a user into the app, and validate the login. All step statements must begin with one of four keywords: <code class="highlighter-rouge">Given</code>, <code class="highlighter-rouge">When</code>, <code class="highlighter-rouge">Then</code>, or <code class="highlighter-rouge">And</code>.</li>
+  <li>The <em>Steps</em> file contains Python functions that are mapped to the <em>Feature</em> file steps using regular expressions.</li>
+</ol>
+
+<blockquote>
+  <p>You may need to add an <em>__init__.py</em> file to the “features” directory for the interpreter to load the <em>friendships_steps.py</em> file correctly.</p>
+</blockquote>
+
+<p>Run <code class="highlighter-rouge">python manage.py harvest</code> and see the following output.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nosetests <span class="nt">--verbosity</span><span class="o">=</span>1
+Creating <span class="nb">test </span>database <span class="k">for </span><span class="nb">alias</span> <span class="s1">'default'</span>...
+E
+<span class="o">======================================================================</span>
+ERROR: A user can log into the app <span class="o">(</span>example.features.friendships: Friendships<span class="o">)</span>
+<span class="nt">----------------------------------------------------------------------</span>
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">"/Users/parentj/.virtualenvs/blog-aloe-bdd/lib/python3.6/site-packages/aloe/registry.py"</span>, line 161, <span class="k">in </span>wrapped
+    <span class="k">return function</span><span class="o">(</span><span class="k">*</span>args, <span class="k">**</span>kwargs<span class="o">)</span>
+  File <span class="s2">"/Users/parentj/Projects/blog-aloe-bdd/example_bdd/example/features/friendships.feature"</span>, line 5, <span class="k">in </span>A user can log into the app
+    Given I empty the <span class="s2">"User"</span> table
+  File <span class="s2">"/Users/parentj/.virtualenvs/blog-aloe-bdd/lib/python3.6/site-packages/aloe/registry.py"</span>, line 161, <span class="k">in </span>wrapped
+    <span class="k">return function</span><span class="o">(</span><span class="k">*</span>args, <span class="k">**</span>kwargs<span class="o">)</span>
+  File <span class="s2">"/Users/parentj/.virtualenvs/blog-aloe-bdd/lib/python3.6/site-packages/aloe/exceptions.py"</span>, line 61, <span class="k">in </span>undefined_step
+    raise NoDefinitionFound<span class="o">(</span>step<span class="o">)</span>
+aloe.exceptions.NoDefinitionFound: The step r<span class="s2">"Given I empty the "</span>User<span class="s2">" table"</span> is not defined
+
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 1 <span class="nb">test </span><span class="k">in </span>0.509s
+
+FAILED <span class="o">(</span><span class="nv">errors</span><span class="o">=</span>1<span class="o">)</span>
+Destroying <span class="nb">test </span>database <span class="k">for </span><span class="nb">alias</span> <span class="s1">'default'</span>...
+</code></pre></div></div>
+
+<p>The test fails because you haven’t mapped the step statements to Python functions. Do so in the following file.</p>
+
+<p><strong>example/features/friendships_steps.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">aloe</span> <span class="kn">import</span> <span class="n">before</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">world</span>
+<span class="kn">from</span> <span class="nn">aloe.tools</span> <span class="kn">import</span> <span class="n">guess_types</span>
+<span class="kn">from</span> <span class="nn">aloe_django.steps.models</span> <span class="kn">import</span> <span class="n">get_model</span>
+<span class="kn">from</span> <span class="nn">nose.tools</span> <span class="kn">import</span> <span class="n">assert_true</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APIClient</span>
+
+
+<span class="nd">@before.each_feature</span>
+<span class="k">def</span> <span class="nf">before_each_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">APIClient</span><span class="p">()</span>
+
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">'I empty the "([^"]+)" table'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_empty_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
+    <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">'I create the following users:'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_create_users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">):</span>
+        <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="o">**</span><span class="n">user</span><span class="p">)</span>
+
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">'I log in with username "([^"]+)" and password "([^"]+)"'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_log_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">is_logged_in</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">'I am logged in'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_confirm_log_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">assert_true</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">is_logged_in</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Each statement is mapped to a Python function via a <code class="highlighter-rouge">@step()</code> decorator. For example, <code class="highlighter-rouge">Given I empty the "User" table</code> will trigger the <code class="highlighter-rouge">step_empty_table()</code> function to run. In this case, the string <code class="highlighter-rouge">"User"</code> will be captured and passed to the function as the <code class="highlighter-rouge">model_name</code> parameter. The Aloe API includes a special global variable called <code class="highlighter-rouge">world</code> that can be used to store and retrieve data between test steps. Notice how the <code class="highlighter-rouge">world.is_logged_in</code> variable is created in <code class="highlighter-rouge">step_log_in()</code> and then accessed in <code class="highlighter-rouge">step_confirm_log_in()</code>. Aloe also defines a special <code class="highlighter-rouge">@before</code> decorator to execute functions before tests run.</p>
+
+<p>One last thing–consider the structure of the following statement.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>And I create the following users:
+  | id | email             | username | password  |
+  | 1  | annie@example.com | Annie    | pAssw0rd! |
+</code></pre></div></div>
+
+<p>With Aloe, you can represent lists of dictionaries using a tabular structure. Access the data using <code class="highlighter-rouge">self.hashes</code>. Wrapping <code class="highlighter-rouge">self.hashes</code> in the <code class="highlighter-rouge">guess_types()</code> function returns the list with the dictionary values correctly typed. In the case of this example, <code class="highlighter-rouge">guess_types(self.hashes)</code> returns this code.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[{</span><span class="s">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'email'</span><span class="p">:</span> <span class="s">'annie@example.com'</span><span class="p">,</span> <span class="s">'username'</span><span class="p">:</span> <span class="s">'Annie'</span><span class="p">,</span> <span class="s">'password'</span><span class="p">:</span> <span class="s">'pAssw0rd!'</span><span class="p">}]</span>
+</code></pre></div></div>
+
+<p>Run the Aloe test suite with the following command and see all tests pass.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python manage.py harvest
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nosetests --verbosity=1
+Creating test database for alias 'default'...
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.512s
+
+OK
+Destroying test database for alias 'default'...
+</code></pre></div></div>
+
+<p>Write a test scenario for the second part of the feature request: <em>a user can see a list of friends</em>.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scenario: A user can see a list of friends
+
+  Given I empty the "Friendship" table
+
+  When I get a list of friends
+
+  Then I see the following response data:
+    | id | email | username |
+</code></pre></div></div>
+
+<p>Before you run the Aloe test suite, modify the first scenario to use the keyword <code class="highlighter-rouge">Background</code> instead of <code class="highlighter-rouge">Scenario</code>. Background is a special type of scenario that is run once before every block defined by <code class="highlighter-rouge">Scenario</code> in the <em>Feature</em> file. Every scenario needs to start with a clean slate and using <code class="highlighter-rouge">Background</code> refreshes the data every time it is run.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Feature: Friendships
+
+  Background: Set up common data
+
+    Given I empty the "User" table
+
+    And I create the following users:
+      | id | email             | username | password  |
+      | 1  | annie@example.com | Annie    | pAssw0rd! |
+      | 2  | brian@example.com | Brian    | pAssw0rd! |
+      | 3  | casey@example.com | Casey    | pAssw0rd! |
+
+    When I log in with username "Annie" and password "pAssw0rd!"
+
+    Then I am logged in
+
+  Scenario: A user can see a list of friends
+
+    Given I empty the "Friendship" table
+
+    And I create the following friendships:
+      | id | user1 | user2 |
+      | 1  | 1     | 2     |
+
+    # Annie and Brian are now friends.
+
+    When I get a list of friends
+
+    Then I see the following response data:
+      | id | email             | username |
+      | 2  | brian@example.com | Brian    |
+</code></pre></div></div>
+
+<p>Now that you’re dealing with friendships between multiple users, add a couple new user records to the database to start. The new scenario clears all entries from a “Friendship” table and creates one new record to define a friendship between Annie and Brian. Then it calls an API to retrieve a list of Annie’s friends and it confirms that the response data includes Brian.</p>
+
+<p>The first step is to create a <code class="highlighter-rouge">Friendship</code> model. It’s simple–it just links two users together.</p>
+
+<p><strong>example/models.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+
+<span class="k">class</span> <span class="nc">Friendship</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">user1</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+      <span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span>
+      <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span>
+      <span class="n">related_name</span><span class="o">=</span><span class="s">'user1_friendships'</span>
+    <span class="p">)</span>
+    <span class="n">user2</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+      <span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span>
+      <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span>
+      <span class="n">related_name</span><span class="o">=</span><span class="s">'user2_friendships'</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p>Make a migration and run it.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python manage.py makemigrations
+<span class="nv">$ </span>python manage.py migrate
+</code></pre></div></div>
+
+<p>Next, create a new test step for the <code class="highlighter-rouge">I create the following friendships:</code> statement.</p>
+
+<p><strong>example/features/friendships_steps.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@step</span><span class="p">(</span><span class="s">'I create the following friendships:'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_create_friendships</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">Friendship</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">([</span>
+        <span class="n">Friendship</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span>
+            <span class="n">user1</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">'user1'</span><span class="p">]),</span>
+            <span class="n">user2</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">'user2'</span><span class="p">])</span>
+        <span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">)</span>
+    <span class="p">])</span>
+</code></pre></div></div>
+
+<p>Add the <code class="highlighter-rouge">Friendship</code> model import to the file.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">Friendship</span>
+</code></pre></div></div>
+
+<p>Create an API to get a list of the logged-in user’s friends. Create a serializer to handle the representation of the <code class="highlighter-rouge">User</code> resource.</p>
+
+<p><strong>example/serializers.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+
+
+<span class="k">class</span> <span class="nc">UserSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">'id'</span><span class="p">,</span> <span class="s">'email'</span><span class="p">,</span> <span class="s">'username'</span><span class="p">,)</span>
+        <span class="n">read_only_fields</span> <span class="o">=</span> <span class="n">fields</span>
+</code></pre></div></div>
+
+<p>Create a manager to handle table-level functionality for your <code class="highlighter-rouge">Friendship</code> model.</p>
+
+<p><strong>example/models.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># New import!</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+
+
+<span class="k">class</span> <span class="nc">FriendshipManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">friends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="s">"""Get all users that are friends with the specified user."""</span>
+        <span class="c"># Get all friendships that involve the specified user.</span>
+        <span class="n">friendships</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span>
+            <span class="s">'user1'</span><span class="p">,</span> <span class="s">'user2'</span>
+        <span class="p">)</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">user1</span><span class="o">=</span><span class="n">user</span><span class="p">)</span> <span class="o">|</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">user2</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">other_user</span><span class="p">(</span><span class="n">friendship</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user1</span> <span class="o">==</span> <span class="n">user</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user2</span>
+            <span class="k">return</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user1</span>
+
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="n">other_user</span><span class="p">,</span> <span class="n">friendships</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">friends()</code> function retrieves all of the friendships that the specified user shares with other users. Then it returns a list of those other users. Add <code class="highlighter-rouge">objects = FriendshipManager()</code> to the <code class="highlighter-rouge">Friendship</code> model.</p>
+
+<p>Create a simple <code class="highlighter-rouge">ListAPIView</code> to return a JSON-serialized list of your <code class="highlighter-rouge">User</code> resources.</p>
+
+<p><strong>example/views.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">rest_framework.generics</span> <span class="kn">import</span> <span class="n">ListAPIView</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Friendship</span>
+<span class="kn">from</span> <span class="nn">.serializers</span> <span class="kn">import</span> <span class="n">UserSerializer</span>
+
+
+<span class="k">class</span> <span class="nc">FriendsView</span><span class="p">(</span><span class="n">ListAPIView</span><span class="p">):</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
+
+    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Friendship</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">friends</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Finally, add a URL path.</p>
+
+<p><strong>example_bdd/urls.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="kn">from</span> <span class="nn">example.views</span> <span class="kn">import</span> <span class="n">FriendsView</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">'friends/'</span><span class="p">,</span> <span class="n">FriendsView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s">'friends'</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p>Create the remaining Python step functions–one to call your new API and another generic function to confirm response payload data. (We can reuse this function to check any payload.)</p>
+
+<p><strong>example/features/friendship_steps.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@step</span><span class="p">(</span><span class="s">'I get a list of friends'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_get_friends</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/friends/'</span><span class="p">)</span>
+
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">'I see the following response data:'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_confirm_response_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">assert_count_equal</span><span class="p">(</span><span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">),</span> <span class="n">response</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">assert_dict_equal</span><span class="p">(</span><span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">response</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Run the tests and watch them pass.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python manage.py harvest
+</code></pre></div></div>
+
+<p>Think of another test scenario. Users with no friends should see an empty list when they call the API.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scenario: A user with no friends sees an empty list
+
+  Given I empty the "Friendship" table
+
+  # Annie has no friends.
+
+  When I get a list of friends
+
+  Then I see the following response data:
+    | id | email | username |
+</code></pre></div></div>
+
+<p>No new Python functions are required. You can reuse all of your steps! Tests pass without any intervention.</p>
+
+<p>You need one last piece of functionality to get this feature off the ground. Users can get a list of their friends, but how do they make new friends? Here’s a new scenario: “a user should be able to add another user as a friend.” Users should be able to call an API to create a friendship with another user. You know the API works if a record gets created in the database.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scenario: A user can add a friend
+
+  Given I empty the "Friendship" table
+
+  When I add the following friendship:
+    | user1 | user2 |
+    | 1     | 2     |
+
+  Then I see the following rows in the "Friendship" table:
+    | user1 | user2 |
+    | 1     | 2     |
+</code></pre></div></div>
+
+<p>Create the new step functions.</p>
+
+<p><strong>example/features/friendship_steps.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@step</span><span class="p">(</span><span class="s">'I add the following friendship:'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_add_friendship</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'/friendship/'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">'I see the following rows in the "([^"]+)" table:'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_confirm_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
+    <span class="n">model_class</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">):</span>
+        <span class="n">has_row</span> <span class="o">=</span> <span class="n">model_class</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+        <span class="n">assert_true</span><span class="p">(</span><span class="n">has_row</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Extend the manager and do some refactoring.</p>
+
+<p><strong>example/models.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FriendshipManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">friendships</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="s">"""Get all friendships that involve the specified user."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span>
+            <span class="s">'user1'</span><span class="p">,</span> <span class="s">'user2'</span>
+        <span class="p">)</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">user1</span><span class="o">=</span><span class="n">user</span><span class="p">)</span> <span class="o">|</span>
+            <span class="n">Q</span><span class="p">(</span><span class="n">user2</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">friends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="s">"""Get all users that are friends with the specified user."""</span>
+        <span class="n">friendships</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">friendships</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">other_user</span><span class="p">(</span><span class="n">friendship</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user1</span> <span class="o">==</span> <span class="n">user</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user2</span>
+            <span class="k">return</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user1</span>
+
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="n">other_user</span><span class="p">,</span> <span class="n">friendships</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Add a new serializer to render the <code class="highlighter-rouge">Friendship</code> resources.</p>
+
+<p><strong>example/serializers.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FriendshipSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Friendship</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">'id'</span><span class="p">,</span> <span class="s">'user1'</span><span class="p">,</span> <span class="s">'user2'</span><span class="p">,</span> <span class="s">'status'</span><span class="p">,)</span>
+        <span class="n">read_only_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">'id'</span><span class="p">,)</span>
+</code></pre></div></div>
+
+<p>Add a new view.</p>
+
+<p><strong>example/views.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FriendshipsView</span><span class="p">(</span><span class="n">ModelViewSet</span><span class="p">):</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">FriendshipSerializer</span>
+
+    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Friendship</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">friendships</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Add a new URL.</p>
+
+<p><strong>example/urls.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">path</span><span class="p">(</span><span class="s">'friendships/'</span><span class="p">,</span> <span class="n">FriendshipsView</span><span class="o">.</span><span class="n">as_view</span><span class="p">({</span><span class="s">'post'</span><span class="p">:</span> <span class="s">'create'</span><span class="p">})),</span>
+</code></pre></div></div>
+
+<p>Your code works and the tests pass!</p>
+
+<h2 id="analyzing-the-feature">Analyzing the Feature</h2>
+
+<p>Now that you’ve successfully programmed and tested your feature, it’s time to analyze it. Two users become friends when one user adds the other one. This is not ideal behavior. Maybe the other user doesn’t want to be friends–don’t they get a say? A user should <em>request</em> a friendship with another user, and the other user should be able to accept or reject that friendship.</p>
+
+<p>Revise the scenario where a user adds another user as a friend: “a user should be able to request a friendship with another user.”</p>
+
+<p>Replace <code class="highlighter-rouge">Scenario: A user can add a friend</code> with this one.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scenario: A user can request a friendship with another user
+
+  Given I empty the "Friendship" table
+
+  When I request the following friendship:
+    | user1 | user2 |
+    | 1     | 2     |
+
+  Then I see the following response data:
+    | id | user1 | user2 | status  |
+    | 3  | 1     | 2     | PENDING |
+</code></pre></div></div>
+
+<p>Refactor your test step to use a new API, <code class="highlighter-rouge">/friendship-requests</code>.</p>
+
+<p><strong>example/features/friendship_steps.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@step</span><span class="p">(</span><span class="s">'I request the following friendship:'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_request_friendship</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'/friendship-requests/'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>Start by adding a new <code class="highlighter-rouge">status</code> field to the <code class="highlighter-rouge">Friendship</code> model.</p>
+
+<p><strong>example/models.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Friendship</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="s">'PENDING'</span>
+    <span class="n">ACCEPTED</span> <span class="o">=</span> <span class="s">'ACCEPTED'</span>
+    <span class="n">REJECTED</span> <span class="o">=</span> <span class="s">'REJECTED'</span>
+    <span class="n">STATUSES</span> <span class="o">=</span> <span class="p">(</span>
+      <span class="p">(</span><span class="n">PENDING</span><span class="p">,</span> <span class="n">PENDING</span><span class="p">),</span>
+      <span class="p">(</span><span class="n">ACCEPTED</span><span class="p">,</span> <span class="n">ACCEPTED</span><span class="p">),</span>
+      <span class="p">(</span><span class="n">REJECTED</span><span class="p">,</span> <span class="n">REJECTED</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">FriendshipManager</span><span class="p">()</span>
+    <span class="n">user1</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+      <span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span>
+      <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span>
+      <span class="n">related_name</span><span class="o">=</span><span class="s">'user1_friendships'</span>
+    <span class="p">)</span>
+    <span class="n">user2</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+      <span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span>
+      <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span>
+      <span class="n">related_name</span><span class="o">=</span><span class="s">'user2_friendships'</span>
+    <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUSES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">PENDING</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Friendships can be <code class="highlighter-rouge">ACCEPTED</code> or <code class="highlighter-rouge">REJECTED</code>. If the other user has not taken action, then the default status is <code class="highlighter-rouge">PENDING</code>.</p>
+
+<p>Make a migration and migrate the database.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python manage.py makemigrations
+$ python manage.py migrate
+</code></pre></div></div>
+
+<p>Rename the <code class="highlighter-rouge">FriendshipsView</code> to `FriendshipRequestsView.</p>
+
+<p><strong>example/views.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FriendshipRequestsView</span><span class="p">(</span><span class="n">ModelViewSet</span><span class="p">):</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">FriendshipSerializer</span>
+
+    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Friendship</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">friendships</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Replace the old URL path with the new one.</p>
+
+<p><strong>example/urls.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">path</span><span class="p">(</span><span class="s">'friendship-requests/'</span><span class="p">,</span> <span class="n">FriendshipRequestsView</span><span class="o">.</span><span class="n">as_view</span><span class="p">({</span><span class="s">'post'</span><span class="p">:</span> <span class="s">'create'</span><span class="p">}))</span>
+</code></pre></div></div>
+
+<p>Add new test scenarios to test the accept and reject actions.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scenario: A user can accept a friendship request
+
+  Given I empty the "Friendship" table
+
+  And I create the following friendships:
+    | id | user1 | user2 | status  |
+    | 1  | 2     | 1     | PENDING |
+
+  When I accept the friendship request with ID "1"
+
+  Then I see the following response data:
+    | id | user1 | user2 | status   |
+    | 1  | 2     | 1     | ACCEPTED |
+
+Scenario: A user can reject a friendship request
+
+  Given I empty the "Friendship" table
+
+  And I create the following friendships:
+    | id | user1 | user2 | status  |
+    | 1  | 2     | 1     | PENDING |
+
+  When I reject the friendship request with ID "1"
+
+  Then I see the following response data:
+    | id | user1 | user2 | status   |
+    | 1  | 2     | 1     | REJECTED |
+</code></pre></div></div>
+
+<p>Add new test steps.</p>
+
+<p><strong>example/features/friendship_steps.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@step</span><span class="p">(</span><span class="s">'I accept the friendship request with ID "([^"]+)"'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_accept_friendship_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">f</span><span class="s">'/friendship-requests/{pk}/'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+      <span class="s">'status'</span><span class="p">:</span> <span class="n">Friendship</span><span class="o">.</span><span class="n">ACCEPTED</span>
+    <span class="p">})</span>
+
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">'I reject the friendship request with ID "([^"]+)"'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_reject_friendship_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">f</span><span class="s">'/friendship-requests/{pk}/'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+      <span class="s">'status'</span><span class="p">:</span> <span class="n">Friendship</span><span class="o">.</span><span class="n">REJECTED</span>
+    <span class="p">})</span>
+</code></pre></div></div>
+
+<p>Add one more URL path. Users need to target the specific friendship they want to accept or reject.</p>
+
+<p><strong>example/urls.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">path</span><span class="p">(</span><span class="s">'friendship-requests/&lt;int:pk&gt;/'</span><span class="p">,</span> <span class="n">FriendshipRequestsView</span><span class="o">.</span><span class="n">as_view</span><span class="p">({</span><span class="s">'put'</span><span class="p">:</span> <span class="s">'partial_update'</span><span class="p">}))</span>
+</code></pre></div></div>
+
+<p>Update <code class="highlighter-rouge">Scenario: A user can see a list of friends</code> to include the new <code class="highlighter-rouge">status</code> field.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scenario: A user can see a list of friends
+
+  Given I empty the "Friendship" table
+
+  And I create the following friendships:
+    | id | user1 | user2 | status   |
+    | 1  | 1     | 2     | ACCEPTED |
+
+  # Annie and Brian are now friends.
+
+  When I get a list of friends
+
+  Then I see the following response data:
+    | id | email             | username |
+    | 2  | brian@example.com | Brian    |
+</code></pre></div></div>
+
+<p>Add one more scenario to test filtering on the status. A user’s friends consist of people who have accepted friendship requests from the user. Those who have not taken action or who have rejected the requests are not considered.</p>
+
+<p><strong>example/features/friendship.feature</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Scenario: A user with no accepted friendship requests sees an empty list
+
+  Given I empty the "Friendship" table
+
+  And I create the following friendships:
+    | id | user1 | user2 | status   |
+    | 1  | 1     | 2     | PENDING  |
+    | 2  | 1     | 3     | REJECTED |
+
+  When I get a list of friends
+
+  Then I see the following response data:
+    | id | email | username |
+</code></pre></div></div>
+
+<p>Edit the <code class="highlighter-rouge">step_create_friendships()</code> function to implement the <code class="highlighter-rouge">status</code> field on the <code class="highlighter-rouge">Friendship</code> model.</p>
+
+<p><strong>example/features/friendship_steps.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@step</span><span class="p">(</span><span class="s">'I create the following friendships:'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_create_friendships</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">Friendship</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">bulk_create</span><span class="p">([</span>
+        <span class="n">Friendship</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">'id'</span><span class="p">],</span>
+            <span class="n">user1</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">'user1'</span><span class="p">]),</span>
+            <span class="n">user2</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">'user2'</span><span class="p">]),</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span>
+        <span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">guess_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashes</span><span class="p">)</span>
+    <span class="p">])</span>
+</code></pre></div></div>
+
+<p>Complete the filtering by adjusting the <code class="highlighter-rouge">friends()</code> method on the manager.</p>
+
+<p><strong>example/models.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">friends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+    <span class="s">"""Get all users that are friends with the specified user."""</span>
+    <span class="n">friendships</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">friendships</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">Friendship</span><span class="o">.</span><span class="n">ACCEPTED</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">other_user</span><span class="p">(</span><span class="n">friendship</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user1</span> <span class="o">==</span> <span class="n">user</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user2</span>
+        <span class="k">return</span> <span class="n">friendship</span><span class="o">.</span><span class="n">user1</span>
+
+    <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="n">other_user</span><span class="p">,</span> <span class="n">friendships</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Feature complete!</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>If you take one thing from this post, I hope it’s this: behavior-driven development is as much about feature analysis as it is about writing, testing, and designing code. Without that crucial step, you’re not creating software, you’re just programming. BDD is not the only way to produce software, but it’s a good one. And if you’re practicing BDD with a Django project, give Aloe a try.</p>
+
+<p>Grab the code from the <a href="https://github.com/testdrivenio/django-aloe-bdd">repo</a>.</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Behavior-Driven Development with Django and Aloe&amp;url=https%3A%2F%2Ftestdriven.io/behavior-driven-development-with-django-and-aloe&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

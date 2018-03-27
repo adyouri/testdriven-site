@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
   <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
   <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
-  <link href="/assets/css/styles.css?1521989479379104000" rel="stylesheet">
+  <link href="/assets/css/styles.css?1522155826170310000" rel="stylesheet">
 </head>
 
 
@@ -105,18 +105,6 @@
 
 <p>We’ll also look at how to run tests against a number of browsers and automate the provisioning and deprovisioning of machines to keep costs down.</p>
 
-<h2 id="objectives">Objectives</h2>
-
-<p>After completing this tutorial, you will be able to:</p>
-
-<ol>
-  <li>Containerize a Selenium Grid with Docker</li>
-  <li>Run automated tests on Selenium Grid</li>
-  <li>Describe the differences between distributed and parallel computing</li>
-  <li>Deploy a Selenium Grid to Digital Ocean via Docker Compose and Machine</li>
-  <li>Automate the provisioning and deprovisioning of resources on Digital Ocean</li>
-</ol>
-
 <h2 class="no_toc">Contents</h2>
 
 <ul class="no_toc" id="markdown-toc">
@@ -130,6 +118,18 @@
   <li><a href="#automation-scripts" id="markdown-toc-automation-scripts">Automation Scripts</a></li>
   <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
 </ul>
+
+<h2 id="objectives">Objectives</h2>
+
+<p>After completing this tutorial, you will be able to:</p>
+
+<ol>
+  <li>Containerize a Selenium Grid with Docker</li>
+  <li>Run automated tests on Selenium Grid</li>
+  <li>Describe the differences between distributed and parallel computing</li>
+  <li>Deploy a Selenium Grid to Digital Ocean via Docker Compose and Machine</li>
+  <li>Automate the provisioning and deprovisioning of resources on Digital Ocean</li>
+</ol>
 
 <h2 id="project-setup">Project Setup</h2>
 
@@ -396,6 +396,7 @@ OK
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine create <span class="se">\</span>
   <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+  <span class="nt">--digitalocean-region</span> <span class="s2">"nyc1"</span> <span class="se">\</span>
   <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
   <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
   selenium-grid<span class="p">;</span>
@@ -447,6 +448,7 @@ OK
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="k">for </span>i <span class="k">in </span>1 2 3 4 5<span class="p">;</span> <span class="k">do
     </span>docker-machine create <span class="se">\</span>
       <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+      <span class="nt">--digitalocean-region</span> <span class="s2">"nyc1"</span> <span class="se">\</span>
       <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
       <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
       node-<span class="nv">$i</span><span class="p">;</span>
@@ -640,6 +642,7 @@ q0uhbsdesixu        selenium_chrome.4    selenium/node-chrome:3.10.0    node-3  
 <span class="k">for </span>i <span class="k">in </span>1 2 3 4 5<span class="p">;</span> <span class="k">do
   </span>docker-machine create <span class="se">\</span>
     <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+    <span class="nt">--digitalocean-region</span> <span class="s2">"nyc1"</span> <span class="se">\</span>
     <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
     <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
     node-<span class="nv">$i</span><span class="p">;</span>

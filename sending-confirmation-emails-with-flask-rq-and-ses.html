@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/flask-rq-ses/sending_emails_redis_python.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This blog post looks at how to send confirmation emails to newly registered users with Flask, Redis Queue, and Amazon SES..">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="python, web development, flask, redis, redis queue, asynchronous tasks, rq, task queue, docker, email confirmation, amazon ses, transactional email">
+  
+  <!-- title -->
+  
+    <title>Sending confirmation Emails with Flask, Redis Queue, and Amazon SES - TestDriven.io</title>
+    <meta property="og:title" content="Sending confirmation Emails with Flask, Redis Queue, and Amazon SES" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1522155826170310000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/flask-rq-ses/sending_emails_redis_python.png" style="max-width:100%" alt="python and redis">
+            </div>
+          
+
+          <h1>Sending confirmation Emails with Flask, Redis Queue, and Amazon SES</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/herman">Michael Herman</a></span> on <span class="badge badge-secondary">Mar 27, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Sending confirmation Emails with Flask, Redis Queue, and Amazon SES&amp;url=https%3A%2F%2Ftestdriven.io/sending-confirmation-emails-with-flask-rq-and-ses&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>For most web applications, after a new user registers, it’s important to confirm that the user provided a valid email address that they have access to. This not only helps to prevent spammers from creating fake accounts, but it also provides an additional layer of security for your application.</p>
+
+<p>For example, you never want to send a password reset email without first verifying the email address. Suppose a new user enters their email address incorrectly during the registration flow and that user attempts to send a reset password email. At best, the user simply won’t get the email. At worst, that password reset email will go to a valid email address, unowned by that user, and their account could then easily be compromised.</p>
+
+<p>This blog post looks at how to send confirmation emails to newly registered users with Flask, Redis Queue (RQ), and Amazon SES (SES).</p>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#objectives" id="markdown-toc-objectives">Objectives</a></li>
+  <li><a href="#project-setup" id="markdown-toc-project-setup">Project Setup</a></li>
+  <li><a href="#workflow" id="markdown-toc-workflow">Workflow</a></li>
+  <li><a href="#redis-queue" id="markdown-toc-redis-queue">Redis Queue</a></li>
+  <li><a href="#email-confirmation" id="markdown-toc-email-confirmation">Email Confirmation</a></li>
+  <li><a href="#amazon-ses" id="markdown-toc-amazon-ses">Amazon SES</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="objectives">Objectives</h2>
+
+<p>After completing this tutorial, you will be able to:</p>
+
+<ol>
+  <li>Discuss the overall client/server email confirmation workflow.</li>
+  <li>Describe what email confirmation is and why you would want to use it in your application’s registration flow.</li>
+  <li>Integrate Redis Queue into a Flask app and create tasks.</li>
+  <li>Containerize Flask and Redis with Docker.</li>
+  <li>Run long-running tasks in the background with a separate worker process.</li>
+  <li>Encode and decode tokens using the itsdangerous module.</li>
+  <li>Interact with the AWS API via Boto3.</li>
+  <li>Send transactional emails with Amazon Simple Email Service (SES).</li>
+</ol>
+
+<h2 id="project-setup">Project Setup</h2>
+
+<p>To code along with this post, clone down the base project:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/testdrivenio/flask-ses-rq <span class="nt">--branch</span> base <span class="nt">--single-branch</span>
+<span class="nv">$ </span><span class="nb">cd </span>flask-ses-rq
+</code></pre></div></div>
+
+<p>Quickly review the code and overall project structure:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>├── Dockerfile
+├── docker-compose.yml
+├── manage.py
+├── project
+│   ├── __init__.py
+│   ├── client
+│   │   ├── static
+│   │   │   ├── main.css
+│   │   │   └── main.js
+│   │   └── templates
+│   │       ├── _base.html
+│   │       ├── footer.html
+│   │       └── home.html
+│   ├── server
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── main
+│   │   │   ├── __init__.py
+│   │   │   ├── forms.py
+│   │   │   └── views.py
+│   │   └── models.py
+│   └── tests
+│       ├── __init__.py
+│       ├── base.py
+│       ├── helpers.py
+│       ├── test__config.py
+│       └── test_main.py
+└── requirements.txt
+</code></pre></div></div>
+
+<p>Then, spin up the app:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>This post uses Docker version 17.12.0-ce.</p>
+</blockquote>
+
+<p>Create the database tables:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose run <span class="nb">users </span>python manage.py create_db
+</code></pre></div></div>
+
+<p>Navigate to <a href="http://localhost:5001">http://localhost:5001</a> in your browser. You should see:</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/base.png">
+  <img src="/assets/img/blog/flask-rq-ses/base.png" style="max-width:90%;padding-top:20px;" alt="base project" />
+</a></p>
+
+<p>Make sure you can add a new user:</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/register.png">
+  <img src="/assets/img/blog/flask-rq-ses/register.png" style="max-width:90%;padding-top:20px;" alt="register a new user" />
+</a></p>
+
+<p>Run the tests:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose run <span class="nb">users </span>python manage.py <span class="nb">test</span>
+
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 8 tests <span class="k">in </span>0.225s
+
+OK
+</code></pre></div></div>
+
+<h2 id="workflow">Workflow</h2>
+
+<p>Here’s the workflow we’ll be using:</p>
+
+<ol>
+  <li>A new user submits the registration form, which sends a POST request to the server-side.</li>
+  <li>Within the Flask view, after a new user is successfully added to the database, a new task is added to the queue and a response is sent back to the end user indicating that they need to confirm their registration via email.</li>
+  <li>In the background, a worker process picks up the task, generates a unique link, and sends a request to Amazon SES to send the confirmation email.</li>
+  <li>The end user can then confirm the email, from his or her mailbox, by clicking the unique link.</li>
+  <li>When the user clicks the link, a GET request is sent to the server-side, which updates the user record in the database.</li>
+</ol>
+
+<blockquote>
+  <p>If you’re trying to incorporate email confirmation into an existing application, the above workflow will vary based on your app’s flow. Keep this in mind as you’re working your way through this tutorial.</p>
+</blockquote>
+
+<p><img src="/assets/img/blog/flask-rq-ses/email-confirmation-flow.png" style="max-width:90%;padding-top:20px;padding-bottom:10px;" alt="email confirmation flow" /></p>
+
+<p>Final app in action:</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/email-confirm.gif">
+  <img src="/assets/img/blog/flask-rq-ses/email-confirm.gif" style="max-width:90%;padding-top:20px;" alt="final app" />
+</a></p>
+
+<h2 id="redis-queue">Redis Queue</h2>
+
+<p>First, let’s wire up the task queue!</p>
+
+<h3 id="docker">Docker</h3>
+
+<p>Start by spinning up two new processes - Redis and a worker. Update the <em>docker-compose.yml</em> file like so:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.5'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">users</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span> <span class="s">.</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">users</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">users</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">5001:5000'</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">python manage.py run -h 0.0.0.0</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.:/usr/src/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">FLASK_DEBUG=1</span>
+      <span class="pi">-</span> <span class="s">APP_SETTINGS=project.server.config.DevelopmentConfig</span>
+      <span class="pi">-</span> <span class="s">DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev</span>
+      <span class="pi">-</span> <span class="s">DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test</span>
+      <span class="pi">-</span> <span class="s">SECRET_KEY=my_precious</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+      <span class="pi">-</span> <span class="s">users-db</span>
+
+  <span class="na">users-db</span><span class="pi">:</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">users-db</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">./project/db</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">5435:5432</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">POSTGRES_USER=postgres</span>
+      <span class="pi">-</span> <span class="s">POSTGRES_PASSWORD=postgres</span>
+
+  <span class="na">worker</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">users</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="s">python manage.py run_worker</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.:/usr/src/app</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">FLASK_DEBUG=1</span>
+      <span class="pi">-</span> <span class="s">APP_SETTINGS=project.server.config.DevelopmentConfig</span>
+      <span class="pi">-</span> <span class="s">DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev</span>
+      <span class="pi">-</span> <span class="s">DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test</span>
+      <span class="pi">-</span> <span class="s">SECRET_KEY=my_precious</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">users-db</span>
+      <span class="pi">-</span> <span class="s">redis</span>
+
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:3.2.11</span>
+</code></pre></div></div>
+
+<p>Add the dependencies to <em>requirements.txt</em>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis==2.10.6
+rq==0.10.0
+</code></pre></div></div>
+
+<h3 id="task">Task</h3>
+
+<p>Add a new task to a file called <em>tasks.py</em> in “project/server/main”:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># project/server/main/tasks.py</span>
+
+
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">project.server</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">project.server.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+
+<span class="k">def</span> <span class="nf">send_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c"># simulate long-running process</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">email_sent</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</code></pre></div></div>
+
+<p>Here, we simulated a long-running process and then updated the <code class="highlighter-rouge">email_sent</code> field in the <code class="highlighter-rouge">User</code> model to <code class="highlighter-rouge">True</code>. We’ll replace <code class="highlighter-rouge">time.sleep(10)</code> with the actual functionality to send an email shortly.</p>
+
+<blockquote>
+  <p>After <code class="highlighter-rouge">email_sent</code> is set to <code class="highlighter-rouge">True</code>, the user is technically registered but “unconfirmed”. At this point, what is that user allowed to do? In other words, does that user have full access to your app, some form of limited or restricted access, or simply no access at all? Think about how you’d handle this in your app.</p>
+</blockquote>
+
+<p>Update the view to connect to Redis and enqueue a task:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@main_blueprint.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">'POST'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="n">redis_url</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'REDIS_URL'</span><span class="p">]</span>
+                <span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">redis_url</span><span class="p">)):</span>
+                    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">send_email</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s">'Thank you for registering.'</span><span class="p">,</span> <span class="s">'success'</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">"main.home"</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">IntegrityError</span><span class="p">:</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s">'Sorry. That email already exists.'</span><span class="p">,</span> <span class="s">'danger'</span><span class="p">)</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">'home.html'</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="n">users</span><span class="o">=</span><span class="n">users</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Update the imports:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> \
+    <span class="n">redirect</span><span class="p">,</span> <span class="n">flash</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">current_app</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.exc</span> <span class="kn">import</span> <span class="n">IntegrityError</span>
+
+<span class="kn">from</span> <span class="nn">project.server</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">project.server.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">project.server.main.forms</span> <span class="kn">import</span> <span class="n">RegisterForm</span>
+<span class="kn">from</span> <span class="nn">project.server.main.tasks</span> <span class="kn">import</span> <span class="n">send_email</span>
+</code></pre></div></div>
+
+<p>Add the config to the <code class="highlighter-rouge">BaseConfig</code> in <em>project/server/config.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BaseConfig</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="s">"""Base configuration."""</span>
+    <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'SECRET_KEY'</span><span class="p">)</span>
+    <span class="n">SQLALCHEMY_TRACK_MODIFICATIONS</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">WTF_CSRF_ENABLED</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">REDIS_URL</span> <span class="o">=</span> <span class="s">'redis://redis:6379/0'</span>
+    <span class="n">QUEUES</span> <span class="o">=</span> <span class="p">[</span><span class="s">'default'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Note that we referenced the <code class="highlighter-rouge">redis</code> service in the <code class="highlighter-rouge">REDIS_URL</code>, defined in <em>docker-compose.yml</em>, rather than <code class="highlighter-rouge">localhost</code>. Review the Docker Compose <a href="https://docs.docker.com/compose/networking/">docs</a> for more info on connecting to other services via the hostname alias.</p>
+
+<h3 id="worker">Worker</h3>
+
+<p>Next, let’s add a custom CLI command to <em>manage.py</em> to fire the worker process, which is used to process the task we added to the queue:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@cli.command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">run_worker</span><span class="p">():</span>
+    <span class="n">redis_url</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'REDIS_URL'</span><span class="p">]</span>
+    <span class="n">redis_connection</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">redis_url</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">redis_connection</span><span class="p">):</span>
+        <span class="n">worker</span> <span class="o">=</span> <span class="n">Worker</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'QUEUES'</span><span class="p">])</span>
+        <span class="n">worker</span><span class="o">.</span><span class="n">work</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Don’t forget the imports:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">redis</span>
+<span class="kn">from</span> <span class="nn">rq</span> <span class="kn">import</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">Worker</span>
+</code></pre></div></div>
+
+<h3 id="test">Test</h3>
+
+<p>Spin up the new containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>To trigger a new task, register a new user. <code class="highlighter-rouge">Confirm Email Sent?</code> should be <code class="highlighter-rouge">False</code>:</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/register2.png">
+  <img src="/assets/img/blog/flask-rq-ses/register2.png" style="max-width:90%;padding-top:20px;" alt="register a new user" />
+</a></p>
+
+<p>Then, refresh the page after ten seconds. <code class="highlighter-rouge">Confirm Email Sent?</code> should now be <code class="highlighter-rouge">True</code> since the task finished and the database was updated.</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/register3.png">
+  <img src="/assets/img/blog/flask-rq-ses/register3.png" style="max-width:90%;padding-top:20px;" alt="register a new user" />
+</a></p>
+
+<h2 id="email-confirmation">Email Confirmation</h2>
+
+<p>Moving right along, let’s add the logic for confirming an email address, starting with the template.</p>
+
+<h3 id="email-template">Email template</h3>
+
+<p>We can use <a href="http://jinja.pocoo.org/">Jinja2</a> to generate the template on the server.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Thanks for signing up. Please follow the link to activate your account.
+{{ confirm_url }}
+
+Cheers!
+</code></pre></div></div>
+
+<p>Save the above text to a new file called <em>email.txt</em> in “project/client/templates”.</p>
+
+<blockquote>
+  <p>For now, we’ll just be sending a plain-text email. Feel free to add an HTML (basic and/or rich) on your own.</p>
+</blockquote>
+
+<h3 id="unique-url">Unique URL</h3>
+
+<p>Next, let’s add a few helper functions to encode and decode a token, which will set the base for generating a unique confirmation URL.</p>
+
+<p>Add a new file called <em>utils.py</em> to “project/server/main”:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># project/server/main/utils.py</span>
+
+
+<span class="kn">from</span> <span class="nn">itsdangerous</span> <span class="kn">import</span> <span class="n">URLSafeTimedSerializer</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">current_app</span><span class="p">,</span> <span class="n">url_for</span>
+
+
+<span class="k">def</span> <span class="nf">encode_token</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+    <span class="n">serializer</span> <span class="o">=</span> <span class="n">URLSafeTimedSerializer</span><span class="p">(</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SECRET_KEY'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">serializer</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">salt</span><span class="o">=</span><span class="s">'email-confirm-salt'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">expiration</span><span class="o">=</span><span class="mi">3600</span><span class="p">):</span>
+    <span class="n">serializer</span> <span class="o">=</span> <span class="n">URLSafeTimedSerializer</span><span class="p">(</span><span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'SECRET_KEY'</span><span class="p">])</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+            <span class="n">token</span><span class="p">,</span>
+            <span class="n">salt</span><span class="o">=</span><span class="s">'email-confirm-salt'</span><span class="p">,</span>
+            <span class="n">max_age</span><span class="o">=</span><span class="n">expiration</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">email</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+<span class="k">def</span> <span class="nf">generate_url</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">url_for</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">_external</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>What’s happening here?</p>
+
+<ol>
+  <li><code class="highlighter-rouge">encode_token</code> utilizes the <code class="highlighter-rouge">URLSafeTimedSerializer</code> class from the <a href="http://pythonhosted.org/itsdangerous/">itsdangerous</a> package to encode the email address and a timestamp in a token.</li>
+  <li><code class="highlighter-rouge">decode_token</code> then decodes the token and returns the email address as long as the token is not older than 3600 seconds (one hour).</li>
+  <li><code class="highlighter-rouge">generate_url</code> takes an endpoint and an encoded token and then returns a unique URL. (Yes, this is a single-line function! It makes testing much easier.)</li>
+</ol>
+
+<blockquote>
+  <p>Since, by default, <code class="highlighter-rouge">url_for</code> creates relative URLs, we set <code class="highlighter-rouge">_external</code> to <code class="highlighter-rouge">True</code> to generate an absolute URL. If this were created outside the Flask request context you would need to define a <code class="highlighter-rouge">SERVER_NAME</code> in the app config <em>and</em> provide access to the application context to use an absolute URL. Once a <code class="highlighter-rouge">SERVER_NAME</code> is set, Flask can <em>only</em> serve requests from that domain, though. Review the following <a href="https://github.com/pallets/flask/issues/998">issue</a> for more info.</p>
+</blockquote>
+
+<p>Let’s add a few quick tests to ensure the encoding and decoding of the token along with the unique URL generation work as expected.</p>
+
+<p><em>test_utils.py</em>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># project/server/tests/test_utils.py</span>
+
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">base</span> <span class="kn">import</span> <span class="n">BaseTestCase</span>
+<span class="kn">from</span> <span class="nn">project.server.main.utils</span> <span class="kn">import</span> <span class="n">encode_token</span><span class="p">,</span> <span class="n">decode_token</span><span class="p">,</span> <span class="n">generate_url</span>
+<span class="kn">from</span> <span class="nn">project.server.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+
+
+<span class="k">class</span> <span class="nc">TestUtils</span><span class="p">(</span><span class="n">BaseTestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_verify_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Ensure encode and decode behave correctly.</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">encode_token</span><span class="p">(</span><span class="s">'dummy@email.com'</span><span class="p">)</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">'dummy@email.com'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_verify_invalid_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Ensure encode and decode behave correctly when token is invalid.</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="s">'invalid'</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_verify_expired_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Ensure encode and decode behave correctly when token has expired.</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">encode_token</span><span class="p">(</span><span class="s">'dummy@email.com'</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_token_is_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Ensure tokens are unique.</span>
+        <span class="n">token1</span> <span class="o">=</span> <span class="n">encode_token</span><span class="p">(</span><span class="s">'dummy@email.com'</span><span class="p">)</span>
+        <span class="n">token2</span> <span class="o">=</span> <span class="n">encode_token</span><span class="p">(</span><span class="s">'dummy@email2.com'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">token1</span><span class="p">,</span> <span class="n">token2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_generate_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Ensure generate_url behaves as expected.</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">encode_token</span><span class="p">(</span><span class="s">'dummy@email.com'</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">generate_url</span><span class="p">(</span><span class="s">'main.home'</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+        <span class="n">url_token</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'='</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">url_token</span><span class="p">)</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">url_token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">'dummy@email.com'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Run the tests:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose run <span class="nb">users </span>python manage.py <span class="nb">test</span>
+
+<span class="nt">----------------------------------------------------------------------</span>
+Ran 13 tests <span class="k">in </span>1.305s
+
+OK
+</code></pre></div></div>
+
+<blockquote>
+  <p>Are we missing any tests? Add them now. How would you mock the test that uses <code class="highlighter-rouge">sleep(1)</code>? Check out <a href="https://github.com/spulec/freezegun">FreezeGun</a>!</p>
+</blockquote>
+
+<p>Next, make a few updates to the view:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@main_blueprint.route</span><span class="p">(</span><span class="s">'/'</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">'GET'</span><span class="p">,</span> <span class="s">'POST'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">'POST'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c"># add user to the db</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="c"># generate token, confirm url, and template</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="n">encode_token</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+                <span class="n">confirm_url</span> <span class="o">=</span> <span class="n">generate_url</span><span class="p">(</span><span class="s">'main.confirm_email'</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+                <span class="n">body</span> <span class="o">=</span> <span class="n">render_template</span><span class="p">(</span><span class="s">'email.txt'</span><span class="p">,</span> <span class="n">confirm_url</span><span class="o">=</span><span class="n">confirm_url</span><span class="p">)</span>
+                <span class="c"># enqueue</span>
+                <span class="n">redis_url</span> <span class="o">=</span> <span class="n">current_app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">'REDIS_URL'</span><span class="p">]</span>
+                <span class="k">with</span> <span class="n">Connection</span><span class="p">(</span><span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">redis_url</span><span class="p">)):</span>
+                    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">send_email</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s">'Thank you for registering.'</span><span class="p">,</span> <span class="s">'success'</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">"main.home"</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">IntegrityError</span><span class="p">:</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+                <span class="n">flash</span><span class="p">(</span><span class="s">'Sorry. That email already exists.'</span><span class="p">,</span> <span class="s">'danger'</span><span class="p">)</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="nb">all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">'home.html'</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="n">users</span><span class="o">=</span><span class="n">users</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Make sure to import <code class="highlighter-rouge">encode_token</code> and <code class="highlighter-rouge">generate_url</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">project.server.main.utils</span> <span class="kn">import</span> <span class="n">encode_token</span><span class="p">,</span> <span class="n">generate_url</span>
+</code></pre></div></div>
+
+<p>So, after adding the user to the database, we created a token, a unique URL (which we still need to create the view for), and a template.</p>
+
+<p>Finally, add <code class="highlighter-rouge">body</code> as a parameter to <code class="highlighter-rouge">send_email</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">send_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c"># simulate long-running process</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">email_sent</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</code></pre></div></div>
+
+<h3 id="view">View</h3>
+
+<p>Next, let’s add the <code class="highlighter-rouge">confirm_email</code> view to process the token and, if appropriate, update the user model:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@main_blueprint.route</span><span class="p">(</span><span class="s">'/confirm/&lt;token&gt;'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">confirm_email</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">email</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">'The confirmation link is invalid or has expired.'</span><span class="p">,</span> <span class="s">'danger'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">'main.home'</span><span class="p">))</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">confirmed</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">'Account already confirmed.'</span><span class="p">,</span> <span class="s">'success'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">'main.home'</span><span class="p">))</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">confirmed</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">flash</span><span class="p">(</span><span class="s">'You have confirmed your account. Thanks!'</span><span class="p">,</span> <span class="s">'success'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">'main.home'</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Import <code class="highlighter-rouge">decode_token</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">project.server.main.utils</span> <span class="kn">import</span> <span class="n">encode_token</span><span class="p">,</span> <span class="n">generate_url</span><span class="p">,</span> <span class="n">decode_token</span>
+</code></pre></div></div>
+
+<p>So, if the decode is successful, the <code class="highlighter-rouge">confirmed</code> field is updated to <code class="highlighter-rouge">True</code> for the database record and the user is redirected back to the homepage with a success message.</p>
+
+<h3 id="test-1">Test</h3>
+
+<p>To manually test, first update the containers and then open the Docker logs for the <code class="highlighter-rouge">worker</code>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose stop
+<span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+<span class="nv">$ </span>docker-compose logs <span class="nt">-f</span> worker
+</code></pre></div></div>
+
+<p>Then, from the browser, add a new email address. You should see the task start and finish successfully:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>default: project.server.main.tasks.send_email<span class="o">(</span><span class="s1">'michael@mherman.org'</span>,
+<span class="s1">'Thanks for signing up. Please follow the link to activate your account.
+\nhttp://localhost:5001/confirm/Im1pY2hhZWxAbWhlcm1hbi5vcmci.DZlVVg.1uPVCboQ8EXc4Xu1YoUgloFL8GE
+\n\nCheers!'</span><span class="o">)</span> <span class="o">(</span>a337e978-abdc-4ef9-bd4a-45447ed0cf24<span class="o">)</span>
+default: Job OK <span class="o">(</span>a337e978-abdc-4ef9-bd4a-45447ed0cf24<span class="o">)</span>
+Result is kept <span class="k">for </span>500 seconds
+</code></pre></div></div>
+
+<p><a href="/assets/img/blog/flask-rq-ses/register4.png">
+  <img src="/assets/img/blog/flask-rq-ses/register4.png" style="max-width:90%;padding-top:20px;" alt="register a new user" />
+</a></p>
+
+<p>Grab the URL from the logs (<code class="highlighter-rouge">http://localhost:5001/confirm/Im1pY2hhZWxAbWhlcm1hbi5vcmci.DZlVVg.1uPVCboQ8EXc4Xu1YoUgloFL8GE</code>), and test it out in the browser.</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/register5.png">
+  <img src="/assets/img/blog/flask-rq-ses/register5.png" style="max-width:90%;padding-top:20px;" alt="register a new user" />
+</a></p>
+
+<h2 id="amazon-ses">Amazon SES</h2>
+
+<p>First off, why would you want to use an transactional email service (like <a href="https://aws.amazon.com/ses/">Amazon SES</a>, <a href="https://www.mandrill.com/">Mandrill</a>, or <a href="https://www.mailgun.com/">Mailgun</a>) over Gmail or your own email server?</p>
+
+<ol>
+  <li><em>Rate limiting</em>: Email service providers - e.g., Gmail, Yahoo, Outlook - have hourly or daily email sending limits. Transactional email service providers have limits as well, but they are much, much higher.</li>
+  <li><em>Deliverability</em>: Most email service providers do not allow messages from unknown IP addresses. Such emails are marked as spam and generally don’t reach the inbox. So if you’re sending transactional emails from your own email server, on a shared server, those emails will most likely never be seen by your users. Transactional email services set up relationships with internet service providers and email service providers to ensure that emails are delivered smoothly and promptly.</li>
+  <li><em>Analytics</em>: Transactional email services provide detailed statistics and analytics to help you improve email open and click rates.</li>
+</ol>
+
+<p><a href="https://aws.amazon.com/ses/">Amazon SES</a> is a cost-effective email service designed for sending both bulk and transactional emails. Emails can be sent directly from the SES console, via the Simple Mail Transfer Protocol (SMTP) interface, or through the API.</p>
+
+<p>In this tutorial, we’ll use <a href="https://github.com/boto/boto3">Boto3</a>, a Python-based AWS SDK, to make calls to the API.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p><a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/sign-up-for-aws.html">Sign up</a> for an AWS account if you don’t already have one.</p>
+
+<p>Before you can send emails with SES, you must first <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/verify-email-addresses.html">verify</a> that you own the email address that you wish to send from. Navigate to <a href="https://console.aws.amazon.com/ses">Amazon SES</a>, click “Email Addresses” in the sidebar, and then click the “Verify a New Email Address” button.</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/aws-ses-1.png">
+  <img src="/assets/img/blog/flask-rq-ses/aws-ses-1.png" style="max-width:90%;padding-top:20px;" alt="amazon ses" />
+</a></p>
+
+<p>Enter the email you’d like to use and click “Verify This Email address”.</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/aws-ses-2.png">
+  <img src="/assets/img/blog/flask-rq-ses/aws-ses-2.png" style="max-width:90%;padding-top:20px;" alt="amazon ses" />
+</a></p>
+
+<p>Then, after clicking the verification link in your email inbox, you should see your email verified back on SES.</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/aws-ses-3.png">
+  <img src="/assets/img/blog/flask-rq-ses/aws-ses-3.png" style="max-width:90%;padding-top:20px;" alt="amazon ses" />
+</a></p>
+
+<p>To help prevent fraud, new accounts are automatically placed in a sandbox mode where you can only send emails to addresses that you have personally verified with Amazon. Fortunately, this is enough for us to wire everything together.</p>
+
+<blockquote>
+  <p>You must make a request with Amazon to move out of the sandbox mode. This can take a day or two, so get this started as soon as possible. Review <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html">Moving Out of the Amazon SES Sandbox</a> for more on this.</p>
+</blockquote>
+
+<h3 id="email">Email</h3>
+
+<p>Back in the code, add <code class="highlighter-rouge">boto3</code> to the requirements file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>boto3==1.6.15
+</code></pre></div></div>
+
+<p>Update <code class="highlighter-rouge">send_email</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">send_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+    <span class="c"># time.sleep(10)  # simulate long-running process</span>
+    <span class="n">ses</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+        <span class="s">'ses'</span><span class="p">,</span>
+        <span class="n">region_name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'SES_REGION'</span><span class="p">),</span>
+        <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'AWS_ACCESS_KEY_ID'</span><span class="p">),</span>
+        <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'AWS_SECRET_ACCESS_KEY'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">ses</span><span class="o">.</span><span class="n">send_email</span><span class="p">(</span>
+        <span class="n">Source</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'SES_EMAIL_SOURCE'</span><span class="p">),</span>
+        <span class="n">Destination</span><span class="o">=</span><span class="p">{</span><span class="s">'ToAddresses'</span><span class="p">:</span> <span class="p">[</span><span class="n">email</span><span class="p">]},</span>
+        <span class="n">Message</span><span class="o">=</span><span class="p">{</span>
+            <span class="s">'Subject'</span><span class="p">:</span> <span class="p">{</span><span class="s">'Data'</span><span class="p">:</span> <span class="s">'Confirm Your Account'</span><span class="p">},</span>
+            <span class="s">'Body'</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">'Text'</span><span class="p">:</span> <span class="p">{</span><span class="s">'Data'</span><span class="p">:</span> <span class="n">body</span><span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">email_sent</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</code></pre></div></div>
+
+<p>Here, we created a new SES client resource and then attempted to send an email.</p>
+
+<p>Import <code class="highlighter-rouge">os</code> and <code class="highlighter-rouge">boto3</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+</code></pre></div></div>
+
+<p>Update the environment variables for the <code class="highlighter-rouge">worker</code> in <em>docker-compose.yml</em>, making sure to update the values:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="s">SES_REGION=us-east-1</span>
+<span class="pi">-</span> <span class="s">SES_EMAIL_SOURCE=your_email</span>
+<span class="pi">-</span> <span class="s">AWS_ACCESS_KEY_ID=your_access_key_id</span>
+<span class="pi">-</span> <span class="s">AWS_SECRET_ACCESS_KEY=your_secret_access_key</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>It’s worth noting that by default, <code class="highlighter-rouge">Boto3</code> will check the <code class="highlighter-rouge">AWS_ACCESS_KEY_ID</code> and <code class="highlighter-rouge">AWS_SECRET_ACCESS_KEY</code> environment variables for credentials. So, we didn’t need to explicitly pass them in when creating the SES client resource. In other words, as long as those environment variables are defined, we can simplify the code:</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ses</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">'ses'</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'SES_REGION'</span><span class="p">))</span>
+</code></pre></div>  </div>
+
+  <p>For more on this, review the official Boto3 <a href="http://boto3.readthedocs.io/en/latest/guide/configuration.html">docs</a>.</p>
+</blockquote>
+
+<h3 id="test-2">Test</h3>
+
+<p>Update the containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose stop
+<span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>Then, register a user from the browser. You should see a confirmation email in your inbox. Click the link and you should be redirected back to <a href="http://localhost:5001">http://localhost:5001</a>.</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/confirm1.png">
+  <img src="/assets/img/blog/flask-rq-ses/confirm1.png" style="max-width:90%;padding-top:20px;" alt="email confirm" />
+</a></p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/confirm2.png">
+  <img src="/assets/img/blog/flask-rq-ses/confirm2.png" style="max-width:90%;padding-top:20px;" alt="email confirm" />
+</a></p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/confirm3.png">
+  <img src="/assets/img/blog/flask-rq-ses/confirm3.png" style="max-width:90%;padding-top:20px;" alt="email confirm" />
+</a></p>
+
+<p>Remember: If you’re still in sandbox mode, you can only send emails to verified addresses. If you try to send an email to an unverified address, the task will fail:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>raise error_class<span class="o">(</span>parsed_response, operation_name<span class="o">)</span>
+botocore.errorfactory.MessageRejected:
+An error occurred <span class="o">(</span>MessageRejected<span class="o">)</span> when calling the SendEmail operation:
+Email address is not verified. The following identities failed the check <span class="k">in </span>region US-EAST-1: t@t.com
+Moving job to <span class="s1">'failed'</span> queue
+</code></pre></div></div>
+
+<p>Also, since you’re probably testing with a single email address, you may want to remove the unique constraint on the model. Otherwise, you will need to remove the user from the database between tests.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">email</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>While the unique constraint is <code class="highlighter-rouge">False</code>, you may also want to ensure the following code from the <code class="highlighter-rouge">confirm_email</code> view works:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">confirmed</span><span class="p">:</span>
+    <span class="n">flash</span><span class="p">(</span><span class="s">'Account already confirmed.'</span><span class="p">,</span> <span class="s">'success'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">'main.home'</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Think about how you can test this?</p>
+
+<ol>
+  <li>Register two users under the same email</li>
+  <li>Confirm one of them</li>
+  <li>Remove the unconfirmed user from the database</li>
+  <li>Try to confirm the other user</li>
+</ol>
+
+<p>You should see:</p>
+
+<p><a href="/assets/img/blog/flask-rq-ses/duplicate_confirm.png">
+  <img src="/assets/img/blog/flask-rq-ses/duplicate_confirm.png" style="max-width:90%;padding-top:20px;" alt="duplicate confirm" />
+</a></p>
+
+<p>Don’t forget to add the unique constraint back in once you’re done testing!</p>
+
+<blockquote>
+  <p>For more info on the process we went through to send emails on SES via <code class="highlighter-rouge">Boto3</code>, review the <a href="https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-sdk-python.html">Send an Email Using the AWS SDK for Python (Boto)</a> guide.</p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this tutorial, we detailed how to send confirmation emails that newly registered users must click on before their account is fully activated.</p>
+
+<p>Looking for some challenges?</p>
+
+<ol>
+  <li><em>Redis Queue</em>: Add RQ Dashboard, a web-based monitoring system for Redis Queue. <em>See <a href="https://testdriven.io/asynchronous-tasks-with-flask-and-redis-queue">Asynchronous Tasks with Flask and Redis Queue</a> for more info.</em></li>
+  <li><em>Email templates</em>: As mentioned, along with the plain-text email template, generate an HTML version of the confirmation email.</li>
+  <li><em>Tools</em>: Don’t like the tools we’re using? Swamp out Redis Queue for Celery or SES for Mailgun.</li>
+  <li><em>End-to-end tests</em>: You could write a test that opens the browser, sends en email to a dummy email account, opens the inbox of the account, and then asserts that the clicking of the confirmation link works as expected. You could also bypass the logging in to the email account and simply programmatically access the account and assert that the email was delivered.</li>
+  <li><em>Re-send confirmation email</em>: Try incorporating functionality to re-send the confirmation email into this flow.</li>
+  <li><em>Password reset</em>: Along the same lines, try adding password reset via email into this flow.</li>
+  <li><em>Verification codes</em>: Want an additional layer of security? Add a verification code or two factor auth (via SMS).</li>
+  <li><em>Handling failures</em>: What happens if an exception occurs? If a confirmation email fails to send, you will probably lose that potential user. You may want to set up an auto retry policy with Redis Queue in case of a failure.</li>
+</ol>
+
+<p>As always, you can find the code in the <a href="https://github.com/testdrivenio/flask-ses-rq">repo</a>. Cheers!</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Sending confirmation Emails with Flask, Redis Queue, and Amazon SES&amp;url=https%3A%2F%2Ftestdriven.io/sending-confirmation-emails-with-flask-rq-and-ses&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

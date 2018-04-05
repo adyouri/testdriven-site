@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/heroku-to-aws/migrating_heroku_aws.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This post organizes some of the best tutorials on the web to migrate from Heroku to AWS.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="heroku, aws, amazon aws, ec2, docker, react">
+  
+  <!-- title -->
+  
+    <title>Migrating from Heroku to AWS - TestDriven.io</title>
+    <meta property="og:title" content="Migrating from Heroku to AWS" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1522932590970666000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/heroku-to-aws/migrating_heroku_aws.png" style="max-width:100%" alt="heroku and aws">
+            </div>
+          
+
+          <h1>Migrating from Heroku to AWS</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/jeffryes">Pete Jeffryes</a></span> on <span class="badge badge-secondary">Apr 5, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Migrating from Heroku to AWS&amp;url=https%3A%2F%2Ftestdriven.io/migrating-from-heroku-to-aws&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>In this tutorial, I tackled two major goals:</p>
+
+<ol>
+  <li>give my personal apps a more professional UX</li>
+  <li>reduce my overall hosting cost by 50%</li>
+</ol>
+
+<p>I have been using the <a href="https://www.heroku.com/pricing">free tier</a> of Heroku to serve up demo apps and create tutorial sandboxes. It’s a great service, easy to use and free, but it does come with a lengthy lag time on initial page load (about 7 seconds). Thats a looooong time by anyone’s standards. With a 7 second load time, according to <a href="https://blog.kissmetrics.com/loading-time/?wide=1">akamai.com and kissmetrics</a>, more than 25% of users will abandon your page well before your first div even shows up. Rather than simply upgrading to the paid tier of Heroku, I wanted to explore my options and learn some useful skills in the process.</p>
+
+<p>What’s more, I also have a hosted blog on <a href="https://ghost.org/">Ghost</a>. It’s an excellent platform, but it’s a bit pricey. Fortunately, they offer their software open source and provide a great tutorial on getting it up and running with Node and MySQL. You simply need somewhere to host it.</p>
+
+<p>By parting ways with my hosted blog and serving up several resources from one server, I can provide a better UX for my personal apps and save a few bucks at the same time. This post organizes some of the best tutorials on the web to get this done quickly and securely.</p>
+
+<p>This requires several different technologies working together to accomplish the goal:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tech</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EC2</td>
+      <td>provide cheap, reliable cloud computing power</td>
+    </tr>
+    <tr>
+      <td>Ubuntu</td>
+      <td>the operating system that handles running our programs</td>
+    </tr>
+    <tr>
+      <td>Docker</td>
+      <td>an isolation layer to provide a consistent execution environment</td>
+    </tr>
+    <tr>
+      <td>Nginx</td>
+      <td>handle requests in a robust and secure way</td>
+    </tr>
+    <tr>
+      <td>Certbot</td>
+      <td>serve up SSL/HTTPS secured web applications, and in turn, increase SSO (search engine optimization)</td>
+    </tr>
+    <tr>
+      <td>Ghost</td>
+      <td>provide a simple blog with GUI and persistance</td>
+    </tr>
+    <tr>
+      <td>React</td>
+      <td>allow for fast, composable web applications</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#ec2-setup" id="markdown-toc-ec2-setup">EC2 setup</a></li>
+  <li><a href="#elastic-ip" id="markdown-toc-elastic-ip">Elastic IP</a></li>
+  <li><a href="#ssh-key" id="markdown-toc-ssh-key">SSH Key</a></li>
+  <li><a href="#dns-configuration" id="markdown-toc-dns-configuration">DNS Configuration</a></li>
+  <li><a href="#ghost-blog-platform" id="markdown-toc-ghost-blog-platform">Ghost Blog Platform</a></li>
+  <li><a href="#midway-recap" id="markdown-toc-midway-recap">Midway recap</a></li>
+  <li><a href="#gotta-have-git" id="markdown-toc-gotta-have-git">Gotta have git</a></li>
+  <li><a href="#static-react-app" id="markdown-toc-static-react-app">Static React App</a></li>
+  <li><a href="#nginx-setup-for-react-app" id="markdown-toc-nginx-setup-for-react-app">Nginx setup for React app</a></li>
+  <li><a href="#lets-encrypt-with-certbot" id="markdown-toc-lets-encrypt-with-certbot">Let’s Encrypt with Certbot</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+<h3 id="objectives">Objectives</h3>
+
+<ul>
+  <li>Host personal projects, portfolio site, blog -&gt; cheaply and without loading lag time</li>
+  <li>Get acquainted with Nginx</li>
+  <li>Serve HTTPS encrypted sites</li>
+  <li>Dockerize React</li>
+</ul>
+
+<h3 id="technologies-used">Technologies Used</h3>
+
+<ul>
+  <li>Amazon EC2</li>
+  <li>Ubuntu</li>
+  <li>Nginx</li>
+  <li>React</li>
+  <li>Let’s Encrypt and Certbot (for SSL)</li>
+  <li>Docker</li>
+  <li>Ghost Blog Platform</li>
+</ul>
+
+<h3 id="takeaways">Takeaways</h3>
+
+<p>After completing this tutorial, you will be able to:</p>
+
+<ul>
+  <li>Set up an EC2 instance</li>
+  <li>Set up Nginx</li>
+  <li>Configure your DNS with sub-domains</li>
+  <li>Set up the Ghost blog platform on an EC2 instance</li>
+  <li>Dockerize a static React app</li>
+  <li>Serve a static site</li>
+  <li>Configure SSL with Let’s Encrypt and Certbot</li>
+</ul>
+
+<h3 id="the-finances">The Finances</h3>
+
+<p><strong>Current Hosted Solutions (No Lag Time)</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Service</th>
+      <th style="text-align: center">Price / Month</th>
+      <th>Info</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Blog</td>
+      <td>Ghost Pro</td>
+      <td style="text-align: center">$19</td>
+      <td><a href="https://ghost.org/pricing">https://ghost.org/pricing</a></td>
+    </tr>
+    <tr>
+      <td>Personal Apps</td>
+      <td>Heroku Hobby</td>
+      <td style="text-align: center">$7/app</td>
+      <td><a href="https://www.heroku.com/pricing">https://www.heroku.com/pricing</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<p><strong>Self Hosted Options</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Service</th>
+      <th style="text-align: center">Price / Month</th>
+      <th>Info</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Blog and Apps</td>
+      <td>AWS EC2 T2 Micro (1GB Memory)</td>
+      <td style="text-align: center">~$10</td>
+      <td><a href="https://aws.amazon.com/ec2/pricing/on-demand">https://aws.amazon.com/ec2/pricing/on-demand</a></td>
+    </tr>
+    <tr>
+      <td>Blog and Apps</td>
+      <td>Linode (1GB Memory)</td>
+      <td style="text-align: center">$5</td>
+      <td><a href="https://www.linode.com/pricing">https://www.linode.com/pricing</a></td>
+    </tr>
+    <tr>
+      <td>Blog and Apps</td>
+      <td>Digital Ocean (1GB Memory)</td>
+      <td style="text-align: center">$5</td>
+      <td><a href="https://www.digitalocean.com/pricing">https://www.digitalocean.com/pricing</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>So with a hosted solution, for one blog and one app, I would be paying $26 per month and that would go up $7/month with each new app. Per year, thats $312 + $84 per additional app. With a little bit of leg work outlined in this post, I am hosting multiple apps and a blog for less than $10/month.</p>
+
+<p>I decided to go with the AWS solution. While it is more expensive, it is a super popular enterprise technology that I want to become more familiar with.</p>
+
+<h3 id="thanks">Thanks</h3>
+
+<p>A <strong>BIG THANKS</strong> to all the folks who authored any of the referenced material. Much of this post consists of links and snippets of resources that proved to work well and includes the slight modifications needed along the way to suite my needs.</p>
+
+<p>Thank you, as well, for reading. Let’s get to it!</p>
+
+<h2 id="ec2-setup">EC2 setup</h2>
+
+<p>Here is how to create a new EC2 instance.</p>
+
+<p><em>Resource</em>: <a href="https://www.nginx.com/blog/setting-up-nginx">https://www.nginx.com/blog/setting-up-nginx</a></p>
+
+<p>All you really need is the above tutorial to be on your way with setting up an EC2 instance and installing Nginx. I stopped after the EC2 creation since Nginx gets installed during the Ghost blog platform setup.</p>
+
+<h2 id="elastic-ip">Elastic IP</h2>
+
+<p><em>Resource</em>: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html</a></p>
+
+<p>Further down the road, you are going to point your DNS (domain name system) at your EC2 instance’s public IP address. That means you don’t want it to change for any reason (for example, stopping and starting the instance). There are two ways to accomplish this:</p>
+
+<ol>
+  <li>activate the <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/default-vpc.html">default VPC</a> (virtual private cloud) in the AWS account</li>
+  <li>assign an <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">Elastic IP address</a></li>
+</ol>
+
+<p>Both options provide a free static IP address. In this tutorial, I went with the Elastic IP to accomplish this goal as it was really straightforward to add to my server after having already set it up.</p>
+
+<p>Follow the steps in the above resource to create an elastic IP address and associate it with your EC2 instance.</p>
+
+<h2 id="ssh-key">SSH Key</h2>
+
+<p><em>Resource</em>: <a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-16-04">https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-16-04</a></p>
+
+<p>I followed this tutorial to the ‘T’…worked like a charm. You’ll set up your own super user with its own SSH key and create a firewall restricting incoming traffic to only allow SSH.</p>
+
+<p>In a minute you’ll open up both HTTP and HTTPS for requests.</p>
+
+<h2 id="dns-configuration">DNS Configuration</h2>
+
+<p>I use <a href="https://www.name.com/">Name.com</a> for my DNS hosting because they have a decent UI and are local to Denver (where I reside). I already own <a href="http://petej.org">petej.org</a> and have been pointing it to a <a href="https://pages.github.com/">github pages</a> hosted static site. I decided to set up a sub-domain for the blog – <a href="https://blog.petej.org">blog.petej.org</a> – using <strong>A records</strong> to point to my EC2 instance’s public IP address. I created two <em>A records</em>, one to handle the <code class="highlighter-rouge">www</code> prefix and another to handle the bare URL:</p>
+
+<p><img src="/assets/img/blog/heroku-to-aws/a-record.png" style="max-width:90%;padding-top:0px;" alt="a-record" /></p>
+
+<p>Now via the command line, use the <code class="highlighter-rouge">dig</code> utility to check to see if the new A record is working. This can be done from your local machine or the EC2 instance:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>dig A blog.petej.org
+
+<span class="p">;</span> &lt;&lt;<span class="o">&gt;&gt;</span> DiG 9.9.7-P3 &lt;&lt;<span class="o">&gt;&gt;</span> A blog.petej.org
+<span class="p">;;</span> global options: +cmd
+<span class="p">;;</span> Got answer:
+<span class="p">;;</span> -&gt;&gt;HEADER<span class="o">&lt;&lt;-</span> <span class="no">opcode</span><span class="sh">: QUERY, status: NOERROR, id: 44050
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;blog.petej.org.			IN	A
+
+;; ANSWER SECTION:
+blog.petej.org.		300	IN	A	35.153.44.46
+
+;; Query time: 76 msec
+;; SERVER: 75.75.75.75#53(75.75.75.75)
+;; WHEN: Sat Jan 27 10:13:50 MST 2018
+;; MSG SIZE  rcvd: 59
+
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><strong>Note</strong>: The <em>A records</em> take effect nearly instantaneously, but can take up to an hour to resolve any caching from a previous use of this URL. So if you already had your domain name set up and working, this may take a little while.</p>
+</blockquote>
+
+<p>Nice: domain –&gt; √. Now you need to get your EC2 instance serving up some content!</p>
+
+<h2 id="ghost-blog-platform">Ghost Blog Platform</h2>
+
+<p><em>Resource</em>: <a href="https://docs.ghost.org/v1/docs/install#section-update-packages">https://docs.ghost.org/v1/docs/install#section-update-packages</a></p>
+
+<p>Another great tutorial. I followed it every step of the way and it was golden. There are some steps that we have already covered above, such as the best practices of setting up an Ubuntu instance, so you can skip those. Be sure to start from the <em>Update Packages</em> section.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> Follow this setup exactly in order. My first time around I neglected to set a user for the MySQL database and ended up having to remove Ghost from the machine, reinstall, and start from the beginning.</p>
+</blockquote>
+
+<p>After stepping through the Ghost install process, you should now have a blog up and running at your domain name - check it out in the browser!</p>
+
+<h2 id="midway-recap">Midway recap</h2>
+
+<p>What have you accomplished?</p>
+
+<ul>
+  <li>Ubuntu server up and running</li>
+  <li>SSH access into our server</li>
+  <li>Ghost platform installed</li>
+  <li>Nginx handling incoming traffic</li>
+  <li>Self hosted blog, up!</li>
+</ul>
+
+<h3 id="so-whats-next">So whats next?</h3>
+
+<p>You are now going to:</p>
+
+<ol>
+  <li>Install git and set up SSH access to your GitHub account</li>
+  <li>Dockerize a static React app</li>
+  <li>Set up Docker on the EC2 instance</li>
+  <li>Configure the Nginx reverse proxy layer to route traffic to your React app</li>
+  <li>Associate SSL certificates with your blog and react app so they can be served over HTTPS</li>
+</ol>
+
+<p>Onward…</p>
+
+<h2 id="gotta-have-git">Gotta have git</h2>
+
+<p>Install git on the EC2 instance:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install </span>git
+</code></pre></div></div>
+
+<p>Create a new SSH key specifically for GitHub access: <a href="https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent</a></p>
+
+<p>Because you set up a user for the Ubuntu server earlier, the <em>/root directory</em> and your <em>~ directory</em> (user’s home directory) are different. To account for that, on the <code class="highlighter-rouge">ssh-add</code> step do this instead:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> /root/.ssh/id_rsa ~/.ssh/id_rsa
+<span class="nb">cd</span> ~/.ssh
+ssh-add
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo cat</span> ~/.ssh/id_rsa
+</code></pre></div></div>
+
+<p>Copy the output and add it to GitHub as a new SSH key as detailed in the below link.</p>
+
+<p>Start with <strong>step 2</strong> –&gt; <a href="https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account">https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account</a></p>
+
+<p>You are all set up to <code class="highlighter-rouge">git</code>. Clone and then push a commit to a repo to make sure everything is wired up correctly.</p>
+
+<h2 id="static-react-app">Static React App</h2>
+
+<p><em>Resource</em>: <a href="https://medium.com/ai2-blog/dockerizing-a-react-application-3563688a2378">https://medium.com/ai2-blog/dockerizing-a-react-application-3563688a2378</a></p>
+
+<p>Once you have your React app running locally with Docker, push the image up to <a href="https://hub.docker.com/">Docker Hub</a>:</p>
+
+<p>You will need a Docker Hub account –&gt; <a href="https://hub.docker.com">https://hub.docker.com</a></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker login
+Username:
+Password:
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker tag &lt;image-name&gt; &lt;username&gt;/&lt;image-name&gt;:&lt;tag-name&gt;
+<span class="nv">$ </span>docker push &lt;username&gt;/&lt;image-name&gt;
+</code></pre></div></div>
+
+<p>This will take a while. About 5 min. Coffee break…</p>
+
+<p>And we’re back. Go ahead and log in to GitHub and make sure that your image has been uploaded.</p>
+
+<p>Now back to your EC2 instance. SSH into it.</p>
+
+<p>Install docker:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>docker.io
+</code></pre></div></div>
+
+<p>Pull down the Docker image locally that you recently pushed up:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>docker pull &lt;username&gt;/&lt;image-name&gt;
+</code></pre></div></div>
+
+<p>Get the image id and use it to fire up the app:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>docker images
+<span class="c"># Copy the image ID</span>
+<span class="nv">$ </span><span class="nb">sudo </span>docker run <span class="nt">-d</span> <span class="nt">-it</span> <span class="nt">-p</span> 5000:5000 &lt;image-id&gt;
+</code></pre></div></div>
+
+<p>Now that you have the React app running, let’s expose it to the world by setting up the Nginx config.</p>
+
+<h2 id="nginx-setup-for-react-app">Nginx setup for React app</h2>
+
+<p><em>Resource</em>: <a href="https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04">https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04</a></p>
+
+<blockquote>
+  <p><strong>Note</strong>: Instead of using <em>/etc/nginx/sites-available/default</em> like the tutorial suggests, I made one specific for the URL (better practice and more flexible going forward) –&gt; <em>circle-grid.petej.org.conf</em> file, leaving the default file completely alone.</p>
+</blockquote>
+
+<p>We also need to set up a symlink:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo ln</span> <span class="nt">-s</span> /etc/nginx/sites-available/circle-grid.petej.org.conf /etc/nginx/sites-enabled/
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>Note</strong>: Why the symlink? As you can see if you take a look in <em>/etc/nginx/nginx.conf</em>, only the files in the <em>/sites-enabled</em> are being taken into account. The symlink will take care of this for us by representing this file in the <em>sites_available</em> file making it discoverable by Nginx. If you’ve  used Apache before you will be familiar with this pattern. You can also remove symlinks just like you would remove a file: <code class="highlighter-rouge">rm ./path/to/symlink</code>.</p>
+</blockquote>
+
+<p>More about ‘symlinks’: <a href="http://manpages.ubuntu.com/manpages/xenial/en/man7/symlink.7.html">http://manpages.ubuntu.com/manpages/xenial/en/man7/symlink.7.html</a></p>
+
+<h2 id="lets-encrypt-with-certbot">Let’s Encrypt with Certbot</h2>
+
+<p><em>Resource</em>: <a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04">https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04</a></p>
+
+<p>Now to be sure that Certbot configured a cron job to auto renew your certificates run this command:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> /etc/cron.d/
+</code></pre></div></div>
+
+<p>If there is a <em>certbot</em> file in there, you are good go.</p>
+
+<p>If not, follow these steps:</p>
+
+<ol>
+  <li>
+    <p>Test the renewal process manually:</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span><span class="nb">sudo </span>certbot renew <span class="nt">--dry-run</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>If that is successful, then:</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span>nano /etc/cron.d/certbot
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Add this line to the file:</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 0 <span class="k">*</span>/12 <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> root <span class="nb">test</span> <span class="nt">-x</span> /usr/bin/certbot <span class="nt">-a</span> <span class="se">\!</span> <span class="nt">-d</span> /run/systemd/system <span class="o">&amp;&amp;</span> perl <span class="nt">-e</span> <span class="s1">'sleep int(rand(3600))'</span> <span class="o">&amp;&amp;</span> certbot <span class="nt">-q</span> renew
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Save it, all done.</p>
+  </li>
+</ol>
+
+<p>You have now configured a task to run every 12 hours that will upgrade any certs that are within 30 days of expiration.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>You should now be able to:</p>
+
+<ul>
+  <li>Set up an EC2 instance</li>
+  <li>Set up Nginx</li>
+  <li>Configure your DNS with sub-domains</li>
+  <li>Set up a Ghost blog platform</li>
+  <li>Dockerize a React app</li>
+  <li>Serve a static React app</li>
+  <li>Configure SSL –&gt; Let’s Encrypt and Certbot</li>
+</ul>
+
+<p>I hope this was a helpful collection of links and tutorials to get you off the ground with a personal app server. Feel free to contact me (pete dot topleft at gmail dot com) with any questions or comments.</p>
+
+<p><strong>Thanks for reading</strong>.</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Migrating from Heroku to AWS&amp;url=https%3A%2F%2Ftestdriven.io/migrating-from-heroku-to-aws&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

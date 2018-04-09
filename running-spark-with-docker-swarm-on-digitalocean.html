@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/spark-docker-swarm/running_spark_docker_swarm.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This post details how to deploy Apache Spark to a Docker Swarm Cluster on DigitalOcean.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="python, docker, docker swarm, data science, digitalocean, spark, apache spark, pyspark">
+  
+  <!-- title -->
+  
+    <title>Running Spark with Docker Swarm on DigitalOcean - TestDriven.io</title>
+    <meta property="og:title" content="Running Spark with Docker Swarm on DigitalOcean" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1523278099405250000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/spark-docker-swarm/running_spark_docker_swarm.png" style="max-width:100%" alt="docker and apache spark">
+            </div>
+          
+
+          <h1>Running Spark with Docker Swarm on DigitalOcean</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/herman">Michael Herman</a></span> on <span class="badge badge-secondary">Apr 9, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Running Spark with Docker Swarm on DigitalOcean&amp;url=https%3A%2F%2Ftestdriven.io/running-spark-with-docker-swarm-on-digitalocean&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>Let’s look at how to deploy <a href="https://spark.apache.org/">Apache Spark</a>, an open-source cluster computing framework for large-scale data processing, to a Docker Swarm Cluster on <a href="https://www.digitalocean.com/">DigitalOcean</a>. We’ll also look at how to automate the provisioning (and deprovisioning) of machines as needed to keep costs down.</p>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#project-setup" id="markdown-toc-project-setup">Project Setup</a></li>
+  <li><a href="#docker-swarm" id="markdown-toc-docker-swarm">Docker Swarm</a></li>
+  <li><a href="#automation-scripts" id="markdown-toc-automation-scripts">Automation Scripts</a></li>
+</ul>
+
+<h2 id="project-setup">Project Setup</h2>
+
+<p>Clone down the project repo:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/testdrivenio/spark-docker-swarm
+<span class="nv">$ </span><span class="nb">cd </span>spark-docker-swarm
+</code></pre></div></div>
+
+<p>Then, pull the pre-built <code class="highlighter-rouge">spark</code> image from <a href="https://hub.docker.com/r/mjhea0/spark/">Docker Hub</a>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker pull mjhea0/spark:latest
+</code></pre></div></div>
+
+<p>The image is about 800MB in size, so it could take a few minutes to download, depending upon your connection speed. While waiting for it to finish, feel free to review the <a href="https://github.com/testdrivenio/spark-docker-swarm/blob/master/Dockerfile">Dockerfile</a> used to build this image along with <a href="https://github.com/testdrivenio/spark-docker-swarm/blob/master/count.py">count.py</a>, which we’ll be running through Spark.</p>
+
+<p>Once pulled, set the <code class="highlighter-rouge">SPARK_PUBLIC_DNS</code> environment variable to either <code class="highlighter-rouge">localhost</code> or the IP address of the Docker Machine:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">EXTERNAL_IP</span><span class="o">=</span>localhost
+</code></pre></div></div>
+
+<blockquote>
+  <p>The <code class="highlighter-rouge">SPARK_PUBLIC_DNS</code> sets the public DNS name of the Spark master and workers.</p>
+</blockquote>
+
+<p>Fire up the containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>This will spin up the Spark master and a single worker. Navigate in your browser to the Spark master’s web UI at <a href="http://localhost:8080">http://localhost:8080</a>:</p>
+
+<p><a href="/assets/img/blog/spark-docker-swarm/web_ui_1.png">
+  <img src="/assets/img/blog/spark-docker-swarm/web_ui_1.png" style="max-width:90%;" alt="spark web ui" />
+</a></p>
+
+<p>To kick off a Spark job, we need to:</p>
+
+<ol>
+  <li>Get the container ID for the <code class="highlighter-rouge">master</code> service and assign it to an environment variable called <code class="highlighter-rouge">CONTAINER_ID</code></li>
+  <li>Copy over the <em>count.py</em> file to the “/tmp” directory in the <code class="highlighter-rouge">master</code> container</li>
+  <li>Run the job!</li>
+</ol>
+
+<p>Try it out:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># get container id, assign to env variable</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">CONTAINER_ID</span><span class="o">=</span><span class="k">$(</span>docker ps <span class="nt">--filter</span> <span class="nv">name</span><span class="o">=</span>master <span class="nt">--format</span> <span class="s2">"{{.ID}}"</span><span class="k">)</span>
+
+<span class="c"># copy count.py</span>
+<span class="nv">$ </span>docker <span class="nb">cp </span>count.py <span class="nv">$CONTAINER_ID</span>:/tmp
+
+<span class="c"># run spark</span>
+<span class="nv">$ </span>docker <span class="nb">exec</span> <span class="nv">$CONTAINER_ID</span> <span class="se">\</span>
+  bin/spark-submit <span class="se">\</span>
+    <span class="nt">--master</span> spark://master:7077 <span class="se">\</span>
+    <span class="nt">--class</span> endpoint <span class="se">\</span>
+    /tmp/count.py
+</code></pre></div></div>
+
+<p>Jump back to the Spark master’s web UI. You should see one running job:</p>
+
+<p><a href="/assets/img/blog/spark-docker-swarm/web_ui_2.png">
+  <img src="/assets/img/blog/spark-docker-swarm/web_ui_2.png" style="max-width:90%;" alt="spark web ui" />
+</a></p>
+
+<p>And, in the terminal, you should see the outputted Spark logs. If all went well, the output from the <code class="highlighter-rouge">get_counts()</code> function from <em>counts.py</em> should be:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span><span class="s1">'test'</span>: 2<span class="o">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/img/blog/spark-docker-swarm/output_1.png">
+  <img src="/assets/img/blog/spark-docker-swarm/output_1.png" style="max-width:90%;" alt="spark terminal output" />
+</a></p>
+
+<p>With that, let’s spin up a Swarm cluster!</p>
+
+<h2 id="docker-swarm">Docker Swarm</h2>
+
+<p>First, you’ll need to <a href="https://m.do.co/c/d8f211a4b4c2">sign up</a> for a DigitalOcean account (if you don’t already have one), and then <a href="https://www.digitalocean.com/community/tutorials/how-to-use-the-digitalocean-api-v2">generate</a> an access token so you can access the <a href="https://developers.digitalocean.com/documentation/v2/">DigitalOcean API</a>.</p>
+
+<p>Add the token to your environment:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">DIGITAL_OCEAN_ACCESS_TOKEN</span><span class="o">=[</span>your_digital_ocean_token]
+</code></pre></div></div>
+
+<p>Spin up three DigitalOcean droplets:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="k">for </span>i <span class="k">in </span>1 2 3<span class="p">;</span> <span class="k">do
+    </span>docker-machine create <span class="se">\</span>
+      <span class="nt">--digitalocean-region</span> <span class="s2">"nyc1"</span> <span class="se">\</span>
+      <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+      <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
+      <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
+      node-<span class="nv">$i</span><span class="p">;</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>Initialize <a href="https://docs.docker.com/engine/swarm/">Swarm mode</a> on <code class="highlighter-rouge">node-1</code>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine ssh node-1 <span class="se">\</span>
+  <span class="nt">--</span> docker swarm init <span class="se">\</span>
+  <span class="nt">--advertise-addr</span> <span class="k">$(</span>docker-machine ip node-1<span class="k">)</span>
+</code></pre></div></div>
+
+<p>Grab the join token from the output of the previous command, and then add the remaining nodes to the Swarm as workers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="k">for </span>i <span class="k">in </span>2 3<span class="p">;</span> <span class="k">do
+    </span>docker-machine ssh node-<span class="nv">$i</span> <span class="se">\</span>
+      <span class="nt">--</span> docker swarm <span class="nb">join</span> <span class="nt">--token</span> YOUR_JOIN_TOKEN<span class="p">;</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>Drain the Swarm manager:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine ssh node-1 <span class="nt">--</span> docker node update <span class="nt">--availability</span> drain node-1
+</code></pre></div></div>
+
+<blockquote>
+  <p>It’s a good practice to drain the Swarm manager so that it can’t run any containers.</p>
+</blockquote>
+
+<p>Point the Docker daemon at <code class="highlighter-rouge">node-1</code>, update the <code class="highlighter-rouge">EXTERNAL_IP</code> environment variable, and deploy the stack:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>node-1<span class="k">)</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>docker-machine ip node-2<span class="k">)</span>
+<span class="nv">$ </span>docker stack deploy <span class="nt">--compose-file</span><span class="o">=</span>docker-compose.yml spark
+</code></pre></div></div>
+
+<p>Add another worker node:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker service scale <span class="nv">spark_worker</span><span class="o">=</span>2
+</code></pre></div></div>
+
+<p>Review the stack:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker stack ps spark
+</code></pre></div></div>
+
+<p>You should see something similar to:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ID                  NAME                IMAGE                 NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
+vg4liuvkpxmi        spark_worker.1      mjhea0/spark:latest   node-3              Running             Running about a minute ago
+zbg458eprlpv        spark_master.1      mjhea0/spark:latest   node-2              Running             Running about a minute ago
+t22vlj12gm2g        spark_worker.2      mjhea0/spark:latest   node-2              Running             Running about a minute ago
+</code></pre></div></div>
+
+<p>Point the Docker daemon at the node the Spark master is on:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ NODE</span><span class="o">=</span><span class="k">$(</span>docker service ps <span class="nt">--format</span> <span class="s2">"{{.Node}}"</span> spark_master<span class="k">)</span>
+<span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env</span> <span class="nv">$NODE</span><span class="k">)</span>
+</code></pre></div></div>
+
+<p>Get the IP:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine ip <span class="nv">$NODE</span>
+</code></pre></div></div>
+
+<p>Make sure the Spark master’s web UI is up at <a href="http://YOUR_MACHINE_IP:8080">http://YOUR_MACHINE_IP:8080</a>. You should see two workers as well:</p>
+
+<p><a href="/assets/img/blog/spark-docker-swarm/web_ui_3.png">
+  <img src="/assets/img/blog/spark-docker-swarm/web_ui_3.png" style="max-width:90%;" alt="spark web ui" />
+</a></p>
+
+<p>Get the container ID for the Spark master and set it as an environment variable:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">CONTAINER_ID</span><span class="o">=</span><span class="k">$(</span>docker ps <span class="nt">--filter</span> <span class="nv">name</span><span class="o">=</span>master <span class="nt">--format</span> <span class="s2">"{{.ID}}"</span><span class="k">)</span>
+</code></pre></div></div>
+
+<p>Copy over the file:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker <span class="nb">cp </span>count.py <span class="nv">$CONTAINER_ID</span>:/tmp
+</code></pre></div></div>
+
+<p>Test:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker <span class="nb">exec</span> <span class="nv">$CONTAINER_ID</span> <span class="se">\</span>
+  bin/spark-submit <span class="se">\</span>
+    <span class="nt">--master</span> spark://master:7077 <span class="se">\</span>
+    <span class="nt">--class</span> endpoint <span class="se">\</span>
+    /tmp/count.py
+</code></pre></div></div>
+
+<p>Again, you should see the job running in the Spark master’s web UI along with the outputted Spark logs in the terminal.</p>
+
+<p><a href="/assets/img/blog/spark-docker-swarm/web_ui_4.png">
+  <img src="/assets/img/blog/spark-docker-swarm/web_ui_4.png" style="max-width:90%;" alt="spark web ui" />
+</a></p>
+
+<p>Spin down the nodes after the job is finished:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-machine <span class="nb">rm </span>node-1 node-2 node-3 <span class="nt">-y</span>
+</code></pre></div></div>
+
+<h2 id="automation-scripts">Automation Scripts</h2>
+
+<p>To keep costs down, you can spin up and provision resources as needed - so you only pay for what you use.</p>
+
+<p>Let’s write a few scripts that will:</p>
+
+<ol>
+  <li>Provision the droplets with Docker Machine</li>
+  <li>Configure Docker Swarm mode</li>
+  <li>Add nodes to the Swarm</li>
+  <li>Deploy Spark</li>
+  <li>Run a Spark job</li>
+  <li>Spin down the droplets once done</li>
+</ol>
+
+<p><em>create.sh</em>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+
+<span class="nb">echo</span> <span class="s2">"Spinning up three droplets..."</span>
+
+<span class="k">for </span>i <span class="k">in </span>1 2 3<span class="p">;</span> <span class="k">do
+  </span>docker-machine create <span class="se">\</span>
+    <span class="nt">--driver</span> digitalocean <span class="se">\</span>
+    <span class="nt">--digitalocean-region</span> <span class="s2">"nyc1"</span> <span class="se">\</span>
+    <span class="nt">--digitalocean-size</span> <span class="s2">"8gb"</span> <span class="se">\</span>
+    <span class="nt">--digitalocean-access-token</span> <span class="nv">$DIGITAL_OCEAN_ACCESS_TOKEN</span> <span class="se">\</span>
+    node-<span class="nv">$i</span><span class="p">;</span>
+<span class="k">done
+
+
+</span><span class="nb">echo</span> <span class="s2">"Initializing Swarm mode..."</span>
+
+docker-machine ssh node-1 <span class="nt">--</span> docker swarm init <span class="nt">--advertise-addr</span> <span class="k">$(</span>docker-machine ip node-1<span class="k">)</span>
+
+docker-machine ssh node-1 <span class="nt">--</span> docker node update <span class="nt">--availability</span> drain node-1
+
+
+<span class="nb">echo</span> <span class="s2">"Adding the nodes to the Swarm..."</span>
+
+<span class="nv">TOKEN</span><span class="o">=</span><span class="sb">`</span>docker-machine ssh node-1 docker swarm join-token worker | <span class="nb">grep </span>token | <span class="nb">awk</span> <span class="s1">'{ print $5 }'</span><span class="sb">`</span>
+
+docker-machine ssh node-2 <span class="s2">"docker swarm join --token </span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2"> </span><span class="k">$(</span>docker-machine ip node-1<span class="k">)</span><span class="s2">:2377"</span>
+docker-machine ssh node-3 <span class="s2">"docker swarm join --token </span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2"> </span><span class="k">$(</span>docker-machine ip node-1<span class="k">)</span><span class="s2">:2377"</span>
+
+
+<span class="nb">echo</span> <span class="s2">"Deploying Spark..."</span>
+
+<span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>node-1<span class="k">)</span>
+<span class="nb">export </span><span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="k">$(</span>docker-machine ip node-2<span class="k">)</span>
+docker stack deploy <span class="nt">--compose-file</span><span class="o">=</span>docker-compose.yml spark
+docker service scale <span class="nv">spark_worker</span><span class="o">=</span>2
+
+
+<span class="nb">echo</span> <span class="s2">"Get address..."</span>
+
+<span class="nv">NODE</span><span class="o">=</span><span class="k">$(</span>docker service ps <span class="nt">--format</span> <span class="s2">"{{.Node}}"</span> spark_master<span class="k">)</span>
+docker-machine ip <span class="nv">$NODE</span>
+</code></pre></div></div>
+
+<p><em>run.sh</em>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+
+<span class="nb">echo</span> <span class="s2">"Getting container ID of the Spark master..."</span>
+
+<span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env </span>node-1<span class="k">)</span>
+<span class="nv">NODE</span><span class="o">=</span><span class="k">$(</span>docker service ps <span class="nt">--format</span> <span class="s2">"{{.Node}}"</span> spark_master<span class="k">)</span>
+<span class="nb">eval</span> <span class="k">$(</span>docker-machine <span class="nb">env</span> <span class="nv">$NODE</span><span class="k">)</span>
+<span class="nv">CONTAINER_ID</span><span class="o">=</span><span class="k">$(</span>docker ps <span class="nt">--filter</span> <span class="nv">name</span><span class="o">=</span>master <span class="nt">--format</span> <span class="s2">"{{.ID}}"</span><span class="k">)</span>
+
+
+<span class="nb">echo</span> <span class="s2">"Copying count.py script to the Spark master..."</span>
+
+docker <span class="nb">cp </span>count.py <span class="nv">$CONTAINER_ID</span>:/tmp
+
+
+<span class="nb">echo</span> <span class="s2">"Running Spark job..."</span>
+
+docker <span class="nb">exec</span> <span class="nv">$CONTAINER_ID</span> <span class="se">\</span>
+  bin/spark-submit <span class="se">\</span>
+    <span class="nt">--master</span> spark://master:7077 <span class="se">\</span>
+    <span class="nt">--class</span> endpoint <span class="se">\</span>
+    /tmp/count.py
+</code></pre></div></div>
+
+<p><em>destroy.sh</em>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+docker-machine <span class="nb">rm </span>node-1 node-2 node-3 <span class="nt">-y</span>
+</code></pre></div></div>
+
+<p>Test it out!</p>
+
+<hr />
+
+<p>The code can be found in the <a href="https://github.com/testdrivenio/spark-docker-swarm">spark-docker-swarm</a> repo. Cheers!</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Running Spark with Docker Swarm on DigitalOcean&amp;url=https%3A%2F%2Ftestdriven.io/running-spark-with-docker-swarm-on-digitalocean&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/tdd_react/tdd_react_part_one.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="In this two part series, we'll look at how to develop a React app using Test-Driven Development (TDD).">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="react, javascript, test-driven development, tdd, jest, enzyme, reactjs">
+  
+  <!-- title -->
+  
+    <title>Test-Driven Development with React, Jest, and Enzyme - Part 1 - TestDriven.io</title>
+    <meta property="og:title" content="Test-Driven Development with React, Jest, and Enzyme - Part 1" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1523883359211289000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/tdd_react/tdd_react_part_one.png" style="max-width:100%" alt="react">
+            </div>
+          
+
+          <h1>Test-Driven Development with React, Jest, and Enzyme - Part 1</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/pollman">Caleb Pollman</a></span> on <span class="badge badge-secondary">Apr 16, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Test-Driven Development with React, Jest, and Enzyme - Part 1&amp;url=https%3A%2F%2Ftestdriven.io/tdd-with-react-jest-and-enzyme-part-one&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>In this post, we’ll develop a React app using Test-Driven Development (TDD) with Jest and Enzyme. Upon completion, you will be able to:</p>
+
+<ul>
+  <li>Use TDD to develop a React Application</li>
+  <li>Test a React Application with Enzyme and Jest</li>
+  <li>Write and use CSS variables for reuse and responsive design</li>
+  <li>Create a reusable React component that renders and functions differently based on the provided props</li>
+  <li>Use React propTypes to type check component props</li>
+  <li>Approach an application from a responsive design perspective</li>
+  <li>Use the Flexible Box Module to create a flexible layout</li>
+</ul>
+
+<blockquote>
+  <p>This post assumes you have at least a basic knowledge of React. If you are completely new to React, it is recommended that you complete the official <a href="https://reactjs.org/tutorial/tutorial.html">Intro To React</a> tutorial.</p>
+</blockquote>
+
+<p><strong>Parts:</strong></p>
+
+<ul>
+  <li><em>Part 1</em> (this post!): In the first part, we’ll set up the overall project and then dive into developing the UI with Test-driven Development.</li>
+  <li><em>Part 2</em> (coming soon!): In this part, we’ll finish the UI by adding the number and operator keys before we dive in to adding the basic calculator functionality.</li>
+</ul>
+
+<blockquote>
+  <p>Part 2 will be published on April 23. Sign up for the mailing list at the bottom of this post to receive alerts about new blog posts.</p>
+</blockquote>
+
+<p><strong>We will be using:</strong></p>
+
+<ol>
+  <li>React v16.3.1</li>
+  <li>Node v9.11.0</li>
+</ol>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#project-overview" id="markdown-toc-project-overview">Project Overview</a></li>
+  <li><a href="#getting-started" id="markdown-toc-getting-started">Getting Started</a></li>
+  <li><a href="#configure-font-and-initial-css" id="markdown-toc-configure-font-and-initial-css">Configure Font and Initial CSS</a></li>
+  <li><a href="#app-component" id="markdown-toc-app-component">App Component</a></li>
+  <li><a href="#calculator-component-1" id="markdown-toc-calculator-component-1">Calculator Component</a></li>
+  <li><a href="#display-component-1" id="markdown-toc-display-component-1">Display Component</a></li>
+  <li><a href="#keypad-component-1" id="markdown-toc-keypad-component-1">Keypad Component</a></li>
+  <li><a href="#next-time" id="markdown-toc-next-time">Next Time</a></li>
+</ul>
+
+<h2 id="project-overview">Project Overview</h2>
+
+<p>We’ll be building a basic calculator app consisting of four UI components. Each component will have a separate set of tests housed in a corresponding test file.</p>
+
+<h3 id="what-is-test-driven-development">What is Test-Driven Development?</h3>
+
+<p>Test-driven development (TDD) is a development method that utilizes repetition of a short development cycle (<span style="color:red">red</span>-<span style="color:green">green</span>-<span style="color:orange">refactor</span>).</p>
+
+<h4 id="process">Process:</h4>
+
+<ol>
+  <li>Add a test</li>
+  <li>Run all tests and see if the new test fails (<span style="color:red">red</span>)</li>
+  <li>Write the code to pass the test (<span style="color:green">green</span>)</li>
+  <li>Run all tests</li>
+  <li><span style="color:orange">Refactor</span></li>
+  <li>repeat</li>
+</ol>
+
+<h4 id="pros">Pros:</h4>
+
+<ol>
+  <li>Design before implementation</li>
+  <li>Helps prevent future regressions and bugs</li>
+  <li>Increases confidence that the code works as expected</li>
+</ol>
+
+<h4 id="cons">Cons:</h4>
+
+<ol>
+  <li>Takes longer to develop (but it can save time in the long run)</li>
+  <li>Testing edge cases is hard</li>
+  <li>Mocking/faking/stubbing is even harder</li>
+</ol>
+
+<h3 id="design-process">Design Process</h3>
+
+<p>Think about what you know about a basic calculator…</p>
+
+<h4 id="from-a-visual-perspective">From a visual perspective:</h4>
+
+<ol>
+  <li>A basic calculator has four operations with keys for each (operator keys):
+    <ul>
+      <li>Addition</li>
+      <li>Subtract</li>
+      <li>Multiplication</li>
+      <li>Division</li>
+    </ul>
+  </li>
+  <li>A basic calculator has 12 keys that update the display (number keys):
+    <ul>
+      <li><code class="highlighter-rouge">0</code> through <code class="highlighter-rouge">9</code></li>
+      <li><code class="highlighter-rouge">.</code> for decimals</li>
+      <li><code class="highlighter-rouge">ce</code> backspace</li>
+    </ul>
+  </li>
+  <li>A basic calculator has an <code class="highlighter-rouge">=</code> (equals) key.</li>
+</ol>
+
+<h4 id="from-a-functional-perspective">From a functional perspective:</h4>
+
+<ol>
+  <li>
+    <p>When a number key is clicked, the calculator updates the display to reflect the new display value.</p>
+  </li>
+  <li>
+    <p>When an operator key is clicked, the calculator saves the selected operator and the current display value to memory and then updates the display.</p>
+  </li>
+  <li>
+    <p>When the submit (or “equals”) key is clicked, the calculator takes the stored value, the stored operator, and the current value of the display and creates an output based off the aforementioned inputs.</p>
+  </li>
+  <li>
+    <p>Finally, based off what we determined above we know we will have three types of keys and three different functions that correspond to the key types:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Key Type</th>
+          <th>Function Name</th>
+          <th>Function Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Number keys</td>
+          <td><code class="highlighter-rouge">updateDisplay</code></td>
+          <td>Updates and renders the display value to the DOM</td>
+        </tr>
+        <tr>
+          <td>Operator keys</td>
+          <td><code class="highlighter-rouge">setOperator</code></td>
+          <td>Saves the chosen operator to the component state object</td>
+        </tr>
+        <tr>
+          <td>Submit key</td>
+          <td><code class="highlighter-rouge">callOperator</code></td>
+          <td>Handles math operations</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<h4 id="and-we-will-have-these-variables">And we will have these variables:</h4>
+
+<ol>
+  <li><code class="highlighter-rouge">displayValue</code> - inputed or computed value to be displayed.</li>
+  <li><code class="highlighter-rouge">numbers</code> - array of string values used for the number keys.</li>
+  <li><code class="highlighter-rouge">operators</code> - array of string values used for the operator keys.</li>
+  <li><code class="highlighter-rouge">selectedOperator</code> - selected operation held in memory.</li>
+  <li><code class="highlighter-rouge">storedValue</code> - inputed or computed value held in memory.</li>
+</ol>
+
+<p>With that, we can now think about our React components. There will be four components related to the calculator:</p>
+
+<p><img src="/assets/img/blog/tdd_react/components/component_structure.png" style="max-width:90%;" alt="component structure" /></p>
+
+<h3 id="calculator-component">Calculator Component</h3>
+
+<p><img src="/assets/img/blog/tdd_react/components/calculator_component.png" style="max-width:90%;" alt="calculator component" /></p>
+
+<p>This is the main UI stateful component for our application. It renders the <code class="highlighter-rouge">Display</code> and <code class="highlighter-rouge">Keypad</code> components and houses all application functions as well as the application’s state.</p>
+
+<h3 id="display-component">Display Component</h3>
+
+<p><img src="/assets/img/blog/tdd_react/components/display_component.png" style="max-width:90%;" alt="display component" /></p>
+
+<p>This is a stateless component, which receives a single prop, <code class="highlighter-rouge">displayValue</code>.</p>
+
+<h3 id="keypad-component">Keypad Component</h3>
+
+<p><img src="/assets/img/blog/tdd_react/components/keypad_component.png" style="max-width:90%;" alt="keypad component" /></p>
+
+<p>This is also a stateless component, which houses all of the keys. it
+receives the following props:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">callOperator</code></li>
+  <li><code class="highlighter-rouge">numbers</code></li>
+  <li><code class="highlighter-rouge">operators</code></li>
+  <li><code class="highlighter-rouge">setOperator</code></li>
+  <li><code class="highlighter-rouge">updateDisplay</code></li>
+</ol>
+
+<h3 id="key-component">Key Component</h3>
+
+<p><img src="/assets/img/blog/tdd_react/components/key_component.png" style="max-width:90%;" alt="key component" /></p>
+
+<p>The final component is also stateless and it receives the following props:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">keyAction</code> - the function related to the key type.</li>
+  <li><code class="highlighter-rouge">keyType</code> - a string used to determine which CSS rules the <code class="highlighter-rouge">Key</code> will have.</li>
+  <li><code class="highlighter-rouge">keyValue</code> - a string used to determine the value to be passed to the <code class="highlighter-rouge">keyAction</code> function.</li>
+</ol>
+
+<h2 id="getting-started">Getting Started</h2>
+
+<h3 id="project-setup">Project Setup</h3>
+
+<p>Start by cloning down the initial project repository:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone <span class="nt">-b</span> init git@github.com:calebpollman/react-calculator.git
+<span class="nv">$ </span><span class="nb">cd </span>react-calculator
+<span class="nv">$ </span>yarn <span class="nb">install</span>
+<span class="nv">$ </span>yarn start
+</code></pre></div></div>
+
+<blockquote>
+  <p>The project repo was initialized using the <em>extremely</em> useful <a href="https://github.com/facebook/create-react-app">Create React App</a> generator.</p>
+</blockquote>
+
+<p>A new browser tab should open to <a href="http://localhost:3000">http://localhost:3000</a> with the only contents of the DOM being <code class="highlighter-rouge">Hello World!</code>. Kill the server once done.</p>
+
+<blockquote>
+  <p>Because we are using TDD to develop the UI, the changes to the view will be slow. We’ll focus on writing tests up front, and the UI will gradually be completed through out the post.</p>
+</blockquote>
+
+<h3 id="test-config">Test Config</h3>
+
+<p>For testing, we’ll use <a href="https://facebook.github.io/jest/">Jest</a>, a full-featured testing solution that comes with Create React App, and <a href="https://github.com/airbnb/enzyme">Enzyme</a>, a powerful set of testing utilities for React.</p>
+
+<p>Add Enzyme:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn add <span class="nt">-D</span> enzyme
+</code></pre></div></div>
+
+<p>Enzyme requires <a href="https://reactjs.org/docs/test-renderer.html">react-test-renderer</a> for React apps version 15.5 or greater:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn add <span class="nt">-D</span> react-test-renderer enzyme-adapter-react-16
+</code></pre></div></div>
+
+<p>Add a new file in the “src” directory titled <em>setupTests.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">configure</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Adapter</span> <span class="k">from</span> <span class="s1">'enzyme-adapter-react-16'</span><span class="p">;</span>
+
+<span class="nx">configure</span><span class="p">({</span><span class="na">adapter</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Adapter</span><span class="p">()});</span>
+</code></pre></div></div>
+
+<p>Create React App runs the <em>setupTests.js</em> file before each test, so it will execute and properly configure Enzyme.</p>
+
+<h2 id="configure-font-and-initial-css">Configure Font and Initial CSS</h2>
+
+<h3 id="import-application-font">Import Application Font</h3>
+
+<p>For our application font, we’ll use <code class="highlighter-rouge">Orbitron</code>, a font designed for displays that resembles something you would see in a technologically advanced future, if the future was 1983. We need two weights, <code class="highlighter-rouge">regular</code> (400) and <code class="highlighter-rouge">bold</code> (700), and we will load the font from <a href="https://fonts.google.com/specimen/Orbitron?selection.family=Orbitron">Google Fonts</a>. Navigate to <em>index.html</em> in the “public” directory and add the <code class="highlighter-rouge">link</code> element in the <code class="highlighter-rouge">head</code> of the HTML:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1, shrink-to-fit=no"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"theme-color"</span> <span class="na">content=</span><span class="s">"#000000"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"https://fonts.googleapis.com/css?family=Orbitron:400,700"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"shortcut icon"</span> <span class="na">href=</span><span class="s">"%PUBLIC_URL%/favicon.png"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Issa Calculator<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;noscript&gt;</span>
+      You need to enable JavaScript to run this app.
+    <span class="nt">&lt;/noscript&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"root"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<h3 id="write-css-variables">Write CSS Variables</h3>
+
+<p>Next, we’ll write our first variable and a basic <a href="https://meyerweb.com/eric/tools/css/reset/">CSS reset</a>. Since we want the variables globally available to the application, we’ll define them from the <code class="highlighter-rouge">:root</code> scope. The syntax for defining variables is to use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*" title="Custom Properties">custom property notation</a>, each will begin with <code class="highlighter-rouge">--</code> followed by the variable name. Let’s write a variable for our application font and continue updating the variables as needed.</p>
+
+<p>Navigate to the <em>index.css</em> file and add the following:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/*
+app variables
+*/</span>
+
+<span class="nd">:root</span> <span class="p">{</span>
+  <span class="c">/* font */</span>
+  <span class="py">--main-font</span><span class="p">:</span> <span class="s2">'Orbitron'</span><span class="p">,</span> <span class="nb">sans-serif</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/*
+app CSS reset  
+*/</span>
+
+<span class="nt">body</span><span class="o">,</span> <span class="nt">div</span><span class="o">,</span> <span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We then need to import the CSS into our application. In <em>index.js</em> update the import statements at the top of the file:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">ReactDOM</span> <span class="k">from</span> <span class="s1">'react-dom'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./index.css'</span><span class="p">;</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>Hello World!<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'root'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="app-component">App Component</h2>
+
+<h3 id="shallow-rendering-tests">Shallow Rendering Tests</h3>
+
+<p>We’ll start out building each component by first adding the corresponding test file and then a shallow render test using Enzyme.</p>
+
+<p>Shallow render tests are useful to keep yourself constrained to testing the component as a unit and avoid indirectly testing the behavior of child components. You can find more information on shallow rendering in the <a href="http://airbnb.io/enzyme/docs/api/shallow.html">Enzyme docs</a>.</p>
+
+<h3 id="write-app-shallow-render-test">Write <code class="highlighter-rouge">App</code> Shallow Render Test</h3>
+
+<p>Begin by adding the first failing test (<span style="color:red">red</span>) for the <code class="highlighter-rouge">App</code> component, and then write the code for it to pass (<span style="color:green">green</span>). First, add a new spec file to “src/components/App” called <em>App.spec.js</em>, and add a shallow render test:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">App</span> <span class="k">from</span> <span class="s1">'./App'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'App'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render a &lt;div /&gt;'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="o">/&gt;</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Run the test:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>Once the test runner is up and running, your terminal should look something like this:</p>
+
+<p><img src="/assets/img/blog/tdd_react/first_fail.png" style="max-width:90%;" alt="first failing test" /></p>
+
+<p>The test has failed since the <code class="highlighter-rouge">App</code> component has not been written.</p>
+
+<h3 id="write-app-component">Write <code class="highlighter-rouge">App</code> Component</h3>
+
+<p>Go ahead and get the test passing by writing the <code class="highlighter-rouge">App</code> component. Navigate to <em>App.jsx</em> and add the following code:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"app-container"</span> <span class="p">/&gt;;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Run the test:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>The first test should now pass:</p>
+
+<p><img src="/assets/img/blog/tdd_react/first_pass.png" style="max-width:90%;" alt="first passing test" /></p>
+
+<blockquote>
+  <p>You may have noticed that if you didn’t exit the test runner it’s still running on the command line. As long as it’s running, it will continue watching the project and run the tests anytime a file changes. You may leave it running as you continue through this tutorial or you can exit and run it at your leisure.</p>
+</blockquote>
+
+<h3 id="add-app-css">Add <code class="highlighter-rouge">App</code> CSS</h3>
+
+<p>Now that our first test passes, let’s add some style to the <code class="highlighter-rouge">App</code> component. Since it is functioning as a wrapper for the rest of the application, we will use it to set the window size for the application and center the content (the <code class="highlighter-rouge">Calculator</code> component) of <code class="highlighter-rouge">App</code> horizontally and vertically using the <code class="highlighter-rouge">flexbox</code> module.</p>
+
+<p>Navigate to <em>App.css</em> in the “src/components/App” directory and add the following class:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.app-container</span> <span class="p">{</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">100vh</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100vw</span><span class="p">;</span>
+  <span class="nl">align-items</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">justify-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>About these CSS properties:</p>
+  <ul>
+    <li><code class="highlighter-rouge">height: 100vh;</code> sets application height to 100% of the browser window view height.</li>
+    <li><code class="highlighter-rouge">width: 100vw;</code> sets application width to 100% of the browser window view width.</li>
+    <li><code class="highlighter-rouge">align-items: center;</code> vertically aligns the content inside of the flex-container, if the <code class="highlighter-rouge">display</code> property is set to <code class="highlighter-rouge">flex</code></li>
+    <li><code class="highlighter-rouge">display: flex;</code> sets the <code class="highlighter-rouge">App</code> class to use the <code class="highlighter-rouge">flexbox</code> module.</li>
+    <li><code class="highlighter-rouge">justify-content: center;</code> horizontally aligns the content inside of the flex-container, if <code class="highlighter-rouge">display</code> property is set to <code class="highlighter-rouge">flex</code></li>
+  </ul>
+</blockquote>
+
+<p>Import the CSS to <code class="highlighter-rouge">App</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./App.css'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">"app-container"</span> <span class="o">/&gt;</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Import <code class="highlighter-rouge">App</code> to <em>index.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">ReactDOM</span> <span class="k">from</span> <span class="s1">'react-dom'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">App</span> <span class="k">from</span> <span class="s1">'./components/App/App'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./index.css'</span><span class="p">;</span>
+
+<span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span>
+  <span class="o">&lt;</span><span class="nx">App</span> <span class="o">/&gt;</span><span class="p">,</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'root'</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="calculator-component-1">Calculator Component</h2>
+
+<h3 id="check-for-calculator-in-app">Check for <code class="highlighter-rouge">Calculator</code> in <code class="highlighter-rouge">App</code></h3>
+
+<p>Because the <code class="highlighter-rouge">App</code> component will contain the <code class="highlighter-rouge">Calculator</code> component, let’s write a test that checks for the presence of the <code class="highlighter-rouge">Calculator</code> component in <code class="highlighter-rouge">App</code>. This test will use <code class="highlighter-rouge">containsMatchingElement</code>, an Enzyme <a href="http://airbnb.io/enzyme/docs/api/ShallowWrapper/containsMatchingElement.html">method</a> that returns <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code> based on whether a React element matches an element in the render tree.</p>
+
+<p>We should also refactor the file to use <code class="highlighter-rouge">beforeEach</code>, a setup method from Jest to reduce boilerplate in our tests moving forward. As the name suggests, any code placed in the <code class="highlighter-rouge">beforeEach</code> is executed before each <code class="highlighter-rouge">it</code> block. We’ll create the <code class="highlighter-rouge">wrapper</code> object outside of the <code class="highlighter-rouge">beforeEach</code> to make it accessible to tests.</p>
+
+<p>Add the test and refactor <em>App.spec.js</em>, making sure to import the <code class="highlighter-rouge">Calculator</code> component at the top of the file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">App</span> <span class="k">from</span> <span class="s1">'./App'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Calculator</span> <span class="k">from</span> <span class="s1">'../Calculator/Calculator'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'App'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render a &lt;div /&gt;'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render the Calculator Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">containsMatchingElement</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Calculator</span> <span class="o">/&gt;</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This test will fail as the <code class="highlighter-rouge">Calculator</code> component does not exist:</p>
+
+<p><img src="/assets/img/blog/tdd_react/second_fail.png" style="max-width:90%;" alt="second failing test" /></p>
+
+<h3 id="write-calculator-shallow-rendering-test">Write <code class="highlighter-rouge">Calculator</code> Shallow Rendering Test</h3>
+
+<p>Before we write the <code class="highlighter-rouge">Calculator</code> component to pass the <code class="highlighter-rouge">App › should render the Calculator Component</code> test, add the <code class="highlighter-rouge">Calculator</code> test file and set up a shallow render test in the new test file, like we did with the <code class="highlighter-rouge">App</code> component.</p>
+
+<p>Create <em>Calculator.spec.js</em>, and add the shallow render test as well as the <code class="highlighter-rouge">beforeEach</code> setup method to the file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Calculator</span> <span class="k">from</span> <span class="s1">'./Calculator'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'Calculator'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Calculator</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render a &lt;div /&gt;'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This test will fail immediately.</p>
+
+<h3 id="write-calculator-component">Write <code class="highlighter-rouge">Calculator</code> Component</h3>
+
+<p>Our application mostly consists of <em>stateless</em> components, but <code class="highlighter-rouge">Calculator</code> will be <em>stateful</em> so we can take advantage of React’s internal application state.</p>
+
+<blockquote>
+  <p><em>Stateful</em> components are <code class="highlighter-rouge">Class</code>-based and allow us to set state variables for the application in the <code class="highlighter-rouge">constructor</code> method. This is also where we will <code class="highlighter-rouge">bind</code> the application methods. More on this later.</p>
+</blockquote>
+
+<p>Navigate to <em>Calculator.jsx</em> and define the initial state variables and methods that were discussed earlier in the <a href="#project-overview">Design Process</a> portion of the post:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">Calculator</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="c1">// value to be displayed in &lt;Display /&gt;</span>
+      <span class="na">displayValue</span><span class="p">:</span> <span class="s1">'0'</span><span class="p">,</span>
+      <span class="c1">// values to be displayed in number &lt;Keys /&gt;</span>
+      <span class="na">numbers</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="c1">// values to be displayed in operator &lt;Keys /&gt;</span>
+      <span class="na">operators</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="c1">// operator selected for math operation</span>
+      <span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+      <span class="c1">// stored value to use for math operation</span>
+      <span class="na">storedValue</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">callOperator</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'call operation'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">setOperator</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'set operation'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">updateDisplay</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'update display'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"calculator-container"</span> <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Calculator</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>This passes the <code class="highlighter-rouge">Calculator › should render a &lt;div /&gt;</code> test, but not <code class="highlighter-rouge">App › should render the Calculator Component</code>. Why? Because the <code class="highlighter-rouge">App</code> component has not been updated to contain the <code class="highlighter-rouge">Calculator</code> component. Let’s do that now.</p>
+
+<p>In <em>App.jsx</em> update the code to the following:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Calculator</span> <span class="k">from</span> <span class="s1">'../Calculator/Calculator'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./App.css'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">"app-container"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Calculator</span> <span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>All tests now pass with the creation of the <code class="highlighter-rouge">Calculator</code> component:</p>
+
+<p><img src="/assets/img/blog/tdd_react/second_pass.png" style="max-width:90%;" alt="second passing test" /></p>
+
+<h3 id="add-snapshot-testing-for-app">Add Snapshot Testing for <code class="highlighter-rouge">App</code></h3>
+
+<p>Although snapshots are not part of TDD as they are written <em>after</em> a component has been written (think “<span style="color:green">green</span>-<span style="color:green">green</span>-<span style="color:orange">refactor</span>” instead of “<span style="color:red">red</span>-<span style="color:green">green</span>-<span style="color:orange">refactor</span>”), they are worth including since they will quickly alert you of any unexpected changes to a rendered component. It’s best to add them <em>after</em> you’ve finished the writing of the component.</p>
+
+<p>From the <a href="https://facebook.github.io/jest/docs/en/snapshot-testing.html">Jest Docs</a>:</p>
+
+<blockquote>
+  <p>A typical snapshot test case for a mobile app renders a UI component, takes a screenshot, then compares it to a reference image stored alongside the test. The test will fail if the two images do not match: either the change is unexpected, or the screenshot needs to be updated to the new version of the UI component.</p>
+</blockquote>
+
+<p>Navigate to <em>App.spec.js</em> and add <code class="highlighter-rouge">toMatchSnapshot</code> as the first test in the file, just after the <code class="highlighter-rouge">beforeEach</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'App'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render correctly'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
+  <span class="p">});</span>
+  <span class="p">...</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>As we complete the UI of each component, we’ll add a snapshot tests as the first test in each <code class="highlighter-rouge">spec</code> file. This creates a pattern of placing the generic tests (snapshot, shallow render) that appear in each <code class="highlighter-rouge">spec</code> file above the component specific tests.</p>
+</blockquote>
+
+<p>The new snapshot test passes immediately, and it will continue to pass <em>until</em> there has been a UI change in that component. This also created a “__snapshots__” directory for the <code class="highlighter-rouge">App</code> component along with a file named <em>App.spec.js.snap</em>.</p>
+
+<p><img src="/assets/img/blog/tdd_react/snapshot_pass.png" style="max-width:90%;" alt="snapshot test" /></p>
+
+<p>Now we can add the <code class="highlighter-rouge">Calculator</code> styles.</p>
+
+<h3 id="add-calculator-css">Add <code class="highlighter-rouge">Calculator</code> CSS</h3>
+
+<p>Start by updating the CSS variables, with the variables related to <code class="highlighter-rouge">Calculator</code>, and adding a media query. Because of the minimal visual design of the application, we only use one media query that updates the font sizes and removes the margins around the <code class="highlighter-rouge">Calculator</code> component for tablets or smaller devices.</p>
+
+<p>Navigate to <em>index.css</em> and update the file like so:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/*
+app variables
+*/</span>
+
+<span class="nd">:root</span> <span class="p">{</span>
+  <span class="c">/* background colors */</span>
+  <span class="py">--calculator-background-color</span><span class="p">:</span> <span class="m">#696969</span><span class="p">;</span>
+
+  <span class="c">/* font */</span>
+  <span class="py">--main-font</span><span class="p">:</span> <span class="s2">'Orbitron'</span><span class="p">,</span> <span class="nb">sans-serif</span><span class="p">;</span>
+
+  <span class="c">/* calculator dimensions */</span>
+  <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">72%</span><span class="p">;</span>
+  <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">36%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/*
+media query for tablet or smaller screen
+*/</span>
+
+<span class="k">@media</span> <span class="n">screen</span> <span class="n">and</span> <span class="p">(</span><span class="n">max-width</span><span class="p">:</span> <span class="m">1024px</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nd">:root</span> <span class="p">{</span>
+    <span class="c">/* calculator dimensions */</span>
+    <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+    <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">/*
+app CSS reset  
+*/</span>
+
+<span class="nt">body</span><span class="o">,</span> <span class="nt">div</span><span class="o">,</span> <span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Next update the component CSS in <em>Calculator.css</em>:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.calculator-container</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--calculator-background-color</span><span class="p">);</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--calculator-height</span><span class="p">);</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--calculator-width</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Then import the CSS file in <em>Calculator.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="s1">'./Calculator.css'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>We now have our first component rendering to the DOM! Fire up the browser by running the app:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn start
+</code></pre></div></div>
+
+<p>Then open your browser (if it hasn’t opened automatically) to <a href="http://localhost:3000">http://localhost:3000</a>. The DOM should match this screenshot:</p>
+
+<p><img src="/assets/img/blog/tdd_react/calculator_component_render.png" style="max-width:90%;" alt="calculator component render" /></p>
+
+<blockquote>
+  <p>Now is a great time to pause and review everything we’ve done thus far. Experiment with the CSS as well.</p>
+</blockquote>
+
+<h2 id="display-component-1">Display Component</h2>
+
+<h3 id="check-for-display-in-calculator">Check for <code class="highlighter-rouge">Display</code> in <code class="highlighter-rouge">Calculator</code></h3>
+
+<p>Because the <code class="highlighter-rouge">Calculator</code> component will contain the <code class="highlighter-rouge">Display</code> and <code class="highlighter-rouge">Keypad</code> components, the next step is to write a test that checks for the presence of the <code class="highlighter-rouge">Display</code> component in <code class="highlighter-rouge">Calculator</code>.</p>
+
+<p>Add the test to <em>Calculator.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render the Display Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">containsMatchingElement</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Display</span> <span class="o">/&gt;</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Make sure to import the <code class="highlighter-rouge">Display</code> component at the top of the file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Display</span> <span class="k">from</span> <span class="s1">'../Display/Display'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>As with the previous <code class="highlighter-rouge">containsMatchingElement</code> test, it will fail as the <code class="highlighter-rouge">Display</code> component does not exist.</p>
+
+<p>Before we write the <code class="highlighter-rouge">Display</code> component, add the <code class="highlighter-rouge">Display</code> test file and set up a shallow render test in the new test file like we did with the <code class="highlighter-rouge">Calculator</code> component.</p>
+
+<p>Create then navigate to <em>Display.spec.js</em>, and add the shallow render test as well as the <code class="highlighter-rouge">beforeEach</code> setup method:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Display</span> <span class="k">from</span> <span class="s1">'./Display'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'Display'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Display</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render a &lt;div /&gt;'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This will also fail since the <code class="highlighter-rouge">Display</code> component still does not exist.</p>
+
+<p>Add the component in <em>Display.jsx</em> and also import <code class="highlighter-rouge">prop-types</code> at the top of the file:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">PropTypes</span> <span class="k">from</span> <span class="s1">'prop-types'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Display</span> <span class="o">=</span> <span class="p">({</span><span class="nx">displayValue</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"display-container"</span> <span class="p">/&gt;;</span>
+
+<span class="nx">Display</span><span class="p">.</span><span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span><span class="na">displayValue</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">};</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Display</span><span class="p">;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><a href="https://github.com/facebook/prop-types">prop-types</a> allow us to document the intended types of properties passed to our components as well as throw warnings, during development, if the types passed to the component do not match the props contained in the <code class="highlighter-rouge">ComponentName.propTypes</code> object.</p>
+</blockquote>
+
+<p>Adding the component to <em>Display.jsx</em> will pass the <code class="highlighter-rouge">Display</code> shallow render test but with a <code class="highlighter-rouge">prop-type</code> warning. The <code class="highlighter-rouge">Calculator › should render the Display component</code> test should still fail, though:</p>
+
+<p><img src="/assets/img/blog/tdd_react/prop_type_warnings.png" style="max-width:90%;" alt="proptype warnings" /></p>
+
+<p>We need to import and add the <code class="highlighter-rouge">Display</code> component inside of <em>Calculator.jsx</em>, and then update the render method so that we pass the <code class="highlighter-rouge">displayValue</code> prop to <code class="highlighter-rouge">Display</code>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Display</span> <span class="k">from</span> <span class="s1">'../Display/Display'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./Calculator.css'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">Calculator</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// unpack this.state by using Object Destructuring</span>
+    <span class="kd">const</span> <span class="p">{</span><span class="nx">displayValue</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"calculator-container"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Display</span> <span class="na">displayValue=</span><span class="si">{</span><span class="nx">displayValue</span><span class="si">}</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>Add the <code class="highlighter-rouge">displayValue</code> prop to the <code class="highlighter-rouge">beforeEach</code> block as well, using an empty string as the value, in <em>Display.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'Display'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Display</span> <span class="nx">displayValue</span><span class="o">=</span><span class="p">{</span><span class="s1">''</span><span class="p">}</span> <span class="sr">/&gt;</span><span class="se">)</span><span class="err">;
+</span>  <span class="p">});</span>
+  <span class="p">...</span>
+<span class="p">});</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>Then update the <code class="highlighter-rouge">Calculator › should render the Display component</code> test to account for the required prop in <code class="highlighter-rouge">Display</code>. We can access the state variables and methods of <code class="highlighter-rouge">Calculator</code> by utilizing the <code class="highlighter-rouge">instance</code> method on the <code class="highlighter-rouge">wrapper</code> object.</p>
+
+<p>In <em>Calculator.spec.js</em> update the test:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render the Display Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">containsMatchingElement</span><span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">Display</span> <span class="nx">displayValue</span><span class="o">=</span><span class="p">{</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">state</span><span class="p">.</span><span class="nx">displayValue</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>  <span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>All tests should pass!</p>
+
+<p><img src="/assets/img/blog/tdd_react/display_pass.png" style="max-width:90%;" alt="display component passing tests" /></p>
+
+<h3 id="display-renders-displayvalue"><code class="highlighter-rouge">Display</code> renders <code class="highlighter-rouge">displayValue</code></h3>
+
+<p>Next, let’s test the rendering of the actual <code class="highlighter-rouge">displayValue</code> so that way our calculator displays something.</p>
+
+<p>Begin by writing a test in <em>Display.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'renders the value of displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'test'</span><span class="p">});</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">text</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'test'</span><span class="p">);;</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Again we’ll have a failing test in the console:</p>
+
+<p><img src="/assets/img/blog/tdd_react/displayValue_fail.png" style="max-width:90%;" alt="display component failing tests" /></p>
+
+<p>We need to refactor <em>Display.jsx</em> to render the value of <code class="highlighter-rouge">displayValue</code>. Let’s also add some <code class="highlighter-rouge">className</code>s to our HTML elements to prepare for adding style:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="kd">const</span> <span class="nx">Display</span> <span class="o">=</span> <span class="p">({</span><span class="nx">displayValue</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"display-container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className=</span><span class="s2">"display-value"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">displayValue</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>Tests and test suites should all be <span style="color:green">green</span>!</p>
+
+<h3 id="add-snapshot-testing-for-display">Add Snapshot Testing for <code class="highlighter-rouge">Display</code></h3>
+
+<p>With our component finished, we can navigate to <em>Display.spec.js</em> and add <code class="highlighter-rouge">toMatchSnapshot</code> as the first test in the file, just after the <code class="highlighter-rouge">beforeEach</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'Display'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render correctly'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
+  <span class="p">});</span>
+  <span class="p">...</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="add-display-css">Add <code class="highlighter-rouge">Display</code> CSS</h3>
+
+<p>Following the same pattern of adding CSS we used in the previous components, first update the variables and media query in <em>index.css</em>:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/*
+app variables
+*/</span>
+
+<span class="nd">:root</span> <span class="p">{</span>
+  <span class="c">/* background colors */</span>
+  <span class="py">--display-background-color</span><span class="p">:</span> <span class="m">#1d1f1f</span><span class="p">;</span>
+
+  <span class="c">/* font */</span>
+  <span class="py">--main-font</span><span class="p">:</span> <span class="s2">'Orbitron'</span><span class="p">,</span> <span class="nb">sans-serif</span><span class="p">;</span>
+
+  <span class="c">/* font colors */</span>
+  <span class="py">--display-text-color</span><span class="p">:</span> <span class="m">#23e000</span><span class="p">;</span>
+
+  <span class="c">/* font sizes */</span>
+  <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">4em</span><span class="p">;</span>
+
+  <span class="c">/* font weights */</span>
+  <span class="py">--display-text-weight</span><span class="p">:</span> <span class="m">400</span><span class="p">;</span>
+
+  <span class="c">/* calculator dimensions */</span>
+  <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">72%</span><span class="p">;</span>
+  <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">36%</span><span class="p">;</span>
+
+  <span class="c">/* display dimensions */</span>
+  <span class="py">--display-height</span><span class="p">:</span> <span class="m">24%</span><span class="p">;</span>
+  <span class="py">--display-width</span><span class="p">:</span> <span class="m">92%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/*
+media query for tablet or smaller screen
+*/</span>
+
+<span class="k">@media</span> <span class="n">screen</span> <span class="n">and</span> <span class="p">(</span><span class="n">max-width</span><span class="p">:</span> <span class="m">1024px</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nd">:root</span> <span class="p">{</span>
+    <span class="c">/* font sizes */</span>
+    <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">6em</span><span class="p">;</span>
+
+    <span class="c">/* calculator dimensions */</span>
+    <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+    <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">/*
+app CSS reset  
+*/</span>
+
+<span class="nt">body</span><span class="o">,</span> <span class="nt">div</span><span class="o">,</span> <span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Then add the component CSS in <em>Display.css</em>:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.display-container</span> <span class="p">{</span>
+  <span class="nl">align-items</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="nl">background</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--display-background-color</span><span class="p">);</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--display-height</span><span class="p">);</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span> <span class="m">4%</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--display-width</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nc">.display-value</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--display-text-color</span><span class="p">);</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--display-text-size</span><span class="p">);</span>
+  <span class="nl">font-family</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--main-font</span><span class="p">);</span>
+  <span class="nl">font-weight</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--display-text-weight</span><span class="p">);</span>
+  <span class="nl">margin-left</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>
+  <span class="nl">overflow</span><span class="p">:</span> <span class="nb">hidden</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>About these CSS properties:</p>
+  <ul>
+    <li><code class="highlighter-rouge">margin-left: auto;</code> pushes the element to right edge of the container.</li>
+    <li><code class="highlighter-rouge">overflow: hidden;</code> specifies that if the HTML is larger than the container, the overflow will be hidden.</li>
+  </ul>
+</blockquote>
+
+<p>And import the CSS file to <em>Display.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">PropTypes</span> <span class="k">from</span> <span class="s1">'prop-types'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./Display.css'</span><span class="p">;</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>Now that we have completed the CSS for <code class="highlighter-rouge">Display</code>, let’s fire up the browser and take a look at the output!</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn start
+</code></pre></div></div>
+
+<p>The output should match this screenshot:</p>
+
+<p><img src="/assets/img/blog/tdd_react/display_render.png" style="max-width:90%;" alt="display render" /></p>
+
+<p>The <code class="highlighter-rouge">Display</code> component now renders in the browser, and we are ready to move on to testing and writing the <code class="highlighter-rouge">Keypad</code> component.</p>
+
+<h2 id="keypad-component-1">Keypad Component</h2>
+
+<h3 id="add-keypad-component-and-tests">Add <code class="highlighter-rouge">Keypad</code> Component and Tests</h3>
+
+<p>Now that we have the <code class="highlighter-rouge">Display</code> component built out, we need to add in our <code class="highlighter-rouge">Keypad</code> component to <code class="highlighter-rouge">Calculator</code>. We’ll start by testing for it in the <code class="highlighter-rouge">Calculator</code> component tests.</p>
+
+<p>Refactor the <code class="highlighter-rouge">Calculator › should render the Display component</code> test in <em>Calculator.spec.js</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render the Display and Keypad Components'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">containsAllMatchingElements</span><span class="p">([</span>
+    <span class="p">&lt;</span><span class="nc">Display</span> <span class="na">displayValue=</span><span class="si">{</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">state</span><span class="p">.</span><span class="nx">displayValue</span><span class="si">}</span> <span class="p">/&gt;,</span>
+    <span class="p">&lt;</span><span class="nc">Keypad</span>
+      <span class="na">callOperator=</span><span class="si">{</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="si">}</span>
+      <span class="na">numbers=</span><span class="si">{</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">state</span><span class="p">.</span><span class="nx">numbers</span><span class="si">}</span>
+      <span class="na">operators=</span><span class="si">{</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">state</span><span class="p">.</span><span class="nx">operators</span><span class="si">}</span>
+      <span class="na">setOperator=</span><span class="si">{</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">setOperator</span><span class="si">}</span>
+      <span class="na">updateDisplay=</span><span class="si">{</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="si">}</span>
+    <span class="p">/&gt;</span>
+  <span class="p">])).</span><span class="nx">toEqual</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="highlighter-rouge">containsAllMatchingElements</code> takes an array of elements and returns <code class="highlighter-rouge">true</code> if all elements are found in the DOM tree.</p>
+</blockquote>
+
+<p>Make sure to import in the <code class="highlighter-rouge">Keypad</code> component:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Keypad</span> <span class="k">from</span> <span class="s1">'../Keypad/Keypad'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Our new test fails! The <code class="highlighter-rouge">Keypad</code> component does not yet exist.</p>
+
+<p>Before we add the component, follow the pattern we used with the <code class="highlighter-rouge">Display</code> component:</p>
+
+<ol>
+  <li>Create the spec file, <em>Keypad.spec.js</em> in “src/components/Keypad”</li>
+  <li>add the <code class="highlighter-rouge">Keypad</code> shallow render test</li>
+</ol>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Keypad</span> <span class="k">from</span> <span class="s1">'./Keypad'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'Keypad'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Keypad</span>
+        <span class="na">callOperator=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+        <span class="na">numbers=</span><span class="si">{</span><span class="p">[]</span><span class="si">}</span>
+        <span class="na">operators=</span><span class="si">{</span><span class="p">[]</span><span class="si">}</span>
+        <span class="na">setOperator=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+        <span class="na">updateDisplay=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render a &lt;div /&gt;'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Because we’re rendering <code class="highlighter-rouge">Keypad</code> directly from it’s file, it does not have access to the <code class="highlighter-rouge">Calculator</code> methods. In place of these methods, we use <code class="highlighter-rouge">jest.fn()</code>, a Jest function that creates a mock function. More info <a href="https://facebook.github.io/jest/docs/en/mock-functions.html">here</a>.</p>
+</blockquote>
+
+<p>If you check the console, you should see two test suites failing. Now add the JSX to <em>Keypad.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">PropTypes</span> <span class="k">from</span> <span class="s1">'prop-types'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Keypad</span> <span class="o">=</span> <span class="p">({</span><span class="nx">callOperator</span><span class="p">,</span> <span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">,</span> <span class="nx">setOperator</span><span class="p">,</span> <span class="nx">updateDisplay</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"keypad-container"</span> <span class="p">/&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">Keypad</span><span class="p">.</span><span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">callOperator</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">func</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+  <span class="na">numbers</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+  <span class="na">operators</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+  <span class="na">setOperator</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">func</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+  <span class="na">updateDisplay</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">func</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Keypad</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Import the <code class="highlighter-rouge">Keypad</code> in <em>Calculator.jsx</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Keypad</span> <span class="k">from</span> <span class="s1">'../Keypad/Keypad'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Then, add the <code class="highlighter-rouge">Keypad</code> to the <code class="highlighter-rouge">render</code> method, making sure to unpack the values of <code class="highlighter-rouge">numbers</code> and <code class="highlighter-rouge">operators</code> from <code class="highlighter-rouge">this.state</code> and passing all required props to <code class="highlighter-rouge">Keypad</code>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// unpack this.state by using Object Destructuring</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">displayValue</span><span class="p">,</span> <span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"calculator-container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">Display</span> <span class="na">displayValue=</span><span class="si">{</span><span class="nx">displayValue</span><span class="si">}</span> <span class="p">/&gt;</span>
+      <span class="p">&lt;</span><span class="nc">Keypad</span>
+        <span class="na">callOperator=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">callOperator</span><span class="si">}</span>
+        <span class="na">numbers=</span><span class="si">{</span><span class="nx">numbers</span><span class="si">}</span>
+        <span class="na">operators=</span><span class="si">{</span><span class="nx">operators</span><span class="si">}</span>
+        <span class="na">setOperator=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">setOperator</span><span class="si">}</span>
+        <span class="na">updateDisplay=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">updateDisplay</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>All tests should pass.</p>
+
+<h3 id="calculator-snapshot"><code class="highlighter-rouge">Calculator</code> Snapshot</h3>
+
+<p>Add the <code class="highlighter-rouge">Calculator</code> snapshot now that we have completed the UI for the component, just below the <code class="highlighter-rouge">beforeEach</code> in <em>Calculator.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render correctly'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/blog/tdd_react/first_part_tests_pass.png" style="max-width:90%;" alt="passing tests" /></p>
+
+<h2 id="next-time">Next Time</h2>
+
+<p>We’ll take a break here and pick back up in the next part, starting with testing for the rendering of the values contained in the <code class="highlighter-rouge">numbers</code> and <code class="highlighter-rouge">operators</code> arrays in <code class="highlighter-rouge">Keypad</code>. We’ll then move on to testing for the <code class="highlighter-rouge">Key</code> component, proceed to the application event and functionality tests, and then do some final refactors.</p>
+
+<p>Grab the final code from the <a href="https://www.github.com/calebpollman/react-calculator">react-calculator</a> repo on GitHub.</p>
+
+<p>Cheers!</p>
+
+<blockquote>
+  <p>Part 2 will be published on April 23. Sign up for the mailing list below to receive alerts about new blog posts.</p>
+</blockquote>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Test-Driven Development with React, Jest, and Enzyme - Part 1&amp;url=https%3A%2F%2Ftestdriven.io/tdd-with-react-jest-and-enzyme-part-one&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

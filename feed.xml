@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<channel>
+		<title>TestDriven.io</title>
+		<description>TestDriven.io blog</description>
+		<link>https://testdriven.io</link>
+		<atom:link href="https://testdriven.io/feed.xml" rel="self" type="application/rss+xml" />
+		<lastBuildDate>Mon, 16 Apr 2018 00:00:00 -0600</lastBuildDate>
+		
+      
+  			<item>
+  				<title>Test-Driven Development with React, Jest, and Enzyme - Part 1</title>
+  				
+  				
+  					<description>&lt;p&gt;In this post, we’ll develop a React app using Test-Driven Development (TDD) with Jest and Enzyme. Upon completion, you will be able to:&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 16 Apr 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/tdd-with-react-jest-and-enzyme-part-one</link>
+  				<guid isPermaLink="true">https://testdriven.io/tdd-with-react-jest-and-enzyme-part-one</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Running Spark with Docker Swarm on DigitalOcean</title>
+  				
+  				
+  					<description>&lt;p&gt;Let’s look at how to deploy &lt;a href=&quot;https://spark.apache.org/&quot;&gt;Apache Spark&lt;/a&gt;, an open-source cluster computing framework for large-scale data processing, to a Docker Swarm Cluster on &lt;a href=&quot;https://www.digitalocean.com/&quot;&gt;DigitalOcean&lt;/a&gt;. We’ll also look at how to automate the provisioning (and deprovisioning) of machines as needed to keep costs down.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 09 Apr 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/running-spark-with-docker-swarm-on-digitalocean</link>
+  				<guid isPermaLink="true">https://testdriven.io/running-spark-with-docker-swarm-on-digitalocean</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Migrating from Heroku to AWS</title>
+  				
+  				
+  					<description>&lt;p&gt;In this tutorial, I tackled two major goals:&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Thu, 05 Apr 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/migrating-from-heroku-to-aws</link>
+  				<guid isPermaLink="true">https://testdriven.io/migrating-from-heroku-to-aws</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Sending Confirmation Emails with Flask, Redis Queue, and Amazon SES</title>
+  				
+  				
+  					<description>&lt;p&gt;For most web applications, after a new user registers, it’s important to confirm that the user provided a valid email address that they have access to. This not only helps to prevent spammers from creating fake accounts, but it also provides an additional layer of security for your application.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Tue, 27 Mar 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/sending-confirmation-emails-with-flask-rq-and-ses</link>
+  				<guid isPermaLink="true">https://testdriven.io/sending-confirmation-emails-with-flask-rq-and-ses</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Distributed Testing with Selenium Grid and Docker</title>
+  				
+  				
+  					<description>&lt;p&gt;Reducing test execution time is key for software development teams that wish to implement frequent delivery approaches (like continuous integration and delivery) or accelerate development cycle times in general. Developers simply cannot afford to wait hours on end for tests to complete in environments where frequent builds and tests are the norm. Distributing tests across a number of machines is one solution to this problem.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 19 Mar 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/distributed-testing-with-selenium-grid</link>
+  				<guid isPermaLink="true">https://testdriven.io/distributed-testing-with-selenium-grid</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Asynchronous Tasks with Falcon and Celery</title>
+  				
+  				
+  					<description>&lt;p&gt;Asynchronous tasks are used to move intensive, time-consuming processes, which are prone to failure, to the background so a response can be returned immediately to the client.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 12 Mar 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/asynchronous-tasks-with-falcon-and-celery</link>
+  				<guid isPermaLink="true">https://testdriven.io/asynchronous-tasks-with-falcon-and-celery</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Concurrent Web Scraping with Selenium Grid and Docker Swarm</title>
+  				
+  				
+  					<description>&lt;p&gt;In this post we’ll look at how to run a Python and Selenium-based web scraper in parallel with Selenium Grid and Docker. We’ll also look at how to &lt;em&gt;quickly&lt;/em&gt; scale Selenium Grid on Digital Ocean using Docker Swarm to increase efficiency of the scraper. Finally, we’ll create a bash script that automates the spinning up and tearing down of resources on Digital Ocean.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 05 Mar 2018 00:00:00 -0700</pubDate>
+  				<link>https://testdriven.io/concurrent-web-scraping-with-selenium-grid-and-docker-swarm</link>
+  				<guid isPermaLink="true">https://testdriven.io/concurrent-web-scraping-with-selenium-grid-and-docker-swarm</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Asynchronous Tasks with Flask and Redis Queue</title>
+  				
+  				
+  					<description>&lt;p&gt;If a long-running task is part of your application’s workflow you should handle it in the background, outside the normal flow.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Tue, 27 Feb 2018 00:00:00 -0700</pubDate>
+  				<link>https://testdriven.io/asynchronous-tasks-with-flask-and-redis-queue</link>
+  				<guid isPermaLink="true">https://testdriven.io/asynchronous-tasks-with-flask-and-redis-queue</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Building A Concurrent Web Scraper With Python and Selenium</title>
+  				
+  				
+  					<description>&lt;p&gt;This is a quick post that looks at how to speed up a simple, Python-based web scraping and crawling script with parallel processing via the multiprocessing library. We’ll also break down the script itself and show how to test the parsing functionality.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 19 Feb 2018 00:00:00 -0700</pubDate>
+  				<link>https://testdriven.io/building-a-concurrent-web-scraper-with-python-and-selenium</link>
+  				<guid isPermaLink="true">https://testdriven.io/building-a-concurrent-web-scraper-with-python-and-selenium</guid>
+  			</item>
+      
+		
+      
+  			<item>
+  				<title>Behavior-Driven Development with Django and Aloe</title>
+  				
+  				
+  					<description>&lt;p&gt;Imagine you are a Django developer building a social network for a lean startup. The CEO is pressuring your team for an MVP. The engineers have agreed to build the product using &lt;a href=&quot;https://en.wikipedia.org/wiki/Behavior-driven_development&quot;&gt;behavior-driven development&lt;/a&gt; (BDD) to deliver fast and efficient results. The product owner gives you the first feature request, and following the practice of all good programming methodologies, you begin the BDD process by writing a test. Next you code a bit of functionality to make your test pass and you consider your design. The last step requires you to analyze the feature itself. Does it belong in your app?&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Tue, 13 Feb 2018 00:00:00 -0700</pubDate>
+  				<link>https://testdriven.io/behavior-driven-development-with-django-and-aloe</link>
+  				<guid isPermaLink="true">https://testdriven.io/behavior-driven-development-with-django-and-aloe</guid>
+  			</item>
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+      
+		
+	</channel>
+</rss>

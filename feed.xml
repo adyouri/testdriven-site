@@ -5,7 +5,22 @@
 		<description>TestDriven.io blog</description>
 		<link>https://testdriven.io</link>
 		<atom:link href="https://testdriven.io/feed.xml" rel="self" type="application/rss+xml" />
-		<lastBuildDate>Mon, 16 Apr 2018 00:00:00 -0600</lastBuildDate>
+		<lastBuildDate>Mon, 23 Apr 2018 00:00:00 -0600</lastBuildDate>
+		
+      
+  			<item>
+  				<title>Test-Driven Development with React, Jest, and Enzyme - Part 2</title>
+  				
+  				
+  					<description>&lt;p&gt;This is part two of &lt;strong&gt;Test-Driven Development with React, Jest, and Enzyme&lt;/strong&gt;. You can find the first part &lt;a href=&quot;https://testdriven.io/tdd-with-react-jest-and-enzyme-part-one&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 23 Apr 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/tdd-with-react-jest-and-enzyme-part-two</link>
+  				<guid isPermaLink="true">https://testdriven.io/tdd-with-react-jest-and-enzyme-part-two</guid>
+  			</item>
+      
 		
       
   			<item>

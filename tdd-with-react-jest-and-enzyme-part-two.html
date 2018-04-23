@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/tdd_react/tdd_react_part_two.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="In this two part series, we'll look at how to develop a React app using Test-Driven Development (TDD).">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="react, javascript, test-driven development, tdd, jest, enzyme, reactjs">
+  
+  <!-- title -->
+  
+    <title>Test-Driven Development with React, Jest, and Enzyme - Part 2 - TestDriven.io</title>
+    <meta property="og:title" content="Test-Driven Development with React, Jest, and Enzyme - Part 2" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1524488137043891000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/tdd_react/tdd_react_part_two.png" style="max-width:100%" alt="react">
+            </div>
+          
+
+          <h1>Test-Driven Development with React, Jest, and Enzyme - Part 2</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/pollman">Caleb Pollman</a></span> on <span class="badge badge-secondary">Apr 23, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Test-Driven Development with React, Jest, and Enzyme - Part 2&amp;url=https%3A%2F%2Ftestdriven.io/tdd-with-react-jest-and-enzyme-part-two&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>This is part two of <strong>Test-Driven Development with React, Jest, and Enzyme</strong>. You can find the first part <a href="https://testdriven.io/tdd-with-react-jest-and-enzyme-part-one">here</a>.</p>
+
+<p>Last time we began with the project overview, which included a brief explanation of Test-Driven Development (TDD), the application design process, and a high-level synopsis of the application components. From there we continued to the project setup and began writing our (failing) tests, then the code to pass those tests, ultimately finishing with our <code class="highlighter-rouge">Calculator</code> snapshot. At this point we have finished the UI for the <code class="highlighter-rouge">Calculator</code> and <code class="highlighter-rouge">Display</code> components, and have begun work on our <code class="highlighter-rouge">Keypad</code> component.</p>
+
+<p><strong>Parts:</strong></p>
+
+<ul>
+  <li><em><a href="https://testdriven.io/tdd-with-react-jest-and-enzyme-part-one">Part 1</a></em>: In the first part, we’ll set up the overall project and then dive into developing the UI with Test-driven Development.</li>
+  <li><em>Part 2</em> (this post!): In this part, we’ll finish the UI by adding the number and operator keys before we dive in to adding the basic calculator functionality.</li>
+</ul>
+
+<p><img src="/assets/img/blog/tdd_react/components/component_structure.png" style="max-width:90%;padding-top:20px;padding-bottom:20px;" alt="component structure" /></p>
+
+<p>Let’s get back in to the <span style="color:red">red</span>, <span style="color:green">green</span>, <span style="color:orange">refactor</span> cycle by testing the rendering of <code class="highlighter-rouge">Keypad</code> for <code class="highlighter-rouge">numbers</code> and <code class="highlighter-rouge">operators</code>!</p>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#keypad-component" id="markdown-toc-keypad-component">Keypad Component</a></li>
+  <li><a href="#key-component" id="markdown-toc-key-component">Key Component</a></li>
+  <li><a href="#application-functions" id="markdown-toc-application-functions">Application Functions</a></li>
+  <li><a href="#click-event-tests" id="markdown-toc-click-event-tests">Click Event Tests</a></li>
+  <li><a href="#update-display-tests" id="markdown-toc-update-display-tests">Update Display Tests</a></li>
+  <li><a href="#set-operator-tests" id="markdown-toc-set-operator-tests">Set Operator Tests</a></li>
+  <li><a href="#call-operator-tests" id="markdown-toc-call-operator-tests">Call Operator Tests</a></li>
+  <li><a href="#final-thoughts" id="markdown-toc-final-thoughts">Final Thoughts</a></li>
+</ul>
+
+<h2 id="keypad-component">Keypad Component</h2>
+
+<h3 id="test-for-numbers-and-operators-rendering-in-keypad">Test for <code class="highlighter-rouge">numbers</code> and <code class="highlighter-rouge">operators</code> Rendering in <code class="highlighter-rouge">Keypad</code></h3>
+
+<p>In the same way that we tested for the rendering of the <code class="highlighter-rouge">displayValue</code> prop in the <code class="highlighter-rouge">Display</code> component, let’s write rendering tests for both the <code class="highlighter-rouge">numbers</code> and <code class="highlighter-rouge">operators</code> props in the <code class="highlighter-rouge">Keypad</code> component.</p>
+
+<p>In <em>Keypad.spec.js</em>, start with the <code class="highlighter-rouge">numbers</code> test:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'renders the values of numbers'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="na">numbers</span><span class="p">:</span> <span class="p">[</span><span class="s1">'0'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">]});</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'.numbers-container'</span><span class="p">).</span><span class="nx">text</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'012'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Then update <em>Keypad.jsx</em> to pass the test by adding a <code class="highlighter-rouge">map</code> function to iterate through the <code class="highlighter-rouge">numbers</code> array along with a container <code class="highlighter-rouge">div</code> element to house our new elements:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="kd">const</span> <span class="nx">Keypad</span> <span class="o">=</span> <span class="p">({</span><span class="nx">callOperator</span><span class="p">,</span> <span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">,</span> <span class="nx">setOperator</span><span class="p">,</span> <span class="nx">updateDisplay</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">numbers</span> <span class="o">=</span> <span class="nx">numbers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">number</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">key=</span><span class="si">{</span><span class="nx">number</span><span class="si">}</span><span class="p">&gt;</span><span class="si">{</span><span class="nx">number</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"keypad-container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"numbers-container"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">numbers</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">Keypad › should render a &lt;div /&gt;</code> should now break, since there is more than one <code class="highlighter-rouge">div</code>.</p>
+
+<p>Update the test in <em>Keypad.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render 2 &lt;div /&gt;</span><span class="se">\'</span><span class="s1">s'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>All pass! Follow the same pattern for <code class="highlighter-rouge">operators</code>, in <em>Keypad.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'renders the values of operators'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="na">operators</span><span class="p">:</span> <span class="p">[</span><span class="s1">'+'</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">]});</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'.operators-container'</span><span class="p">).</span><span class="nx">text</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'+-*/'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Then update the component in the same way we did for <code class="highlighter-rouge">numbers</code>, in <em>Keypad.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="kd">const</span> <span class="nx">Keypad</span> <span class="o">=</span> <span class="p">({</span><span class="nx">callOperator</span><span class="p">,</span> <span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">,</span> <span class="nx">setOperator</span><span class="p">,</span> <span class="nx">updateDisplay</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">numbers</span> <span class="o">=</span> <span class="nx">numbers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">number</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">key=</span><span class="si">{</span><span class="nx">number</span><span class="si">}</span><span class="p">&gt;</span><span class="si">{</span><span class="nx">number</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">operators</span> <span class="o">=</span> <span class="nx">operators</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">operator</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">key=</span><span class="si">{</span><span class="nx">operator</span><span class="si">}</span><span class="p">&gt;</span><span class="si">{</span><span class="nx">operator</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"keypad-container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"numbers-container"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">numbers</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"operators-container"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">operators</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>This should now break <code class="highlighter-rouge">Keypad › should render 2 &lt;div /&gt;'s</code>. Update the test in <em>Keypad.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render 3 &lt;div /&gt;</span><span class="se">\'</span><span class="s1">s'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Tests are <span style="color:green">green</span>!</p>
+
+<h3 id="add-keypad-css">Add <code class="highlighter-rouge">Keypad</code> CSS</h3>
+
+<p>Now add the <code class="highlighter-rouge">Keypad</code> CSS variables along with the component CSS. Navigate to <em>index.css</em> and make the updates to the <code class="highlighter-rouge">:root</code> scope:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/*
+app variables
+*/</span>
+
+<span class="nd">:root</span> <span class="p">{</span>
+  <span class="c">/* background colors */</span>
+  <span class="py">--calculator-background-color</span><span class="p">:</span> <span class="m">#696969</span><span class="p">;</span>
+  <span class="py">--display-background-color</span><span class="p">:</span> <span class="m">#1d1f1f</span><span class="p">;</span>
+
+  <span class="c">/* font */</span>
+  <span class="py">--main-font</span><span class="p">:</span> <span class="s2">'Orbitron'</span><span class="p">,</span> <span class="nb">sans-serif</span><span class="p">;</span>
+
+  <span class="c">/* font colors */</span>
+  <span class="py">--display-text-color</span><span class="p">:</span> <span class="m">#23e000</span><span class="p">;</span>
+
+  <span class="c">/* font sizes */</span>
+  <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">4em</span><span class="p">;</span>
+
+  <span class="c">/* font weights */</span>
+  <span class="py">--display-text-weight</span><span class="p">:</span> <span class="m">400</span><span class="p">;</span>
+
+  <span class="c">/* calculator dimensions */</span>
+  <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">72%</span><span class="p">;</span>
+  <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">36%</span><span class="p">;</span>
+
+  <span class="c">/* display dimensions */</span>
+  <span class="py">--display-height</span><span class="p">:</span> <span class="m">24%</span><span class="p">;</span>
+  <span class="py">--display-width</span><span class="p">:</span> <span class="m">92%</span><span class="p">;</span>
+
+  <span class="c">/* keypad dimensions */</span>
+  <span class="py">--keypad-height</span><span class="p">:</span> <span class="m">72%</span><span class="p">;</span>
+  <span class="py">--keypad-width</span><span class="p">:</span> <span class="m">96%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/*
+media query for tablet or smaller screen
+*/</span>
+
+<span class="k">@media</span> <span class="n">screen</span> <span class="n">and</span> <span class="p">(</span><span class="n">max-width</span><span class="p">:</span> <span class="m">1024px</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nd">:root</span> <span class="p">{</span>
+    <span class="c">/* font sizes */</span>
+    <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">6em</span><span class="p">;</span>
+
+    <span class="c">/* calculator dimensions */</span>
+    <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+    <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Add the following to <em>Keypad.css</em>:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.keypad-container</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">row</span><span class="p">;</span>
+  <span class="nl">flex-wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--keypad-height</span><span class="p">);</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">2%</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--keypad-width</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nc">.numbers-container</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">row</span><span class="p">;</span>
+  <span class="nl">flex-wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">80%</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">75%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.operators-container</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">column</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">80%</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">25%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.submit-container</span> <span class="p">{</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">20%</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>About these CSS properties:</p>
+  <ul>
+    <li><code class="highlighter-rouge">flex-direction: row;</code> sets the layout of the content in the <code class="highlighter-rouge">flex-container</code> to <code class="highlighter-rouge">row</code> (this is the default direction of <code class="highlighter-rouge">display: flex</code>).</li>
+    <li><code class="highlighter-rouge">flex-wrap: wrap;</code> informs the flex-container to wrap the content in the flex-container if it exceeds the flex-container width.</li>
+    <li><code class="highlighter-rouge">flex-direction: column;</code> sets the layout of the content in the flex-container to <code class="highlighter-rouge">column</code>.</li>
+  </ul>
+</blockquote>
+
+<p>Finally, import <em>Keypad.css</em> into <em>Keypad.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">PropTypes</span> <span class="k">from</span> <span class="s1">'prop-types'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./Keypad.css'</span><span class="p">;</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>Start the app:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn start
+</code></pre></div></div>
+
+<p>The browser should now look like this:</p>
+
+<p><img src="/assets/img/blog/tdd_react/keypad_render_one.png" style="max-width:90%;" alt="keypad render" /></p>
+
+<h2 id="key-component">Key Component</h2>
+
+<h3 id="check-for-key-in-keypad">Check for <code class="highlighter-rouge">Key</code> in <code class="highlighter-rouge">Keypad</code></h3>
+
+<p>Following the same shallow render test pattern we used with the <code class="highlighter-rouge">Calculator</code>, <code class="highlighter-rouge">Display</code>, and <code class="highlighter-rouge">Keypad</code> components, we’ll now check for the existence of the <code class="highlighter-rouge">Key</code> component in <code class="highlighter-rouge">Keypad</code>.</p>
+
+<p>Add the following test to <em>Keypad.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render an instance of the Key component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'Key'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>You may have noticed that in the previous tests we used <code class="highlighter-rouge">containsMatchingElement</code> when checking for child components. Because we will be rendering 17 different <code class="highlighter-rouge">Key</code> elements, each with a different <code class="highlighter-rouge">keyAction</code>, <code class="highlighter-rouge">keyType</code>, and <code class="highlighter-rouge">keyValue</code>, using <code class="highlighter-rouge">containsMatchingElement</code> will not work for this example. Instead we will check for the presence of the element(s) by using the <code class="highlighter-rouge">find</code> method, and then checking the length of the resulting array.</p>
+</blockquote>
+
+<p>Create the test suite file for the <code class="highlighter-rouge">Key</code> component in “src/components/Key”, and then add the shallow render test for <code class="highlighter-rouge">Key</code> in <em>Key.spec.js</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Key</span> <span class="k">from</span> <span class="s1">'./Key'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'Key'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Key</span>
+        <span class="na">keyAction=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+        <span class="na">keyType=</span><span class="si">{</span><span class="s1">''</span><span class="si">}</span>
+        <span class="na">keyValue=</span><span class="si">{</span><span class="s1">''</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render a &lt;div /&gt;'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Add the component to <em>Key.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">PropTypes</span> <span class="k">from</span> <span class="s1">'prop-types'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Key</span> <span class="o">=</span> <span class="p">({</span><span class="nx">keyAction</span><span class="p">,</span> <span class="nx">keyType</span><span class="p">,</span> <span class="nx">keyValue</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"key-container"</span> <span class="p">/&gt;;</span>
+
+<span class="nx">Key</span><span class="p">.</span><span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">keyAction</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">func</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+  <span class="na">keyType</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+  <span class="na">keyValue</span><span class="p">:</span> <span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span><span class="p">.</span><span class="nx">isRequired</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Key</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Keypad › should render an instance of the Key component</code> should still fail.</p>
+
+<p><img src="/assets/img/blog/tdd_react/key_instance_fail.png" style="max-width:90%;" alt="key instance fail test" /></p>
+
+<p>Import <code class="highlighter-rouge">Key</code> component in <em>Keypad.jsx</em> and update the <code class="highlighter-rouge">return</code> statement:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="k">import</span> <span class="nx">Key</span> <span class="k">from</span> <span class="s1">'../Key/Key'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./Keypad.css'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Keypad</span> <span class="o">=</span> <span class="p">({</span><span class="nx">callOperator</span><span class="p">,</span> <span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">,</span> <span class="nx">setOperator</span><span class="p">,</span> <span class="nx">updateDisplay</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"keypad-container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"numbers-container"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">numbers</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"operators-container"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">operators</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nc">Key</span>
+        <span class="na">keyAction=</span><span class="si">{</span><span class="nx">callOperator</span><span class="si">}</span>
+        <span class="na">keyType=</span><span class="s2">""</span>
+        <span class="na">keyValue=</span><span class="s2">""</span>
+      <span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<h3 id="key-renders-keyvalue"><code class="highlighter-rouge">Key</code> renders <code class="highlighter-rouge">keyValue</code></h3>
+
+<p>Next, add a new test to <em>Key.spec.jsx</em> that checks for the presence of the value of <code class="highlighter-rouge">keyValue</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render the value of keyValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="na">keyValue</span><span class="p">:</span> <span class="s1">'test'</span><span class="p">});</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">text</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'test'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Refactor the <code class="highlighter-rouge">Key</code> component in <em>Key.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">Key</span> <span class="o">=</span> <span class="p">({</span><span class="nx">keyAction</span><span class="p">,</span> <span class="nx">keyType</span><span class="p">,</span> <span class="nx">keyValue</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"key-container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className=</span><span class="s2">"key-value"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">keyValue</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>All pass!</p>
+
+<h3 id="add-key-css">Add <code class="highlighter-rouge">Key</code> CSS</h3>
+
+<p>This is a good place to update our CSS variables and add the <code class="highlighter-rouge">Key</code> CSS. Navigate to <em>index.css</em> and make the following updates:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">:root</span> <span class="p">{</span>
+  <span class="c">/* background colors */</span>
+  <span class="py">--action-key-color</span><span class="p">:</span> <span class="m">#545454</span><span class="p">;</span>
+  <span class="py">--action-key-color-hover</span><span class="p">:</span> <span class="m">#2a2a2a</span><span class="p">;</span>
+  <span class="py">--calculator-background-color</span><span class="p">:</span> <span class="m">#696969</span><span class="p">;</span>
+  <span class="py">--display-background-color</span><span class="p">:</span> <span class="m">#1d1f1f</span><span class="p">;</span>
+  <span class="py">--number-key-color</span><span class="p">:</span> <span class="m">#696969</span><span class="p">;</span>
+  <span class="py">--number-key-color-hover</span><span class="p">:</span> <span class="m">#3f3f3f</span><span class="p">;</span>
+  <span class="py">--submit-key-color</span><span class="p">:</span> <span class="m">#d18800</span><span class="p">;</span>
+  <span class="py">--submit-key-color-hover</span><span class="p">:</span> <span class="m">#aa6e00</span><span class="p">;</span>
+  <span class="err">...</span>
+  <span class="c">/* font colors */</span>
+  <span class="py">--display-text-color</span><span class="p">:</span> <span class="m">#23e000</span><span class="p">;</span>
+  <span class="py">--key-text-color</span><span class="p">:</span> <span class="m">#d3d3d3</span><span class="p">;</span>
+
+  <span class="c">/* font sizes */</span>
+  <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">4em</span><span class="p">;</span>
+  <span class="py">--key-text-size</span><span class="p">:</span> <span class="m">3em</span><span class="p">;</span>
+
+  <span class="c">/* font weights */</span>
+  <span class="py">--display-text-weight</span><span class="p">:</span> <span class="m">400</span><span class="p">;</span>
+  <span class="py">--key-text-weight</span><span class="p">:</span> <span class="m">700</span><span class="p">;</span>
+  <span class="err">...</span>
+<span class="p">}</span>
+<span class="o">...</span>
+<span class="k">@media</span> <span class="n">screen</span> <span class="n">and</span> <span class="p">(</span><span class="n">max-width</span><span class="p">:</span> <span class="m">1024px</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nd">:root</span> <span class="p">{</span>
+    <span class="c">/* font sizes */</span>
+    <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">10em</span><span class="p">;</span>
+    <span class="py">--key-text-size</span><span class="p">:</span> <span class="m">6em</span><span class="p">;</span>
+    <span class="err">...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The file should now look like:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/*
+app variables
+*/</span>
+
+<span class="nd">:root</span> <span class="p">{</span>
+  <span class="c">/* background colors */</span>
+  <span class="py">--action-key-color</span><span class="p">:</span> <span class="m">#545454</span><span class="p">;</span>
+  <span class="py">--action-key-color-hover</span><span class="p">:</span> <span class="m">#2a2a2a</span><span class="p">;</span>
+  <span class="py">--calculator-background-color</span><span class="p">:</span> <span class="m">#696969</span><span class="p">;</span>
+  <span class="py">--display-background-color</span><span class="p">:</span> <span class="m">#1d1f1f</span><span class="p">;</span>
+  <span class="py">--number-key-color</span><span class="p">:</span> <span class="m">#696969</span><span class="p">;</span>
+  <span class="py">--number-key-color-hover</span><span class="p">:</span> <span class="m">#3f3f3f</span><span class="p">;</span>
+  <span class="py">--submit-key-color</span><span class="p">:</span> <span class="m">#d18800</span><span class="p">;</span>
+  <span class="py">--submit-key-color-hover</span><span class="p">:</span> <span class="m">#aa6e00</span><span class="p">;</span>
+
+  <span class="c">/* font */</span>
+  <span class="py">--main-font</span><span class="p">:</span> <span class="s2">'Orbitron'</span><span class="p">,</span> <span class="nb">sans-serif</span><span class="p">;</span>
+
+  <span class="c">/* font colors */</span>
+  <span class="py">--display-text-color</span><span class="p">:</span> <span class="m">#23e000</span><span class="p">;</span>
+  <span class="py">--key-text-color</span><span class="p">:</span> <span class="m">#d3d3d3</span><span class="p">;</span>
+
+  <span class="c">/* font sizes */</span>
+  <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">4em</span><span class="p">;</span>
+  <span class="py">--key-text-size</span><span class="p">:</span> <span class="m">3em</span><span class="p">;</span>
+
+  <span class="c">/* font weights */</span>
+  <span class="py">--display-text-weight</span><span class="p">:</span> <span class="m">400</span><span class="p">;</span>
+  <span class="py">--key-text-weight</span><span class="p">:</span> <span class="m">700</span><span class="p">;</span>
+
+  <span class="c">/* calculator dimensions */</span>
+  <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">72%</span><span class="p">;</span>
+  <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">36%</span><span class="p">;</span>
+
+  <span class="c">/* display dimensions */</span>
+  <span class="py">--display-height</span><span class="p">:</span> <span class="m">24%</span><span class="p">;</span>
+  <span class="py">--display-width</span><span class="p">:</span> <span class="m">92%</span><span class="p">;</span>
+
+  <span class="c">/* keypad dimensions */</span>
+  <span class="py">--keypad-height</span><span class="p">:</span> <span class="m">72%</span><span class="p">;</span>
+  <span class="py">--keypad-width</span><span class="p">:</span> <span class="m">96%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/*
+media query for tablet or smaller screen
+*/</span>
+
+<span class="k">@media</span> <span class="n">screen</span> <span class="n">and</span> <span class="p">(</span><span class="n">max-width</span><span class="p">:</span> <span class="m">1024px</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nd">:root</span> <span class="p">{</span>
+    <span class="c">/* font sizes */</span>
+    <span class="py">--display-text-size</span><span class="p">:</span> <span class="m">10em</span><span class="p">;</span>
+    <span class="py">--key-text-size</span><span class="p">:</span> <span class="m">6em</span><span class="p">;</span>
+
+    <span class="c">/* calculator dimensions */</span>
+    <span class="py">--calculator-height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+    <span class="py">--calculator-width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">/*
+app CSS reset
+*/</span>
+
+<span class="nt">body</span><span class="o">,</span> <span class="nt">div</span><span class="o">,</span> <span class="nt">p</span> <span class="p">{</span>
+  <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Then add the component CSS in <em>Key.css</em>:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.key-container</span> <span class="p">{</span>
+  <span class="nl">align-items</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">25%</span><span class="p">;</span>
+  <span class="nl">justify-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+  <span class="nl">transition</span><span class="p">:</span> <span class="n">background-color</span> <span class="m">0.3s</span> <span class="n">linear</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.key-container</span><span class="nd">:hover</span> <span class="p">{</span>
+  <span class="nl">cursor</span><span class="p">:</span> <span class="nb">pointer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.operator-key</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--action-key-color</span><span class="p">);</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.operator-key</span><span class="nd">:hover</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--action-key-color-hover</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nc">.number-key</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--number-key-color</span><span class="p">);</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="n">calc</span><span class="p">(</span><span class="m">100%</span><span class="p">/</span><span class="m">3</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nc">.number-key</span><span class="nd">:hover</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--number-key-color-hover</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nc">.submit-key</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--submit-key-color</span><span class="p">);</span>
+  <span class="nl">height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nc">.submit-key</span><span class="nd">:hover</span> <span class="p">{</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--submit-key-color-hover</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nc">.key-value</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--key-text-color</span><span class="p">);</span>
+  <span class="nl">font-family</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--main-font</span><span class="p">);</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--key-text-size</span><span class="p">);</span>
+  <span class="nl">font-weight</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--key-text-weight</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>The <code class="highlighter-rouge">transition: background-color 0.3s linear;</code> property is used to give our <code class="highlighter-rouge">hover</code> effects a smooth animation between the non-hover and the on-hover background colors. The first argument (<code class="highlighter-rouge">background-color</code>) defines which property to transition, the second (<code class="highlighter-rouge">0.3s</code>) specifies the length of the transition in seconds, and the third (<code class="highlighter-rouge">linear</code>) is the style of the transition animation.</p>
+</blockquote>
+
+<p>Last, import the CSS and make the aforementioned updates in <em>Key.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">PropTypes</span> <span class="k">from</span> <span class="s1">'prop-types'</span><span class="p">;</span>
+<span class="k">import</span> <span class="s1">'./Key.css'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Key</span> <span class="o">=</span> <span class="p">({</span><span class="nx">keyAction</span><span class="p">,</span> <span class="nx">keyType</span><span class="p">,</span> <span class="nx">keyValue</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="si">{</span><span class="s2">`key-container ${keyType}`</span><span class="si">}</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className=</span><span class="s2">"key-value"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">keyValue</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<h3 id="add-snapshot-testing-for-key">Add Snapshot Testing for <code class="highlighter-rouge">Key</code></h3>
+
+<p>With the <code class="highlighter-rouge">Key</code> component UI complete, we can add snapshot testing. At the top of the tests in <em>Key.spec.js</em>, add:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render correctly'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Again, this test will immediately pass and it will continue passing until a change has been made to the <code class="highlighter-rouge">Key</code> component UI.</p>
+</blockquote>
+
+<h3 id="refactor-keypad-to-use-key-for-numbers-operators-and-submit">Refactor <code class="highlighter-rouge">Keypad</code> to use <code class="highlighter-rouge">Key</code> for <code class="highlighter-rouge">numbers</code>, <code class="highlighter-rouge">operators</code>, and <code class="highlighter-rouge">submit</code></h3>
+
+<p>Since we want to render a <code class="highlighter-rouge">Key</code> component for each index of the <code class="highlighter-rouge">numbers</code> and <code class="highlighter-rouge">operators</code> arrays as well as the <code class="highlighter-rouge">submit</code> key, refactor the <code class="highlighter-rouge">Keypad › should render an instance of the Key component</code> test in <em>Keypad.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render an instance of the Key component for each index of numbers, operators, and the submit Key'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">];</span>
+  <span class="kd">const</span> <span class="nx">operators</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'+'</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">];</span>
+  <span class="kd">const</span> <span class="nx">submit</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">keyTotal</span> <span class="o">=</span> <span class="nx">numbers</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="nx">operators</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="nx">submit</span><span class="p">;</span>
+  <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">});</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'Key'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">keyTotal</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Refactor the map functions and the <code class="highlighter-rouge">Key</code> component in the <code class="highlighter-rouge">return</code> statement of <em>Keypad.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="kd">const</span> <span class="nx">Keypad</span> <span class="o">=</span> <span class="p">({</span><span class="nx">callOperator</span><span class="p">,</span> <span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">,</span> <span class="nx">setOperator</span><span class="p">,</span> <span class="nx">updateDisplay</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">numbers</span> <span class="o">=</span> <span class="nx">numbers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">number</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Key</span>
+        <span class="na">key=</span><span class="si">{</span><span class="nx">number</span><span class="si">}</span>
+        <span class="na">keyAction=</span><span class="si">{</span><span class="nx">updateDisplay</span><span class="si">}</span>
+        <span class="na">keyType=</span><span class="s2">"number-key"</span>
+        <span class="na">keyValue=</span><span class="si">{</span><span class="nx">number</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">operators</span> <span class="o">=</span> <span class="nx">operators</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">operator</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Key</span>
+        <span class="na">key=</span><span class="si">{</span><span class="nx">operator</span><span class="si">}</span>
+        <span class="na">keyAction=</span><span class="si">{</span><span class="nx">setOperator</span><span class="si">}</span>
+        <span class="na">keyType=</span><span class="s2">"operator-key"</span>
+        <span class="na">keyValue=</span><span class="si">{</span><span class="nx">operator</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"keypad-container"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"numbers-container"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">numbers</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"operators-container"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">operators</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className=</span><span class="s2">"submit-container"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">Key</span>
+          <span class="na">keyAction=</span><span class="si">{</span><span class="nx">callOperator</span><span class="si">}</span>
+          <span class="na">keyType=</span><span class="s2">"submit-key"</span>
+          <span class="na">keyValue=</span><span class="s2">"="</span>
+        <span class="p">/&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>After the refactor, <code class="highlighter-rouge">Keypad › should render the Key component for each index of numbers, operators, and the submit Key</code> passes, but the following tests fail:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">Keypad › renders the values of numbers</code></li>
+  <li><code class="highlighter-rouge">Keypad › renders the values of operators</code></li>
+</ol>
+
+<p>If you check the test runner, the <code class="highlighter-rouge">Keypad › renders the values of operators</code> fail should look like this:</p>
+
+<p><img src="/assets/img/blog/tdd_react/shallow_vs_mount_fail.png" style="max-width:90%;" alt="failing tests" /></p>
+
+<p>This is due to the <code class="highlighter-rouge">shallow</code> rendering method only going one layer deep and returning the contents of the component being shallow rendered and not the contents of child components. In other words, when these tests use <code class="highlighter-rouge">find</code>, the return contents are just <code class="highlighter-rouge">Key</code> elements, not the <em>actual</em> content inside the <code class="highlighter-rouge">Key</code>. For this functionality we can use Enzyme <code class="highlighter-rouge">mount</code>, which does a full DOM render and allows to us to get the text values of the child elements. We’ll move these tests into their own <code class="highlighter-rouge">describe</code> statement to prevent unnecessary calls to <code class="highlighter-rouge">shallow</code>.</p>
+
+<blockquote>
+  <p>As a rule for writing your rendering tests:</p>
+  <ol>
+    <li>Always start with <code class="highlighter-rouge">shallow</code> (shallow render)</li>
+    <li>Use <code class="highlighter-rouge">mount</code>, when you want to test either
+      <ul>
+        <li><code class="highlighter-rouge">componentDidMount</code> or <code class="highlighter-rouge">componentDidUpdate</code></li>
+        <li>DOM rendering, component lifecycle, and the behavior of child components</li>
+      </ul>
+    </li>
+  </ol>
+</blockquote>
+
+<p>Also, <code class="highlighter-rouge">Keypad › should render 3 &lt;div /&gt;'s</code> fails because we have added another container <code class="highlighter-rouge">div</code>.</p>
+
+<p>Update <em>Keypad.spec.js</em> like so:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s1">'react'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">mount</span><span class="p">,</span> <span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Keypad</span> <span class="k">from</span> <span class="s1">'./Keypad'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">Key</span> <span class="k">from</span> <span class="s1">'../Key/Key'</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'Keypad'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Keypad</span>
+        <span class="na">callOperator=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+        <span class="na">numbers=</span><span class="si">{</span><span class="p">[]</span><span class="si">}</span>
+        <span class="na">operators=</span><span class="si">{</span><span class="p">[]</span><span class="si">}</span>
+        <span class="na">setOperator=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+        <span class="na">updateDisplay=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render 4 &lt;div /&gt;</span><span class="se">\'</span><span class="s1">s'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'div'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should render an instance of the Key component for each index of numbers, operators, and the submit Key'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">operators</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'+'</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">submit</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">keyTotal</span> <span class="o">=</span> <span class="nx">numbers</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="nx">operators</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="nx">submit</span><span class="p">;</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="nx">numbers</span><span class="p">,</span> <span class="nx">operators</span><span class="p">});</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'Key'</span><span class="p">).</span><span class="nx">length</span><span class="p">).</span><span class="nx">toEqual</span><span class="p">(</span><span class="nx">keyTotal</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">'mounted Keypad'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">mount</span><span class="p">(</span>
+      <span class="p">&lt;</span><span class="nc">Keypad</span>
+        <span class="na">callOperator=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+        <span class="na">numbers=</span><span class="si">{</span><span class="p">[]</span><span class="si">}</span>
+        <span class="na">operators=</span><span class="si">{</span><span class="p">[]</span><span class="si">}</span>
+        <span class="na">setOperator=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+        <span class="na">updateDisplay=</span><span class="si">{</span><span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">()</span><span class="si">}</span>
+      <span class="p">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'renders the values of numbers to the DOM'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="na">numbers</span><span class="p">:</span> <span class="p">[</span><span class="s1">'0'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">]})</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'.numbers-container'</span><span class="p">).</span><span class="nx">text</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'012'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'renders the values of operators to the DOM'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setProps</span><span class="p">({</span><span class="na">operators</span><span class="p">:</span> <span class="p">[</span><span class="s1">'+'</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">]});</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'.operators-container'</span><span class="p">).</span><span class="nx">text</span><span class="p">()).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'+-*/'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>The tests should pass. Run the app. You should see:</p>
+
+<p><img src="/assets/img/blog/tdd_react/keypad_render_two.png" style="max-width:90%;" alt="keypad render" /></p>
+
+<h3 id="add-keypad-snapshot">Add <code class="highlighter-rouge">Keypad</code> snapshot</h3>
+
+<p>Now that the UI is completed for the <code class="highlighter-rouge">Keypad</code> component, add the snapshot test to <em>Keypad.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should render correctly'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Again, the snapshot test will immediately pass.</p>
+
+<h3 id="refactor-calculator-state">Refactor <code class="highlighter-rouge">Calculator</code> State</h3>
+
+<p>Add the number and operator values to the state object in <em>Calculator.jsx</em>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="kd">class</span> <span class="nx">Calculator</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="c1">// value to be displayed in &lt;Display /&gt;</span>
+      <span class="na">displayValue</span><span class="p">:</span> <span class="s1">'0'</span><span class="p">,</span>
+      <span class="c1">// values to be displayed in number &lt;Keys /&gt;</span>
+      <span class="na">numbers</span><span class="p">:</span> <span class="p">[</span><span class="s1">'9'</span><span class="p">,</span> <span class="s1">'8'</span><span class="p">,</span> <span class="s1">'7'</span><span class="p">,</span> <span class="s1">'6'</span><span class="p">,</span> <span class="s1">'5'</span><span class="p">,</span> <span class="s1">'4'</span><span class="p">,</span> <span class="s1">'3'</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">,</span> <span class="s1">'0'</span><span class="p">,</span><span class="s1">'ce'</span><span class="p">],</span>
+      <span class="c1">// values to be displayed in operator &lt;Keys /&gt;</span>
+      <span class="na">operators</span><span class="p">:</span> <span class="p">[</span><span class="s1">'/'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">,</span> <span class="s1">'+'</span><span class="p">],</span>
+      <span class="c1">// operator selected for math operation</span>
+      <span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+      <span class="c1">// stored value to use for math operation</span>
+      <span class="na">storedValue</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>After the changes, the <code class="highlighter-rouge">Calculator</code> snapshot breaks since we made changes to the UI of <code class="highlighter-rouge">Calculator</code>. We need to update the snapshot. This can be done by entering <code class="highlighter-rouge">u</code> in the task runner or by passing the <code class="highlighter-rouge">--updateSnapshot</code> flag in when calling the test runner from the command line:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn <span class="nb">test</span> <span class="nt">--updateSnapshot</span>
+</code></pre></div></div>
+
+<p>Run the app:</p>
+
+<p><img src="/assets/img/blog/tdd_react/final_application_render.png" style="max-width:90%;" alt="final application render" /></p>
+
+<p>We have completed developing the UI and writing of the render tests for the components, and are ready to move on to giving our calculator functionality.</p>
+
+<h2 id="application-functions">Application Functions</h2>
+
+<p>In this section, we will use TDD to write our application functions, <code class="highlighter-rouge">updateDisplay</code>, <code class="highlighter-rouge">setOperator</code>, and <code class="highlighter-rouge">callOperator</code> by utilizing the <span style="color:red">red</span>-<span style="color:green">green</span>-<span style="color:orange">refactor</span> cycle of creating failing tests and then writing the corresponding code to make them pass. We’ll begin by testing for the <code class="highlighter-rouge">click</code> event for the different calculator methods.</p>
+
+<h2 id="click-event-tests">Click Event Tests</h2>
+
+<p>For each of the calculator methods we’ll write tests that check for calls to the individual methods when the corresponding key type is clicked.</p>
+
+<p>These tests will go in their own <code class="highlighter-rouge">describe</code> block as we need to use <code class="highlighter-rouge">mount</code> rather than <code class="highlighter-rouge">shallow</code> since we are testing the behavior of child components. The tests involve (1) first creating a <code class="highlighter-rouge">spy</code> using the Jest <code class="highlighter-rouge">spyOn</code> method for the calculator method we are testing, (2) calling <code class="highlighter-rouge">forceUpdate</code> to re-render the <code class="highlighter-rouge">instance</code> within the test, then (3) using Enzyme’s <code class="highlighter-rouge">simulate</code> method on the corresponding <code class="highlighter-rouge">Key</code> to create the event.</p>
+
+<p>Add the following in <em>Calculator.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'mounted Calculator'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">mount</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Calculator</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'calls updateDisplay when a number key is clicked'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">spy</span> <span class="o">=</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">spyOn</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">(),</span> <span class="s1">'updateDisplay'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">forceUpdate</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">spy</span><span class="p">).</span><span class="nx">toHaveBeenCalledTimes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'.number-key'</span><span class="p">).</span><span class="nx">first</span><span class="p">().</span><span class="nx">simulate</span><span class="p">(</span><span class="s1">'click'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">spy</span><span class="p">).</span><span class="nx">toHaveBeenCalledTimes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'calls setOperator when an operator key is clicked'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">spy</span> <span class="o">=</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">spyOn</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">(),</span> <span class="s1">'setOperator'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">forceUpdate</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">spy</span><span class="p">).</span><span class="nx">toHaveBeenCalledTimes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'.operator-key'</span><span class="p">).</span><span class="nx">first</span><span class="p">().</span><span class="nx">simulate</span><span class="p">(</span><span class="s1">'click'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">spy</span><span class="p">).</span><span class="nx">toHaveBeenCalledTimes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'calls callOperator when the submit key is clicked'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">spy</span> <span class="o">=</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">spyOn</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">(),</span> <span class="s1">'callOperator'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">forceUpdate</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">spy</span><span class="p">).</span><span class="nx">toHaveBeenCalledTimes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'.submit-key'</span><span class="p">).</span><span class="nx">simulate</span><span class="p">(</span><span class="s1">'click'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">spy</span><span class="p">).</span><span class="nx">toHaveBeenCalledTimes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Don’t forget to import <code class="highlighter-rouge">mount</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">mount</span><span class="p">,</span> <span class="nx">shallow</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'enzyme'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Now refactor <em>Key.jsx</em> to execute the calculator methods on <code class="highlighter-rouge">click</code> events:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="kd">const</span> <span class="nx">Key</span> <span class="o">=</span> <span class="p">({</span><span class="nx">keyAction</span><span class="p">,</span> <span class="nx">keyType</span><span class="p">,</span> <span class="nx">keyValue</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span>
+      <span class="na">className=</span><span class="si">{</span><span class="s2">`key-container ${keyType}`</span><span class="si">}</span>
+      <span class="na">onClick=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="nx">keyAction</span><span class="p">(</span><span class="nx">keyValue</span><span class="p">)}</span><span class="si">}</span>
+    <span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className=</span><span class="s2">"key-value"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="nx">keyValue</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>The tests will pass, but the <code class="highlighter-rouge">Key</code> snapshot fails. Update the <code class="highlighter-rouge">Key</code> snapshot by entering <code class="highlighter-rouge">u</code> in the test runner or from the command line run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yarn <span class="nb">test</span> <span class="nt">--updateSnapshot</span>
+</code></pre></div></div>
+
+<p>Now that the <code class="highlighter-rouge">onClick</code> handler has been added to <code class="highlighter-rouge">Key</code>, run the app and then hop back into the browser and open the JavaScript console. Click on a number key. The output of the <code class="highlighter-rouge">click</code> event should look like this:</p>
+
+<p><img src="/assets/img/blog/tdd_react/console_log.png" style="max-width:90%;" alt="console log" /></p>
+
+<p>Now we are ready for the function tests!</p>
+
+<h2 id="update-display-tests">Update Display Tests</h2>
+
+<p>The <code class="highlighter-rouge">updateDisplay</code> method will take a single string argument, <code class="highlighter-rouge">value</code>, and update the <code class="highlighter-rouge">displayValue</code> in the <code class="highlighter-rouge">state</code> object. When <code class="highlighter-rouge">displayValue</code> is updated, React will re-render the <code class="highlighter-rouge">Display</code> component with the new value of <code class="highlighter-rouge">displayValue</code> as the display text.</p>
+
+<p>We need to add a new <code class="highlighter-rouge">describe</code> block for <code class="highlighter-rouge">updateDisplay</code> in our <code class="highlighter-rouge">Calculator</code> test file, and then add our tests for the <code class="highlighter-rouge">updateDisplay</code> method. In the tests, <code class="highlighter-rouge">updateDisplay</code> will be called from the <code class="highlighter-rouge">wrapper.instance()</code> object and the result will be tested against the <code class="highlighter-rouge">state</code> object.</p>
+
+<p>Navigate to <em>Calculator.spec.js</em>, declare the <code class="highlighter-rouge">describe</code> block, and add the tests inside:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'updateDisplay'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Calculator</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'concatenates displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'50'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'removes leading "0" from displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'prevents multiple leading "0"s from displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'removes last char of displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'ce'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'prevents multiple instances of "." in displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'.'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'.'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'.'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'will set displayValue to "0" if displayValue is equal to an empty string'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">updateDisplay</span><span class="p">(</span><span class="s1">'ce'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Now, update the <code class="highlighter-rouge">updateDisplay</code> method in the <code class="highlighter-rouge">Calculator</code> component and then <code class="highlighter-rouge">bind</code> the method to the component in the <code class="highlighter-rouge">constructor</code> method. Refer to the <a href="https://reactjs.org/docs/handling-events.html">React docs</a> for more info on bind:</p>
+
+<blockquote>
+  <p>You have to be careful about the meaning of <code class="highlighter-rouge">this</code> in JSX callbacks. In JavaScript, class methods are not bound by default. If you forget to bind <code class="highlighter-rouge">this.handleClick</code> and pass it to <code class="highlighter-rouge">onClick</code>, <code class="highlighter-rouge">this</code> will be <code class="highlighter-rouge">undefined</code> when the function is actually called.</p>
+</blockquote>
+
+<p>Navigate to <em>Calculator.jsx</em>, add the <code class="highlighter-rouge">bind</code> in the <code class="highlighter-rouge">constructor</code> and update <code class="highlighter-rouge">updateDisplay</code>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+
+<span class="kd">class</span> <span class="nx">Calculator</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">...</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">updateDisplay</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateDisplay</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+  <span class="nx">updateDisplay</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="p">{</span><span class="nx">displayValue</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
+
+    <span class="c1">// prevent multiple occurences of '.'</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">===</span> <span class="s1">'.'</span> <span class="o">&amp;&amp;</span> <span class="nx">displayValue</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">'.'</span><span class="p">))</span> <span class="nx">value</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">===</span> <span class="s1">'ce'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// deletes last char in displayValue</span>
+      <span class="nx">displayValue</span> <span class="o">=</span> <span class="nx">displayValue</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">displayValue</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="c1">// set displayValue to '0' if displayValue is empty string</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">displayValue</span> <span class="o">===</span> <span class="s1">''</span><span class="p">)</span> <span class="nx">displayValue</span> <span class="o">=</span> <span class="s1">'0'</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// replace displayValue with value if displayValue equal to '0'</span>
+      <span class="c1">// else concatenate displayValue and value</span>
+      <span class="nx">displayValue</span> <span class="o">===</span> <span class="s1">'0'</span> <span class="p">?</span> <span class="nx">displayValue</span> <span class="o">=</span> <span class="nx">value</span> <span class="p">:</span> <span class="nx">displayValue</span> <span class="o">+=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="nx">displayValue</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</code></pre></div></div>
+
+<p>All tests should now pass, navigate to the browser and click the number keys to see the display update.</p>
+
+<p><img src="/assets/img/blog/tdd_react/number_keys.png" style="max-width:90%;" alt="number keys" /></p>
+
+<p>Now move on to the <code class="highlighter-rouge">setOperator</code> method!</p>
+
+<h2 id="set-operator-tests">Set Operator Tests</h2>
+
+<p>The <code class="highlighter-rouge">setOperator</code> method will take a single string argument, <code class="highlighter-rouge">value</code>, and it will update <code class="highlighter-rouge">displayValue</code>, <code class="highlighter-rouge">selectedOperator</code>, and <code class="highlighter-rouge">storedValue</code> in the <code class="highlighter-rouge">state</code> object.</p>
+
+<p>Again, add a <code class="highlighter-rouge">describe</code> block for <code class="highlighter-rouge">setOperator</code> in our <code class="highlighter-rouge">Calculator</code> test file and then add the tests for the <code class="highlighter-rouge">setOperator</code> method. Like before, <code class="highlighter-rouge">setOperator</code> will be called from the <code class="highlighter-rouge">wrapper.instance()</code> object and the result will be tested against the <code class="highlighter-rouge">state</code> object.</p>
+
+<p>Navigate over to <em>Calculator.spec.js</em>, add the <code class="highlighter-rouge">describe</code> block along with the tests:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'setOperator'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Calculator</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates the value of selectedOperator'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">setOperator</span><span class="p">(</span><span class="s1">'+'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'selectedOperator'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'+'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">setOperator</span><span class="p">(</span><span class="s1">'/'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'selectedOperator'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'/'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates the value of storedValue to the value of displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'5'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">setOperator</span><span class="p">(</span><span class="s1">'+'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'storedValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates the value of displayValue to "0"'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'5'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">setOperator</span><span class="p">(</span><span class="s1">'+'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'selectedOperator is not an empty string, does not update storedValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'5'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">setOperator</span><span class="p">(</span><span class="s1">'+'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'storedValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">setOperator</span><span class="p">(</span><span class="s1">'-'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'storedValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Navigate to <em>Calculator.jsx</em>. Update the <code class="highlighter-rouge">setOperator</code> method (don’t forget to <code class="highlighter-rouge">bind</code> it in the <code class="highlighter-rouge">constructor</code>):</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+<span class="kd">class</span> <span class="nx">Calculator</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setOperator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">setOperator</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">updateDisplay</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateDisplay</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+  <span class="nx">setOperator</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="p">{</span><span class="nx">displayValue</span><span class="p">,</span> <span class="nx">selectedOperator</span><span class="p">,</span> <span class="nx">storedValue</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
+
+    <span class="c1">// check if a value is already present for selectedOperator</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">selectedOperator</span> <span class="o">===</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// update storedValue to the value of displayValue</span>
+      <span class="nx">storedValue</span> <span class="o">=</span> <span class="nx">displayValue</span><span class="p">;</span>
+      <span class="c1">// reset the value of displayValue to '0'</span>
+      <span class="nx">displayValue</span> <span class="o">=</span> <span class="s1">'0'</span><span class="p">;</span>
+      <span class="c1">// update the value of selectedOperator to the given value</span>
+      <span class="nx">selectedOperator</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>  
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// if selectedOperator is not an empty string</span>
+      <span class="c1">// update the value of selectedOperator to the given value</span>
+      <span class="nx">selectedOperator</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="nx">displayValue</span><span class="p">,</span> <span class="nx">selectedOperator</span><span class="p">,</span> <span class="nx">storedValue</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Calculator</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Again, all tests are now <span style="color:green">green</span>. Move on to <code class="highlighter-rouge">callOperator</code>.</p>
+
+<h2 id="call-operator-tests">Call Operator Tests</h2>
+
+<p>The <code class="highlighter-rouge">callOperator</code> method has no arguments. It updates <code class="highlighter-rouge">displayValue</code>, <code class="highlighter-rouge">selectedOperator</code>, and <code class="highlighter-rouge">storedValue</code> in the <code class="highlighter-rouge">state</code> object.</p>
+
+<p>Once again, we need a <code class="highlighter-rouge">describe</code> block for <code class="highlighter-rouge">callOperator</code> in our <code class="highlighter-rouge">Calculator</code> test file. Then, we’ll add our tests for the <code class="highlighter-rouge">callOperator</code> method inside. As in the above sections, <code class="highlighter-rouge">callOperator</code> will be called from the <code class="highlighter-rouge">wrapper.instance()</code> object and the result will be tested against the <code class="highlighter-rouge">state</code> object.</p>
+
+<p>Navigate to <em>Calculator.spec.js</em> and add the new <code class="highlighter-rouge">describe</code> block at the bottom of the file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'callOperator'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">wrapper</span><span class="p">;</span>
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">shallow</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">Calculator</span> <span class="o">/&gt;</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to the sum of storedValue and displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">'3'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'2'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">'+'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'5'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to the difference of storedValue and displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">'3'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'2'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">'-'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'1'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to the product of storedValue and displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">'3'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'2'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">'x'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'6'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to the quotient of storedValue and displayValue'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">'3'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'2'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'1.5'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to "0" if operation results in "NaN"'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">'3'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to "0" if operation results in "Infinity"'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">'7'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'0'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to "0" if selectedOperator does not match cases'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">'7'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'10'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'updates displayValue to "0" if called with no value for storedValue or selectedOperator'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">storedValue</span><span class="p">:</span> <span class="s1">''</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">displayValue</span><span class="p">:</span> <span class="s1">'10'</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="na">selectedOperator</span><span class="p">:</span> <span class="s1">''</span><span class="p">});</span>
+    <span class="nx">wrapper</span><span class="p">.</span><span class="nx">instance</span><span class="p">().</span><span class="nx">callOperator</span><span class="p">();</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">'displayValue'</span><span class="p">)).</span><span class="nx">toEqual</span><span class="p">(</span><span class="s1">'0'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Navigate to <em>Calculator.jsx</em>, update the <code class="highlighter-rouge">callOperator</code> method (keeping in mind to <code class="highlighter-rouge">bind</code> the method in the <code class="highlighter-rouge">constructor</code>):</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Calculator</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">callOperator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">callOperator</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setOperator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">setOperator</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">updateDisplay</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateDisplay</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">callOperator</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="p">{</span><span class="nx">displayValue</span><span class="p">,</span> <span class="nx">selectedOperator</span><span class="p">,</span> <span class="nx">storedValue</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">;</span>
+    <span class="c1">// temp variable for updating state storedValue</span>
+    <span class="kd">const</span> <span class="nx">updateStoredValue</span> <span class="o">=</span> <span class="nx">displayValue</span><span class="p">;</span>
+
+    <span class="c1">// parse strings for operations</span>
+    <span class="nx">displayValue</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">displayValue</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="nx">storedValue</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">storedValue</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+
+    <span class="c1">// performs selected operation</span>
+    <span class="k">switch</span><span class="p">(</span><span class="nx">selectedOperator</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="s1">'+'</span><span class="p">:</span>
+        <span class="nx">displayValue</span> <span class="o">=</span> <span class="nx">storedValue</span> <span class="o">+</span> <span class="nx">displayValue</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s1">'-'</span><span class="p">:</span>
+        <span class="nx">displayValue</span> <span class="o">=</span> <span class="nx">storedValue</span> <span class="o">-</span> <span class="nx">displayValue</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s1">'x'</span><span class="p">:</span>
+        <span class="nx">displayValue</span> <span class="o">=</span> <span class="nx">storedValue</span> <span class="o">*</span> <span class="nx">displayValue</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s1">'/'</span><span class="p">:</span>
+        <span class="nx">displayValue</span> <span class="o">=</span> <span class="nx">storedValue</span> <span class="o">/</span> <span class="nx">displayValue</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="nl">default</span><span class="p">:</span>
+        <span class="c1">// set displayValue to zero if no case matches</span>
+        <span class="nx">displayValue</span> <span class="o">=</span> <span class="s1">'0'</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// converts displayValue to a string</span>
+    <span class="nx">displayValue</span> <span class="o">=</span> <span class="nx">displayValue</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+    <span class="c1">// reset selectedOperator</span>
+    <span class="nx">selectedOperator</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+    <span class="c1">// check for 'NaN' or 'Infinity', if true set displayValue to '0'</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">displayValue</span> <span class="o">===</span> <span class="s1">'NaN'</span> <span class="o">||</span> <span class="nx">displayValue</span> <span class="o">===</span> <span class="s1">'Infinity'</span><span class="p">)</span> <span class="nx">displayValue</span> <span class="o">=</span><span class="s1">'0'</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span><span class="nx">displayValue</span><span class="p">,</span> <span class="nx">selectedOperator</span><span class="p">,</span> <span class="na">storedValue</span><span class="p">:</span> <span class="nx">updateStoredValue</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Calculator</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The calculator is now fully functional!</p>
+
+<p><img src="/assets/img/blog/tdd_react/final.gif" style="max-width:90%;" alt="final app" /></p>
+
+<p>All tests should be passing as well!</p>
+
+<p><img src="/assets/img/blog/tdd_react/final_tests.png" style="max-width:90%;" alt="all tests passing" /></p>
+
+<h2 id="final-thoughts">Final Thoughts</h2>
+
+<p>At this point we have:</p>
+
+<ol>
+  <li>Employed Test-driven Development, along with Enzyme and Jest, to structure our application and write our tests.</li>
+  <li>Used CSS Variables to allow for variable reuse and reassignment for responsive design.</li>
+  <li>Written a reusable React component that we were able to render with individual functions and in multiple styles.</li>
+  <li>Used React’s PropTypes for type-checking throughout the application.</li>
+</ol>
+
+<p>Next steps:</p>
+
+<p>You may have noticed a quirk if you play with the calculator, that the <code class="highlighter-rouge">.</code> key doesn’t work quite as expected. You know what to do: Write a test first, debug, and then write the code to pass the test.</p>
+
+<p>Another quirk you have come across is that if you click a key following an operation (doesn’t matter which key), the <code class="highlighter-rouge">displayValue</code> doesn’t quite update the way we would expect if we are trying to mimic the experience of using an average calculator. Compare this calculator with another calculator, isolate the differences in the experience, write some tests for the new outcomes, lastly updating the calculator functionality to get the tests <span style="color:green">green</span>.</p>
+
+<p>Try experimenting with the CSS:</p>
+
+<p><img src="/assets/img/blog/tdd_react/new_css.png" style="max-width:90%;" alt="new css" /></p>
+
+<p>After the above items, the next steps could be to add a loading transition or an event listener for keyboard events to the application for a better user experience. If you are curious on how to set up the latter, you can find the completed application in the <code class="highlighter-rouge">master</code> branch of the <a href="https://www.github.com/calebpollman/react-calculator">react-calculator</a> repo on GitHub.</p>
+
+<p>Hope you enjoyed the post!</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Test-Driven Development with React, Jest, and Enzyme - Part 2&amp;url=https%3A%2F%2Ftestdriven.io/tdd-with-react-jest-and-enzyme-part-two&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

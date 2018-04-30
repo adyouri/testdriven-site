@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/simple-task-queue/async_task_queue_python.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This post looks at how to implement several asynchronous task queues using Python's multiprocessing library and Redis.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="python, multiprocessing, asynchronous tasks, task queue, redis, redis queue">
+  
+  <!-- title -->
+  
+    <title>Developing an Asynchronous Task Queue in Python - TestDriven.io</title>
+    <meta property="og:title" content="Developing an Asynchronous Task Queue in Python" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1525092741450856000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/simple-task-queue/async_task_queue_python.png" style="max-width:100%" alt="python">
+            </div>
+          
+
+          <h1>Developing an Asynchronous Task Queue in Python</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/herman">Michael Herman</a></span> on <span class="badge badge-secondary">Apr 30, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Developing an Asynchronous Task Queue in Python&amp;url=https%3A%2F%2Ftestdriven.io/developing-an-asynchronous-task-queue-in-python&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p>This post looks at how to implement several asynchronous task queues using Python’s <a href="https://docs.python.org/3.6/library/multiprocessing.html">multiprocessing</a> library and <a href="https://redis.io/">Redis</a>.</p>
+
+<h2 class="no_toc">Contents</h2>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#queue---basic-overview" id="markdown-toc-queue---basic-overview">Queue - basic overview</a></li>
+  <li><a href="#task" id="markdown-toc-task">Task</a></li>
+  <li><a href="#multiprocessing-pool" id="markdown-toc-multiprocessing-pool">Multiprocessing Pool</a></li>
+  <li><a href="#multiprocessing-queue" id="markdown-toc-multiprocessing-queue">Multiprocessing Queue</a></li>
+  <li><a href="#logging" id="markdown-toc-logging">Logging</a></li>
+  <li><a href="#redis" id="markdown-toc-redis">Redis</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="queue---basic-overview">Queue - basic overview</h2>
+
+<p>A <a href="https://en.wikipedia.org/wiki/Queue_(abstract_data_type)">queue</a> is a <a href="https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)">First-In-First-Out</a> (<strong>FIFO</strong>) data structure.</p>
+
+<ol>
+  <li>an item is added at the tail (<strong>enqueue</strong>)</li>
+  <li>an item is removed at the head (<strong>dequeue</strong>)</li>
+</ol>
+
+<p><img src="/assets/img/blog/simple-task-queue/queue.png" style="max-width:70%;" alt="queue" /></p>
+
+<p>You will see this in practice as you code out the examples in this post.</p>
+
+<h2 id="task">Task</h2>
+
+<p>Let’s start by creating a basic task:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># tasks.py</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+
+
+<span class="n">COMMON_WORDS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s">'english'</span><span class="p">))</span>
+<span class="n">DATA_DIRECTORY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s">'data'</span><span class="p">)</span>
+<span class="n">OUTPUT_DIRECTORY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s">'output'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">save_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="n">random_str</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="nb">hex</span>
+    <span class="n">outfile</span> <span class="o">=</span> <span class="n">f</span><span class="s">'{filename}_{random_str}.txt'</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUTPUT_DIRECTORY</span><span class="p">,</span> <span class="n">outfile</span><span class="p">),</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_word_counts</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">wordcount</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">()</span>
+    <span class="c"># get counts</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DATA_DIRECTORY</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">wordcount</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">COMMON_WORDS</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">wordcount</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+    <span class="c"># save file</span>
+    <span class="n">save_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">wordcount</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">20</span><span class="p">))))</span>
+    <span class="c"># simulate long-running task</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Processed {filename} with process id: {proc}'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">get_word_counts</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>So, <code class="highlighter-rouge">get_word_counts</code> finds the twenty most frequent words from a given text file and saves them to an output file. It also prints the current process identifier (or pid) using Python’s <a href="https://docs.python.org/3.6/library/os.html">os</a> library.</p>
+
+<blockquote>
+  <p><strong>Following along?</strong>  Let’s get coding…</p>
+  <ol>
+    <li>Create a project directory along with a virtual environment.</li>
+    <li>Use pip to install <a href="https://pypi.org/project/nltk/">NLTK</a>:
+      <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> $ pip install nltk==3.2.5
+</code></pre></div>      </div>
+    </li>
+    <li>Once installed, invoke the Python shell and download the <code class="highlighter-rouge">stopwords</code> <a href="https://www.nltk.org/data.html">corpus</a>:
+      <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; import nltk
+&gt;&gt; nltk.download('stopwords')
+  [nltk_data] Downloading package stopwords to
+  [nltk_data]     /Users/michael.herman/nltk_data...
+  [nltk_data]   Unzipping corpora/stopwords.zip.
+  True
+</code></pre></div>      </div>
+      <p>If you experience an SSL error refer to <a href="https://stackoverflow.com/questions/41348621/ssl-error-downloading-nltk-data">this</a> article.</p>
+    </li>
+    <li>Add the above <em>tasks.py</em> file to your project directory but don’t run it yet.</li>
+  </ol>
+</blockquote>
+
+<h2 id="multiprocessing-pool">Multiprocessing Pool</h2>
+
+<p>We can run this task in parallel using the <a href="https://docs.python.org/3.6/library/multiprocessing.html">multiprocessing</a> library:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># simple_pool.py</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">tasks</span> <span class="kn">import</span> <span class="n">get_word_counts</span>
+
+
+<span class="n">PROCESSES</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Running with {PROCESSES} processes!'</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">map_async</span><span class="p">(</span><span class="n">get_word_counts</span><span class="p">,</span> <span class="p">[</span>
+            <span class="s">'pride-and-prejudice.txt'</span><span class="p">,</span>
+            <span class="s">'heart-of-darkness.txt'</span><span class="p">,</span>
+            <span class="s">'frankenstein.txt'</span><span class="p">,</span>
+            <span class="s">'dracula.txt'</span>
+        <span class="p">])</span>
+        <span class="c"># clean up</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Time taken = {time.time() - start:.10f}'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Here, using the <a href="https://docs.python.org/3.6/library/multiprocessing.html#multiprocessing.pool.Pool">Pool</a> class, we processed four tasks with two processes.</p>
+
+<p>Did you notice the <code class="highlighter-rouge">map_async</code> method? There are essentially four different methods available for mapping tasks to processes. When choosing one, you have to take multi-args, concurrency, blocking, and ordering into account:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Multi-args</th>
+      <th>Concurrency</th>
+      <th>Blocking</th>
+      <th>Ordered-results</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">map</code></td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">map_async</code></td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">apply</code></td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">apply_async</code></td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Without both <code class="highlighter-rouge">close</code> and <code class="highlighter-rouge">join</code>, garbage collection may not occur, which could lead to a memory leak.</p>
+
+<ol>
+  <li><code class="highlighter-rouge">close</code> tells the pool not to accept any new tasks</li>
+  <li><code class="highlighter-rouge">join</code> tells the pool to exit after all tasks have completed</li>
+</ol>
+
+<blockquote>
+  <p><strong>Following along?</strong> Grab the <a href="http://www.gutenberg.org/">Project Gutenberg</a> sample text files from the “data” directory in the <a href="https://github.com/testdrivenio/simple-task-queue">simple-task-queue</a> repo, and then add an “output” directory.</p>
+
+  <p>Your project directory should look like this:</p>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>├── data
+│   ├── dracula.txt
+│   ├── frankenstein.txt
+│   ├── heart-of-darkness.txt
+│   └── pride-and-prejudice.txt
+├── output
+└── tasks.py
+</code></pre></div>  </div>
+</blockquote>
+
+<p>It should take about two seconds to run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python simple_pool.py
+
+Running with 7 processes!
+Processed heart-of-darkness.txt with process <span class="nb">id</span>: 27713
+Processed frankenstein.txt with process <span class="nb">id</span>: 27714
+Processed pride-and-prejudice.txt with process <span class="nb">id</span>: 27712
+Processed dracula.txt with process <span class="nb">id</span>: 27715
+Time taken <span class="o">=</span> 2.1577479839
+</code></pre></div></div>
+
+<blockquote>
+  <p>This script ran on a i7 Macbook Pro with <a href="https://superuser.com/questions/1101311/how-many-cores-does-my-mac-have/1101314#1101314">8 cores</a>.</p>
+</blockquote>
+
+<p>So, the multiprocessing <code class="highlighter-rouge">Pool</code> class handles the queuing logic for us. It’s perfect for running web scraping jobs in parallel (<a href="https://testdriven.io/building-a-concurrent-web-scraper-with-python-and-selenium">example</a>) or really any job that can be broken up and distributed independently. If you’d like more control over the queue or need to share data between multiple processes, you may want to look at the <code class="highlighter-rouge">Queue</code> class.</p>
+
+<h2 id="multiprocessing-queue">Multiprocessing Queue</h2>
+
+<p>Let’s look at a simple example:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># simple_queue.py</span>
+
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">books</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s">'pride-and-prejudice.txt'</span><span class="p">,</span>
+        <span class="s">'heart-of-darkness.txt'</span><span class="p">,</span>
+        <span class="s">'frankenstein.txt'</span><span class="p">,</span>
+        <span class="s">'dracula.txt'</span>
+    <span class="p">]</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'Enqueuing...'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">books</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\n</span><span class="s">Dequeuing...'</span><span class="p">)</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>The <a href="https://docs.python.org/3.6/library/multiprocessing.html#exchanging-objects-between-processes">Queue</a> class, also from the multiprocessing library, is a basic FIFO (first in, first out) data structure.  It’s similar to the <a href="https://docs.python.org/3.6/library/queue.html#queue.Queue">queue.Queue</a> class, but designed for interprocess communication. We used <code class="highlighter-rouge">put</code> to enqueue an item to the queue and <code class="highlighter-rouge">get</code> to dequeue an item.</p>
+
+<blockquote>
+  <p>Check out the <code class="highlighter-rouge">Queue</code> <a href="https://github.com/python/cpython/blob/master/Lib/multiprocessing/queues.py">source code</a> for a better understanding of the mechanics of this class.</p>
+</blockquote>
+
+<p>Now, let’s look at more advanced example:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># simple_task_queue.py</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">tasks</span> <span class="kn">import</span> <span class="n">get_word_counts</span>
+
+
+<span class="n">PROCESSES</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">NUMBER_OF_TASKS</span> <span class="o">=</span> <span class="mi">10</span>
+
+
+<span class="k">def</span> <span class="nf">process_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">):</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">get_word_counts</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="k">def</span> <span class="nf">add_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">,</span> <span class="n">number_of_tasks</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_tasks</span><span class="p">):</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'pride-and-prejudice.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'heart-of-darkness.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'frankenstein.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'dracula.txt'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">task_queue</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">empty_task_queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">full_task_queue</span> <span class="o">=</span> <span class="n">add_tasks</span><span class="p">(</span><span class="n">empty_task_queue</span><span class="p">,</span> <span class="n">NUMBER_OF_TASKS</span><span class="p">)</span>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Running with {PROCESSES} processes!'</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">process_tasks</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">full_task_queue</span><span class="p">,))</span>
+        <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Time taken = {time.time() - start:.10f}'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Here, we enqueued 40 tasks (ten for each text file) to the queue, created separate processes via the <code class="highlighter-rouge">Process</code> class, used <code class="highlighter-rouge">start</code> to start running the processes, and, finally, used <code class="highlighter-rouge">join</code> to complete the processes.</p>
+
+<p>It should take about 12 seconds to run.</p>
+
+<blockquote>
+  <p><strong>Challenge</strong>: Check your understanding by adding another queue to hold completed tasks. You can enqueue them within the <code class="highlighter-rouge">process_tasks</code> function.</p>
+</blockquote>
+
+<h2 id="logging">Logging</h2>
+
+<p>The multiprocessing library provides support for logging as well:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># simple_task_queue_logging.py</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">tasks</span> <span class="kn">import</span> <span class="n">get_word_counts</span>
+
+
+<span class="n">PROCESSES</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">NUMBER_OF_TASKS</span> <span class="o">=</span> <span class="mi">10</span>
+
+
+<span class="k">def</span> <span class="nf">process_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">):</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">book</span> <span class="o">=</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">get_word_counts</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s">'Process {proc} completed successfully'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="k">def</span> <span class="nf">add_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">,</span> <span class="n">number_of_tasks</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_tasks</span><span class="p">):</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'pride-and-prejudice.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'heart-of-darkness.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'frankenstein.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'dracula.txt'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">task_queue</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">empty_task_queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">full_task_queue</span> <span class="o">=</span> <span class="n">add_tasks</span><span class="p">(</span><span class="n">empty_task_queue</span><span class="p">,</span> <span class="n">NUMBER_OF_TASKS</span><span class="p">)</span>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Running with {PROCESSES} processes!'</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">process_tasks</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">full_task_queue</span><span class="p">,))</span>
+        <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Time taken = {time.time() - start:.10f}'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">multiprocessing</span><span class="o">.</span><span class="n">log_to_stderr</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+    <span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>To test, change <code class="highlighter-rouge">task_queue.put('dracula.txt')</code> to <code class="highlighter-rouge">task_queue.put('drakula.txt')</code>. You should see the following error outputted ten times in the terminal:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>ERROR/Process-4] <span class="o">[</span>Errno 2] No such file or directory:
+<span class="s1">'simple-task-queue/data/drakula.txt'</span>
+</code></pre></div></div>
+
+<p>Want to log to disc?</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># simple_task_queue_logging.py</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">tasks</span> <span class="kn">import</span> <span class="n">get_word_counts</span>
+
+
+<span class="n">PROCESSES</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">NUMBER_OF_TASKS</span> <span class="o">=</span> <span class="mi">10</span>
+
+
+<span class="k">def</span> <span class="nf">create_logger</span><span class="p">():</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">fh</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s">'process.log'</span><span class="p">)</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="s">'</span><span class="si">%(asctime)</span><span class="s">s - </span><span class="si">%(levelname)</span><span class="s">s - </span><span class="si">%(message)</span><span class="s">s'</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logger</span>
+
+
+<span class="k">def</span> <span class="nf">process_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">):</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">()</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">book</span> <span class="o">=</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">get_word_counts</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s">'Process {proc} completed successfully'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="k">def</span> <span class="nf">add_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">,</span> <span class="n">number_of_tasks</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_tasks</span><span class="p">):</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'pride-and-prejudice.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'heart-of-darkness.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'frankenstein.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'dracula.txt'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">task_queue</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">empty_task_queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">full_task_queue</span> <span class="o">=</span> <span class="n">add_tasks</span><span class="p">(</span><span class="n">empty_task_queue</span><span class="p">,</span> <span class="n">NUMBER_OF_TASKS</span><span class="p">)</span>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Running with {PROCESSES} processes!'</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">process_tasks</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">full_task_queue</span><span class="p">,))</span>
+        <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Time taken = {time.time() - start:.10f}'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Again, cause an error by altering one of the file names, and then run it. Take a look at <em>process.log</em> - not quite as organized as it should be since the Python logging library does not use shared locks between processes. To get around this, let’s have each process write to its own file. To keep things organized, add a logs directory to you project folder:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># simple_task_queue_logging_separate_files.py</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">tasks</span> <span class="kn">import</span> <span class="n">get_word_counts</span>
+
+
+<span class="n">PROCESSES</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">NUMBER_OF_TASKS</span> <span class="o">=</span> <span class="mi">10</span>
+
+
+<span class="k">def</span> <span class="nf">create_logger</span><span class="p">(</span><span class="n">pid</span><span class="p">):</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">fh</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">f</span><span class="s">'logs/process_{pid}.log'</span><span class="p">)</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="s">'</span><span class="si">%(asctime)</span><span class="s">s - </span><span class="si">%(levelname)</span><span class="s">s - </span><span class="si">%(message)</span><span class="s">s'</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logger</span>
+
+
+<span class="k">def</span> <span class="nf">process_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">):</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="n">proc</span><span class="p">)</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">book</span> <span class="o">=</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">get_word_counts</span><span class="p">(</span><span class="n">book</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s">'Process {proc} completed successfully'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="k">def</span> <span class="nf">add_tasks</span><span class="p">(</span><span class="n">task_queue</span><span class="p">,</span> <span class="n">number_of_tasks</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_tasks</span><span class="p">):</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'pride-and-prejudice.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'heart-of-darkness.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'frankenstein.txt'</span><span class="p">)</span>
+        <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'dracula.txt'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">task_queue</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">empty_task_queue</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">full_task_queue</span> <span class="o">=</span> <span class="n">add_tasks</span><span class="p">(</span><span class="n">empty_task_queue</span><span class="p">,</span> <span class="n">NUMBER_OF_TASKS</span><span class="p">)</span>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Running with {PROCESSES} processes!'</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">process_tasks</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">full_task_queue</span><span class="p">,))</span>
+        <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Time taken = {time.time() - start:.10f}'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="redis">Redis</h2>
+
+<p>Moving right along, instead of using an in-memory queue, let’s add <a href="https://redis.io/">Redis</a> into the mix.</p>
+
+<blockquote>
+  <p><strong>Following along?</strong> <a href="https://redis.io/download">Download</a> and install Redis if you do not already have it installed. Then, install the Python <a href="https://pypi.org/project/redis/">interface</a>:</p>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pip install redis==2.10.6
+</code></pre></div>  </div>
+</blockquote>
+
+<p>We’ll break the logic up into four files:</p>
+
+<ol>
+  <li><em>redis_queue.py</em> creates new queues and tasks via the <code class="highlighter-rouge">SimpleQueue</code> and <code class="highlighter-rouge">SimpleTask</code> classes, respectively.</li>
+  <li><em>redis_queue_client</em> enqueues new tasks.</li>
+  <li><em>redis_queue_worker</em> dequeues and processes tasks.</li>
+  <li><em>redis_queue_server</em> spawns worker processes.</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># redis_queue.py</span>
+
+
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+
+<span class="k">class</span> <span class="nc">SimpleQueue</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">enqueue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">SimpleTask</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">serialized_task</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">lpush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">serialized_task</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="nb">id</span>
+
+    <span class="k">def</span> <span class="nf">dequeue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">serialized_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">brpop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">serialized_task</span><span class="p">)</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">process_task</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">task</span>
+
+    <span class="k">def</span> <span class="nf">get_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">llen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SimpleTask</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Here, we defined two classes, <code class="highlighter-rouge">SimpleQueue</code> and <code class="highlighter-rouge">SimpleTask</code>:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">SimpleQueue</code> creates a new queue and enqueues, dequeues, and gets the length of the queue.</li>
+  <li><code class="highlighter-rouge">SimpleTask</code> creates new tasks, which are used by the instance of the <code class="highlighter-rouge">SimpleQueue</code> class to enqueue new tasks, and processes new tasks.</li>
+</ol>
+
+<blockquote>
+  <p>Curious about <code class="highlighter-rouge">lpush()</code>, <code class="highlighter-rouge">brpop()</code>, and <code class="highlighter-rouge">llen()</code>? Refer to the <a href="https://redis.io/commands">Command reference</a> page. (<code class="highlighter-rouge">The brpop()</code> function is particularly cool because it blocks the connection until a value exists to be popped!)</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># redis_queue_client.py</span>
+
+<span class="kn">import</span> <span class="nn">redis</span>
+
+<span class="kn">from</span> <span class="nn">redis_queue</span> <span class="kn">import</span> <span class="n">SimpleQueue</span>
+<span class="kn">from</span> <span class="nn">tasks</span> <span class="kn">import</span> <span class="n">get_word_counts</span>
+
+
+<span class="n">NUMBER_OF_TASKS</span> <span class="o">=</span> <span class="mi">10</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">()</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">SimpleQueue</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">'sample'</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUMBER_OF_TASKS</span><span class="p">):</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">get_word_counts</span><span class="p">,</span> <span class="s">'pride-and-prejudice.txt'</span><span class="p">)</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">get_word_counts</span><span class="p">,</span> <span class="s">'heart-of-darkness.txt'</span><span class="p">)</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">get_word_counts</span><span class="p">,</span> <span class="s">'frankenstein.txt'</span><span class="p">)</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="n">get_word_counts</span><span class="p">,</span> <span class="s">'dracula.txt'</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">4</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Enqueued {count} tasks!'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This module will create a new instance of Redis and the <code class="highlighter-rouge">SimpleQueue</code> class and enqueue 40 tasks.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># redis_queue_worker.py</span>
+
+<span class="kn">import</span> <span class="nn">redis</span>
+
+<span class="kn">from</span> <span class="nn">redis_queue</span> <span class="kn">import</span> <span class="n">SimpleQueue</span>
+
+
+<span class="k">def</span> <span class="nf">worker</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">()</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">SimpleQueue</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">'sample'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">queue</span><span class="o">.</span><span class="n">get_length</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">dequeue</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'No tasks in the queue'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">worker</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>If there is an available task, the <code class="highlighter-rouge">dequeue</code> method is called, which  then  de-serializes the task and calls the <code class="highlighter-rouge">process_task</code> method (in <em>redis_queue.py</em>).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># redis_queue_server.py</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">tasks</span> <span class="kn">import</span> <span class="n">get_word_counts</span>
+<span class="kn">from</span> <span class="nn">redis_queue_worker</span> <span class="kn">import</span> <span class="n">worker</span>
+
+
+<span class="n">PROCESSES</span> <span class="o">=</span> <span class="mi">4</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">'Running with {PROCESSES} processes!'</span><span class="p">)</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="p">)</span>
+            <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">run</code> method spawns four new worker processes.</p>
+
+<blockquote>
+  <p>You probably don’t want four processes running at once all the time, but there may be times that you will need four or more processes. Think about how you could programmatically spin up and down additional workers based on demand.</p>
+</blockquote>
+
+<p>To test, run <em>redis_queue_server.py</em> and <em>redis_queue_client.py</em> in separate terminal windows:</p>
+
+<p><a href="/assets/img/blog/simple-task-queue/example.png">
+  <img src="/assets/img/blog/simple-task-queue/example.png" style="max-width:80%;padding-top:20px;" alt="example" />
+</a></p>
+
+<p><a href="/assets/img/blog/simple-task-queue/example.gif">
+  <img src="/assets/img/blog/simple-task-queue/example.gif" style="max-width:80%;padding-top:20px;" alt="example" />
+</a></p>
+
+<blockquote>
+  <p>Check your understanding again by adding logging to the above application.</p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post, we looked at a number of asynchronous task queue implementations in Python. If the requirements are simple enough, it may be easier to develop a queue in this manner. That said, if you’re looking for more advanced features - like task scheduling, batch processing, job prioritization, and retrying of failed tasks - you should look into a full-blown solution. Check out <a href="http://www.celeryproject.org/">Celery</a>, <a href="http://python-rq.org/">RQ</a>, or <a href="http://huey.readthedocs.io/">Huey</a>.</p>
+
+<p>Grab the final code from the <a href="https://github.com/testdrivenio/simple-task-queue">simple-task-queue</a> repo.</p>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Developing an Asynchronous Task Queue in Python&amp;url=https%3A%2F%2Ftestdriven.io/developing-an-asynchronous-task-queue-in-python&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 - 3</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

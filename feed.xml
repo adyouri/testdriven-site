@@ -5,7 +5,22 @@
 		<description>TestDriven.io blog</description>
 		<link>https://testdriven.io</link>
 		<atom:link href="https://testdriven.io/feed.xml" rel="self" type="application/rss+xml" />
-		<lastBuildDate>Mon, 23 Apr 2018 00:00:00 -0600</lastBuildDate>
+		<lastBuildDate>Mon, 30 Apr 2018 00:00:00 -0600</lastBuildDate>
+		
+      
+  			<item>
+  				<title>Developing an Asynchronous Task Queue in Python</title>
+  				
+  				
+  					<description>&lt;p&gt;This post looks at how to implement several asynchronous task queues using Python’s &lt;a href=&quot;https://docs.python.org/3.6/library/multiprocessing.html&quot;&gt;multiprocessing&lt;/a&gt; library and &lt;a href=&quot;https://redis.io/&quot;&gt;Redis&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 30 Apr 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/developing-an-asynchronous-task-queue-in-python</link>
+  				<guid isPermaLink="true">https://testdriven.io/developing-an-asynchronous-task-queue-in-python</guid>
+  			</item>
+      
 		
       
   			<item>

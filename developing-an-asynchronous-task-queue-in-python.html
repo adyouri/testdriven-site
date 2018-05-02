@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
   <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
   <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
-  <link href="/assets/css/styles.css?1525302798911925000" rel="stylesheet">
+  <link href="/assets/css/styles.css?1525303040746579000" rel="stylesheet">
 </head>
 
 
@@ -549,7 +549,7 @@ Time taken <span class="o">=</span> 2.1577479839
     <span class="n">run</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>Again, cause an error by altering one of the file names, and then run it. Take a look at <em>process.log</em> - not quite as organized as it should be since the Python logging library does not use shared locks between processes. To get around this, let’s have each process write to its own file. To keep things organized, add a logs directory to you project folder:</p>
+<p>Again, cause an error by altering one of the file names, and then run it. Take a look at <em>process.log</em> - not quite as organized as it should be since the Python logging library does not use shared locks between processes. To get around this, let’s have each process write to its own file. To keep things organized, add a logs directory to your project folder:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># simple_task_queue_logging_separate_files.py</span>
 
@@ -732,7 +732,7 @@ Time taken <span class="o">=</span> 2.1577479839
     <span class="n">worker</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p>If there is an available task, the <code class="highlighter-rouge">dequeue</code> method is called, which  then  de-serializes the task and calls the <code class="highlighter-rouge">process_task</code> method (in <em>redis_queue.py</em>).</p>
+<p>If there is an available task, the <code class="highlighter-rouge">dequeue</code> method is called, which then  de-serializes the task and calls the <code class="highlighter-rouge">process_task</code> method (in <em>redis_queue.py</em>).</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># redis_queue_server.py</span>
 

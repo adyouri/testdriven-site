@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <!-- meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <!-- og -->
+  
+    <meta property="og:image" content="https://testdriven.io/assets/img/blog/angular-cypress/testing_angular_cypress_docker.png" />
+  
+  <!-- description -->
+  
+    <meta name="description" property="og:description" content="This post details how to add end-to-end tests to an Angular app with Cypress and Docker.">
+  
+  <!-- keywords -->
+  
+    <meta name="keywords" content="testing, cypress, cypress.io, angular, javascript, automated tests, functional testing, end-to-end testing, e2e, e2e tests">
+  
+  <!-- title -->
+  
+    <title>Testing Angular with Cypress and Docker - TestDriven.io</title>
+    <meta property="og:title" content="Testing Angular with Cypress and Docker" />
+  
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+  <link href="/assets/css/styles.css?1525698083388409000" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img
+        class="nav-logo" src="/assets/img/test_driven_io_full_logo_white_text.svg" alt="testdriven.io"
+      />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Course</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/course-contents">Contents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/testimonials">Testimonials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+      <li class="nav-item">
+        <a class="nav-link" href="https://twitter.com/testdrivenio"><i class="fab fa-twitter"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/testdrivenio"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="nav-item nav-purcahse-btn">
+        <a class="btn btn-outline-warning" href="https://gum.co/flask">Purchase the Course</a>
+      </li>
+  </ul>
+  </div>
+</nav>
+
+
+    <br>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          
+            <div class="text-center" style="padding-bottom:20px;">
+              <img src="/assets/img/blog/angular-cypress/testing_angular_cypress_docker.png" style="max-width:100%" alt="cypress and docker">
+            </div>
+          
+
+          <h1>Testing Angular with Cypress and Docker</h1>
+
+          
+            <p>Posted by <a href="https://testdriven.io/authors/herman">Michael Herman</a></span> on <span class="badge badge-secondary">May 7, 2018</span><br>
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Testing Angular with Cypress and Docker&amp;url=https%3A%2F%2Ftestdriven.io/testing-angular-with-cypress-and-docker&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+</p>
+          
+
+          <p><a href="https://www.cypress.io/">Cypress</a> is a powerful testing framework that makes writing end-to-end tests fast with very little setup.</p>
+
+<p>This post details how to add end-to-end (E2E) tests to an Angular app with Cypress and Docker. We’ll look at adding tests to both a new and an existing Angular project as well as incorporating Cypress into your continuous integration flow with Docker.</p>
+
+<p><img src="/assets/img/blog/angular-cypress/all-tests.gif" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<p><em>Dependencies:</em></p>
+
+<ul>
+  <li>Cypress v2.1.0</li>
+  <li>Angular CLI v1.7.3 (Angular v5.2.0)</li>
+  <li>Docker v18.03.1-ce</li>
+  <li>
+    <p>Node v10.0.0</p>
+
+    <h2 class="no_toc">Contents</h2>
+  </li>
+</ul>
+
+<ul class="no_toc" id="markdown-toc">
+  <li><a href="#objectives" id="markdown-toc-objectives">Objectives</a></li>
+  <li><a href="#new-angular-project" id="markdown-toc-new-angular-project">New Angular Project</a></li>
+  <li><a href="#docker-for-ci" id="markdown-toc-docker-for-ci">Docker for CI</a></li>
+  <li><a href="#travis-ci" id="markdown-toc-travis-ci">Travis CI</a></li>
+  <li><a href="#existing-angular-project" id="markdown-toc-existing-angular-project">Existing Angular Project</a></li>
+  <li><a href="#adding-cypress" id="markdown-toc-adding-cypress">Adding Cypress</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="objectives">Objectives</h2>
+
+<p>By the end of this tutorial, you will be able to…</p>
+
+<ol>
+  <li>Add Cypress to both a new and an existing Angular project</li>
+  <li>Test an Angular app with end-to-end tests</li>
+  <li>Set up Cypress to run from a Docker container</li>
+  <li>Integrate Cypress into a continuous integration process</li>
+</ol>
+
+<h2 id="new-angular-project">New Angular Project</h2>
+
+<p>This section looks at how to add Cypress to a new Angular project.</p>
+
+<p>Begin by installing the <a href="https://cli.angular.io/">Angular CLI</a> globally, if you don’t already have it installed, and then create a new Angular project:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm <span class="nb">install</span> <span class="nt">-g</span> @angular/cli@1.7.3
+<span class="nv">$ </span>ng new angular-cypress
+<span class="nv">$ </span><span class="nb">cd </span>angular-cypress
+</code></pre></div></div>
+
+<p>Run the server:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ng serve
+</code></pre></div></div>
+
+<p>Navigate to <a href="http://localhost:4200">http://localhost:4200</a> in your browser. You should see the “Welcome to app!” message along with the Angular logo. Kill the server when done.</p>
+
+<p>Then, install Cypress:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm <span class="nb">install </span>cypress@2.1.0 <span class="nt">--save-dev</span>
+</code></pre></div></div>
+
+<p>Open the Cypress test runner:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./node_modules/.bin/cypress open
+</code></pre></div></div>
+
+<p>Since this is the first time we’re running the test runner, Cypress will automatically scaffold out a folder structure:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└─── cypress
+    ├── fixtures
+    │   └── example.json
+    ├── integration
+    │   └── example_spec.js
+    ├── plugins
+    │   └── index.js
+    └── support
+        ├── commands.js
+        └── index.js
+</code></pre></div></div>
+
+<p>It will also add an empty <em>cypress.json</em> config file to the project root.</p>
+
+<blockquote>
+  <p>Review <a href="https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests.html">Writing and Organizing Tests</a>, from the official Cypress <a href="https://docs.cypress.io">documentation</a>, for more info on the above folder structure.</p>
+</blockquote>
+
+<p>It’s worth noting that at this point we can already start writing and running tests. Cypress comes bundled with everything needed to get up and running without any configuration!</p>
+
+<p>Finally, remove the example spec file - <em>cypress/integration/example_spec.js</em>. In its place, add a <em>spec.js</em> file:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'My App'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'loads'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">);</span>
+    <span class="nx">cy</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Welcome to app!'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Cypress has <a href="https://docs.cypress.io/guides/tooling/typescript-support.html">support</a> for TypeScript, but I ran into a number of type definition conflicts. As of writing, there is an <a href="https://github.com/Microsoft/TypeScript/issues/22331">open</a> issue on GitHub to address this.</p>
+</blockquote>
+
+<p>This is a basic test spec file that opens the main page and confirms that the page loads and that there is an <code class="highlighter-rouge">H1</code> tag with the <code class="highlighter-rouge">Welcome to app!</code> text present.</p>
+
+<p>Commands:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">visit()</code> visits the provided URL.</li>
+  <li><code class="highlighter-rouge">get()</code> queries elements by selector.</li>
+  <li><code class="highlighter-rouge">contains()</code> gets the element that contains the text. It’s also a <a href="https://docs.cypress.io/guides/core-concepts/introduction-to-cypress.html#Default-Assertions">built-in</a> assertion.</li>
+</ol>
+
+<blockquote>
+  <p>For more on these commands, review the Cypress <a href="https://docs.cypress.io/api/introduction/api.html">API</a>.</p>
+</blockquote>
+
+<p>Cypress uses a fork of <a href="https://mochajs.org/">Mocha</a> under the hood as its test runner along with <a href="http://www.chaijs.com/">Chai</a> for assertions and <a href="http://sinonjs.org/">Sinon</a> for mocking and stubbing. Thus, the <code class="highlighter-rouge">describe</code> and <code class="highlighter-rouge">it</code> blocks should look familiar to you if you’ve used either Mocha or <a href="https://jasmine.github.io/">Jasmine</a> in the past.</p>
+
+<p>Set the <code class="highlighter-rouge">baseUrl</code> and turn off video recording by updating the <em>cypress.json</em> file in the project root:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"baseUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:4200"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"videoRecording"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Cypress will then prefix the URL in <code class="highlighter-rouge">cy.visit()</code> with the <code class="highlighter-rouge">baseUrl</code>.</p>
+
+<p>Run the Angular app in one terminal window:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ng serve
+</code></pre></div></div>
+
+<p>Then, open the test runner in another terminal window:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./node_modules/.bin/cypress open
+</code></pre></div></div>
+
+<p>Tests run in an <a href="https://electronjs.org/">Electron</a> app that shows your tests side-by-side with the application itself under test. Click the “Run All Tests” button to kick off a new test run:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/electron-app.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test runner" /></p>
+
+<p>Cypress will launch a new UI that goes through each step from the spec file:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/first-test-run.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<p>With the runner active, Cypress is watching your code and it will re-run the tests anytime changes are made. Try it out! Make a quick change to the <code class="highlighter-rouge">&lt;h1&gt;&lt;/h1&gt;</code> element in the <em>src/app/app.component.html</em> template to watch the tests break.</p>
+
+<p>Revert the change(s) you just made so the tests pass once again and then stop the test runner along with the Angular development server before moving on.</p>
+
+<h2 id="docker-for-ci">Docker for CI</h2>
+
+<p>Let’s add Docker into the mix to simplify testing for a continuous integration environment - like <a href="https://jenkins.io/">Jenkins</a>, <a href="https://travis-ci.org/">Travis CI</a>, or <a href="https://circleci.com/">Circle</a>. In these environments, we’ll want to serve the Angular app in one container and run the Cypress tests in another container.</p>
+
+<p>Add a <em>Dockerfile</em>:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#########################</span>
+<span class="c">### build environment ###</span>
+<span class="c">#########################</span>
+
+<span class="c"># base image</span>
+FROM node:9.6.1 as builder
+
+<span class="c"># install chrome for protractor tests</span>
+RUN wget <span class="nt">-q</span> <span class="nt">-O</span> - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh <span class="nt">-c</span> <span class="s1">'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" &gt;&gt; /etc/apt/sources.list.d/google.list'</span>
+RUN apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install</span> <span class="nt">-yq</span> google-chrome-stable
+
+<span class="c"># set working directory</span>
+RUN <span class="nb">mkdir</span> /usr/src/app
+WORKDIR /usr/src/app
+
+<span class="c"># add `/usr/src/app/node_modules/.bin` to $PATH</span>
+ENV PATH /usr/src/app/node_modules/.bin:<span class="nv">$PATH</span>
+
+<span class="c"># install and cache app dependencies</span>
+COPY package.json /usr/src/app/package.json
+RUN npm <span class="nb">install
+</span>RUN npm <span class="nb">install</span> <span class="nt">-g</span> @angular/cli@1.7.1 <span class="nt">--unsafe</span>
+
+<span class="c"># add app</span>
+COPY <span class="nb">.</span> /usr/src/app
+
+<span class="c"># run tests</span>
+RUN ng <span class="nb">test</span> <span class="nt">--watch</span><span class="o">=</span><span class="nb">false</span>
+
+<span class="c"># generate build</span>
+RUN npm run build
+
+<span class="c">##################</span>
+<span class="c">### production ###</span>
+<span class="c">##################</span>
+
+<span class="c"># base image</span>
+FROM nginx:1.13.9-alpine
+
+<span class="c"># copy artifact build from the 'build environment'</span>
+COPY <span class="nt">--from</span><span class="o">=</span>builder /usr/src/app/dist /usr/share/nginx/html
+
+<span class="c"># expose port 80</span>
+EXPOSE 80
+
+<span class="c"># run nginx</span>
+CMD <span class="o">[</span><span class="s2">"nginx"</span>, <span class="s2">"-g"</span>, <span class="s2">"daemon off;"</span><span class="o">]</span>
+</code></pre></div></div>
+
+<p>Here, using a Docker <a href="https://docs.docker.com/develop/develop-images/multistage-build/">multistage build</a>, we created a temporary image used for building the Angular app. Once the Angular build process is complete, the static files are copied over to the production image and the temporary image is discarded.</p>
+
+<blockquote>
+  <p>For more on this, please review the <a href="http://mherman.org/blog/2018/02/26/dockerizing-an-angular-app">Dockerizing an Angular App</a> blog post.</p>
+</blockquote>
+
+<p>Next, add a <em>docker-compose.yml</em> file:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.6'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">angular</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">80:80'</span>
+</code></pre></div></div>
+
+<p>Build the image and spin up the container:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose up <span class="nt">-d</span> <span class="nt">--build</span>
+</code></pre></div></div>
+
+<p>Once up, ensure the app is running at <a href="http://localhost">http://localhost</a>.</p>
+
+<p>Again, we’ll run the Cypress tests from within a separate container, so add a new Dockerfile called <em>Dockerfile-cypress</em>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># base image
+FROM cypress/browsers:chrome65-ff57
+
+# set working directory
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+
+# install cypress
+RUN npm install cypress@2.1.0
+
+# copy cypress files and folders
+COPY cypress /usr/src/app/cypress
+COPY cypress.json /usr/src/app/cypress.json
+
+# confirm the cypress install
+RUN ./node_modules/.bin/cypress verify
+</code></pre></div></div>
+
+<blockquote>
+  <p>Review the official <a href="https://github.com/cypress-io/cypress-docker-images">Cypress Docker Images</a> repo for more info on the available base images.</p>
+</blockquote>
+
+<p>Update the <em>docker-compose.yml</em> file like so:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.6'</span>
+
+<span class="na">services</span><span class="pi">:</span>
+
+  <span class="na">angular</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">80:80'</span>
+
+  <span class="na">cypress</span><span class="pi">:</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">Dockerfile-cypress</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">angular</span>
+    <span class="na">network_mode</span><span class="pi">:</span> <span class="s1">'</span><span class="s">host'</span>
+</code></pre></div></div>
+
+<p>Take note of the <a href="https://docs.docker.com/compose/compose-file/#network_mode">network_mode</a>. By setting it to <code class="highlighter-rouge">host</code>, the Cypress container will be able to access localhost from the host machine. Review <a href="https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach">this</a> Stack Overflow question for more info.</p>
+
+<p>Now, we’ll need to <a href="https://docs.cypress.io/guides/references/configuration.html#Overriding-Options">override</a> the <code class="highlighter-rouge">baseURL</code> set in the <em>cypress.json</em> file when we run the tests:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose run cypress ./node_modules/.bin/cypress run <span class="se">\</span>
+    <span class="nt">--config</span> <span class="nv">baseUrl</span><span class="o">=</span>http://127.0.0.1
+</code></pre></div></div>
+
+<blockquote>
+  <p>It’s worth nothing that you could also copy over a different configuration file, with config specific to running the tests with Docker and/or in the CI environment, to the container like so:</p>
+  <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>COPY cypress-ci.json /usr/src/app/cypress.json
+</code></pre></div>  </div>
+</blockquote>
+
+<p>The tests should pass:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>Tests Starting<span class="o">)</span>
+
+
+My App
+  ✓ loads <span class="o">(</span>679ms<span class="o">)</span>
+
+
+1 passing <span class="o">(</span>792ms<span class="o">)</span>
+
+
+<span class="o">(</span>Tests Finished<span class="o">)</span>
+
+- Tests:           1
+- Passes:          1
+- Failures:        0
+- Pending:         0
+- Duration:        0 seconds
+- Screenshots:     0
+- Video Recorded:  <span class="nb">false</span>
+- Cypress Version: 2.1.0
+
+
+<span class="o">(</span>All Done<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Bring down the containers:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker-compose down
+</code></pre></div></div>
+
+<h2 id="travis-ci">Travis CI</h2>
+
+<p>Next, let’s use Travis CI for continuous integration. Add a <em>.travis.yml</em> file to the project root:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">language</span><span class="pi">:</span> <span class="s">node_js</span>
+
+<span class="na">node_js</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">10</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">docker</span>
+
+<span class="na">env</span><span class="pi">:</span>
+  <span class="na">global</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">DOCKER_COMPOSE_VERSION=1.21.1</span>
+
+<span class="na">before_install</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">sudo rm /usr/local/bin/docker-compose</span>
+  <span class="pi">-</span> <span class="s">curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` &gt; docker-compose</span>
+  <span class="pi">-</span> <span class="s">chmod +x docker-compose</span>
+  <span class="pi">-</span> <span class="s">sudo mv docker-compose /usr/local/bin</span>
+
+<span class="na">before_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">sleep 3</span>
+  <span class="pi">-</span> <span class="s">docker-compose up -d --build</span>
+
+<span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">docker-compose run cypress ./node_modules/.bin/cypress run --config baseUrl=http://127.0.0.1</span>
+
+<span class="na">after_script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">docker-compose down</span>
+</code></pre></div></div>
+
+<p>If you’d like to test this out, create a new repo on GitHub, <a href="https://docs.travis-ci.com/user/getting-started">enable</a> Travis for that repo, and the push up your code.</p>
+
+<p>With that, let’s move on to adding Cypress tests to an existing Angular project.</p>
+
+<h2 id="existing-angular-project">Existing Angular Project</h2>
+
+<p>In this section, we’ll add Cypress to an Angular project with token-based authentication already built out. The app itself comes from the <a href="http://mherman.org/blog/2018/04/17/authentication-in-angular-with-ngrx">Authentication in Angular with NGRX</a> blog post. There is a slight error in the code, which we’ll flesh out with Cypress.</p>
+
+<p>Start by cloning the project down and installing the dependencies:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/mjhea0/angular-auth-ngrx
+<span class="nv">$ </span><span class="nb">cd </span>angular-auth-ngrx
+<span class="nv">$ </span>npm <span class="nb">install</span>
+</code></pre></div></div>
+
+<p>The application requires a back-end with the following routes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP Verb</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>http://localhost:1337/register</td>
+      <td>POST</td>
+      <td>Register a new user</td>
+    </tr>
+    <tr>
+      <td>http://localhost:1337/login</td>
+      <td>POST</td>
+      <td>Log a user in</td>
+    </tr>
+    <tr>
+      <td>http://localhost:1337/status</td>
+      <td>GET</td>
+      <td>Get user status</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We’ll use a fake back-end that generates a dummy token to test out the functionality on the front-end. Clone down the repo in a new terminal window, install the dependencies, and fire up the app:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/testdrivenio/fake-token-api
+<span class="nv">$ </span><span class="nb">cd </span>fake-token-api
+<span class="nv">$ </span>npm <span class="nb">install</span>
+<span class="nv">$ </span>npm start
+</code></pre></div></div>
+
+<p>Spin up the Angular app:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ng serve
+</code></pre></div></div>
+
+<p>Navigate to <a href="http://localhost:4200">http://localhost:4200</a>. Ensure that you can sign up and log in with the following credentials:</p>
+
+<ul>
+  <li><em>email</em>: test@test.com</li>
+  <li><em>password</em>: test</li>
+</ul>
+
+<p>Leave the development server running.</p>
+
+<h2 id="adding-cypress">Adding Cypress</h2>
+
+<p>Install Cypress and open the test runner in a new terminal window:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm <span class="nb">install </span>cypress@2.1.0 <span class="nt">--save-dev</span>
+<span class="nv">$ </span>./node_modules/.bin/cypress open
+</code></pre></div></div>
+
+<p>Remove the example spec file and update <em>cypress.json</em>:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"baseUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:4200"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"videoRecording"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Let’s write a number of tests to ensure that:</p>
+
+<ol>
+  <li>The main page loads</li>
+  <li>Users can sign up</li>
+  <li>Users can log in</li>
+  <li>Only authenticated users can view the <code class="highlighter-rouge">/status</code> route</li>
+</ol>
+
+<p>We’ll break these up by component:</p>
+
+<ol>
+  <li>Landing</li>
+  <li>LogIn</li>
+  <li>SignUp</li>
+  <li>Status</li>
+</ol>
+
+<h3 id="test-landing-component">TEST: Landing Component</h3>
+
+<p>Add a new spec file - <em>landing.component.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'Landing Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should display the landing page'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Angular + NGRX'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+<p>Nothing new here, so go ahead and run the tests:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/test-run-landing-component1.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<h3 id="test-login-component">TEST: LogIn Component</h3>
+
+<p>Again, add a new spec file - <em>login.component.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'LogIn Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should log a user in'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="email"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s1">'test@test.com'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="password"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s1">'test'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button[type="submit"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log out'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>In this test, we navigate to the main page, click the Log in button, submit the form with the correct credentials, and then confirm the login worked.</p>
+
+<p>Run the tests!</p>
+
+<p><img src="/assets/img/blog/angular-cypress/test-run-login-component1.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<p>Try hovering over one of the test steps on the left side of the UI - it will show a snapshot of the DOM for that step. By default, Cypress saves 50 snapshots. For example, hover over the <code class="highlighter-rouge">CONTAINS You logged in test@test.com!</code> step. Notice how that element is now highlighted in the application on the right:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/test-run-login-component3.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<p>You can also open developer tools to get more info about the step:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/test-run-login-component4.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<p>Finally, you can use the debugger to stop a running test, review the state of your variables, make changes, and then re-run the test.</p>
+
+<p>These features make it easy to debug failing tests.</p>
+
+<p>Moving on, let’s ensure a user is not logged in if the credentials are incorrect. Update the spec like so:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'LogIn Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should log a user in if the credentials are valid'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="email"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s1">'test@test.com'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="password"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s1">'test'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button[type="submit"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log out'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should not log a user in if the credentials are invalid'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="email"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s1">'not@correct.com'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="password"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="s1">'incorrect'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button[type="submit"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'div.alert.alert-danger'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Incorrect email and/or password.'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>The tests should pass. To keep the code DRY, we can create our own <a href="https://docs.cypress.io/api/cypress-api/custom-commands.html">custom command</a> for logging a user in. In short, Cypress commands allow you to create your own actions that can be reused.</p>
+
+<p>Update <em>cypress/support/commands.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Cypress</span><span class="p">.</span><span class="nx">Commands</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'login'</span><span class="p">,</span> <span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="email"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nx">email</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="password"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button[type="submit"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Then update the spec:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'LogIn Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should log a user in if the credentials are valid'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="s1">'test@test.com'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log out'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should not log a user in if the credentials are invalid'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="s1">'not@correct.com'</span><span class="p">,</span> <span class="s1">'incorrect'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/log-in'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'div.alert.alert-danger'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Incorrect email and/or password.'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Ensure the tests still pass. Did you notice that we added an additional assertion with <code class="highlighter-rouge">location()</code> to ensure the user was properly redirected after a successful login?</p>
+
+<p>Let’s add one more test for logging out:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should log an authenticated user out'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="s1">'test@test.com'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">);</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log out'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Angular + NGRX'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/blog/angular-cypress/test-run-login-component2.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<h3 id="test-signup-component">TEST: SignUp Component</h3>
+
+<p>Testing this component will be very similar to the LogIn component. Start by creating a new spec file - <em>signup.component.spec.js</em>.</p>
+
+<p>Test:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'SignUp Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should sign a user up'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">signup</span><span class="p">(</span><span class="s1">'test@test.com'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log out'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should throw an error if the email is already is use'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">signup</span><span class="p">(</span><span class="s1">'in@use.com'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/sign-up'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'div.alert.alert-danger'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'That email is already in use.'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Add the command:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Cypress</span><span class="p">.</span><span class="nx">Commands</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'login'</span><span class="p">,</span> <span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="email"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nx">email</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="password"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button[type="submit"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+<span class="p">});</span>
+
+<span class="nx">Cypress</span><span class="p">.</span><span class="nx">Commands</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'signup'</span><span class="p">,</span> <span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="email"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nx">email</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'form input[name="password"]'</span><span class="p">).</span><span class="nx">clear</span><span class="p">().</span><span class="nx">type</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'button[type="submit"]'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Ensure the tests pass:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/test-run-signup-component1.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<p>One final thing before moving on, let’s ensure that the state of the sign up form is correct on the initial load.</p>
+
+<p>Add the following test:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should not display an error message when a user first hits the component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="s1">'not@correct.com'</span><span class="p">,</span> <span class="s1">'incorrect'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'div.alert.alert-danger'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Incorrect email and/or password.'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Cancel'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Sign up'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'div.alert.alert-danger'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This test should fail:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/test-run-signup-component2.png" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<p>Add a similar test to the login spec:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'should not display an error message when a user first hits the component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="nx">signup</span><span class="p">(</span><span class="s1">'in@use.com'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'div.alert.alert-danger'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'That email is already in use.'</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Cancel'</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Log in'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+  <span class="nx">cy</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'div.alert.alert-danger'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>It should also fail. So, we uncovered an error in the code: The message state is not getting cleared out on the component init. You can either fix this on your own or comment out the failing asserts.</p>
+
+<h3 id="test-status-component">TEST: Status Component</h3>
+
+<p>Add the spec - <em>status.component.spec.js</em>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="s1">'Status Component'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should display the component if a user is logged in'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="s1">'test@test.com'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">);</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'p'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'You logged in test@test.com!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/status'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status Works!'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Home'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="s1">'should not display the component if a user is not logged in'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'a.btn'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status'</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+    <span class="nx">cy</span>
+      <span class="p">.</span><span class="nx">location</span><span class="p">(</span><span class="s1">'pathname'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'eq'</span><span class="p">,</span> <span class="s1">'/log-in'</span><span class="p">)</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">).</span><span class="nx">contains</span><span class="p">(</span><span class="s1">'Status Works!'</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">'not.be.visible'</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Ensure ALL tests pass:</p>
+
+<p><img src="/assets/img/blog/angular-cypress/all-tests.gif" style="max-width:100%;padding-top:20px;padding-bottom:20px;" alt="cypress test run" /></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>That’s it!</p>
+
+<p>Cypress is a powerful, end-to-end testing tool. With it, you can start writing tests within minutes of download with a familiar assertion library. Tests run in real-time time in an Electron app, which makes it easy to debug failing assertions. There’s a strong community behind the project, and the <a href="https://docs.cypress.io">documentation</a> is excellent!</p>
+
+<p>Grab the final code from the following repos:</p>
+
+<ol>
+  <li><a href="https://github.com/testdrivenio/angular-cypress">angular-cypress</a></li>
+  <li><a href="https://github.com/mjhea0/angular-auth-ngrx">angular-auth-ngrx</a></li>
+</ol>
+
+
+          
+  
+    <br>
+    <a class="twitter-share-button" data-show-count="false" href="https://twitter.com/intent/tweet?text=Testing Angular with Cypress and Docker&amp;url=https%3A%2F%2Ftestdriven.io/testing-angular-with-cypress-and-docker&amp;via=testdrivenio" rel="nofollow" target="_blank" title="Share on Twitter"></a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  
+
+
+
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block">
+  <div class="card box-shadow">
+    <h4 class="card-header text-center">Microservices with Docker, Flask, and React</h4>
+    <div class="card-body text-dark">
+      <p class="card-text">Get the full course. Learn how to build, test, and deploy microservices powered by Docker, Flask, and React!</p>
+      <div class="text-center">
+        <hr>
+        <p><a class="btn btn-success btn-lg" href="https://gum.co/flask">Purchase Now!</a></p>
+        <p><a href="https://testdriven.io/part-one-intro">Or, preview parts 1 &amp; 2</a></p>
+      </div>
+    </div>
+  </div>
+  
+  
+    <br>
+<div class="blog-toc-container card box-shadow">
+  <h4 class="card-header text-center">Table of Contents</h4>
+  <div class="blog-toc-subcontainer">
+    <ul class="blog-toc card-body" id="blog-toc" />
+  </div>
+</div>
+<script>
+  const headerList = document.getElementsByTagName('h2');
+  let tocContainer = document.getElementById('blog-toc');
+  for (el in headerList) {
+    if (headerList[el].innerHTML && headerList[el].innerHTML !== 'Contents') {
+      // added to anchor target to push target below navbar
+      headerList[el].setAttribute('style', 'padding-top: 60px; margin-top: -60px;');
+      // create li
+      let listElement = document.createElement('li');
+      // create anchor
+      let anchorElement = document.createElement('a');
+      // set text and href values
+      anchorElement.innerText = headerList[el].innerHTML;
+      anchorElement.href = "#" + headerList[el].id;
+      // append anchor to li, append li to ul
+      listElement.appendChild(anchorElement);
+      tocContainer.appendChild(listElement);
+    }
+  }
+</script>
+
+  
+</div>
+
+
+      </div>
+
+      <hr>
+
+<div class="row">
+
+  <div class="col-sm-12">
+
+    <p><strong>Join our mailing list to be notified about course updates and new tutorials.</strong></p>
+
+    <form class="validate" action="//testdriven.us17.list-manage.com/subscribe/post?u=bea5ac664532063fe8aa8d6a2&amp;id=eddaf58c2a" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+      <div class="form-group">
+        <input placeholder="Enter your email..." type="email" name="EMAIL" class="form-control col-sm-4">
+      </div>
+      <div>
+        &nbsp;<button class="btn btn-success" type="submit" name="action">Submit</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+
+    </div>
+
+     <footer class="footer text-center">
+  <div class="container">
+    <hr>
+    <small>
+      <p>
+      <span>&copy; Copyright 2018</span>
+      <a href="http://testdriven.io">TestDriven.io</a>.
+      <br>
+      <span>Developed by </span>
+      <a href="http://mherman.org/">Michael Herman</a>.
+      <br>
+      <span>Questions? </span>
+      <a href="mailto:michael@mherman.org">michael@mherman.org</a>
+      <p>
+    </small>
+  </div>
+</footer>
+
+
+    <script
+  src="//code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"
+></script>
+<script
+  src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="/assets/js/main.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://gumroad.com/js/gumroad.js"
+></script>
+<!-- addthis -->
+
+  <script
+    type="text/javascript"
+    src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50e5f1cc35ad077d"
+  ></script>
+
+
+
+    
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-100160465-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+
+
+  </body>
+</html>

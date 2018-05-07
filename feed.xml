@@ -5,7 +5,22 @@
 		<description>TestDriven.io blog</description>
 		<link>https://testdriven.io</link>
 		<atom:link href="https://testdriven.io/feed.xml" rel="self" type="application/rss+xml" />
-		<lastBuildDate>Mon, 30 Apr 2018 00:00:00 -0600</lastBuildDate>
+		<lastBuildDate>Mon, 07 May 2018 00:00:00 -0600</lastBuildDate>
+		
+      
+  			<item>
+  				<title>Testing Angular with Cypress and Docker</title>
+  				
+  				
+  					<description>&lt;p&gt;&lt;a href=&quot;https://www.cypress.io/&quot;&gt;Cypress&lt;/a&gt; is a powerful testing framework that makes writing end-to-end tests fast with very little setup.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Mon, 07 May 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/testing-angular-with-cypress-and-docker</link>
+  				<guid isPermaLink="true">https://testdriven.io/testing-angular-with-cypress-and-docker</guid>
+  			</item>
+      
 		
       
   			<item>
@@ -185,34 +200,6 @@
   				<link>https://testdriven.io/behavior-driven-development-with-django-and-aloe</link>
   				<guid isPermaLink="true">https://testdriven.io/behavior-driven-development-with-django-and-aloe</guid>
   			</item>
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
-      
-		
       
 		
       

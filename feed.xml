@@ -5,7 +5,22 @@
 		<description>TestDriven.io blog</description>
 		<link>https://testdriven.io</link>
 		<atom:link href="https://testdriven.io/feed.xml" rel="self" type="application/rss+xml" />
-		<lastBuildDate>Mon, 07 May 2018 00:00:00 -0600</lastBuildDate>
+		<lastBuildDate>Tue, 29 May 2018 00:00:00 -0600</lastBuildDate>
+		
+      
+  			<item>
+  				<title>Developing a Single Page App with Flask and Vue.js</title>
+  				
+  				
+  					<description>&lt;p&gt;The following is a step-by-step walkthrough of how to set up a basic CRUD app with Vue and Flask. We’ll start by scaffolding a new Vue application, using the Vue CLI, and then move on to performing the basic CRUD operations through a back-end RESTful API powered by Python and Flask.&lt;/p&gt;
+
+</description>
+  				
+  				<pubDate>Tue, 29 May 2018 00:00:00 -0600</pubDate>
+  				<link>https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs</link>
+  				<guid isPermaLink="true">https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs</guid>
+  			</item>
+      
 		
       
   			<item>
